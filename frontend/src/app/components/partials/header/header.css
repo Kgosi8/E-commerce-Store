@@ -3,6 +3,9 @@
     justify-content: space-between;
     padding: 15px 30px;
 }
+a{
+    color:black;
+}
 
 .search-login{
     display: flex;
@@ -12,11 +15,4 @@
 
 .category{
     display: flex;
-}
-
-a{
-    text-decoration: none;
-    color: black;
-    padding-right: 10px;
-    font-weight: 400; 
 }

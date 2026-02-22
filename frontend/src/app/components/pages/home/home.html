@@ -1,0 +1,100 @@
+<div class="model-cover">
+    <div class="no-image"></div>
+    <h2 class="cover-description">Mpahlas Winter Collection</h2>
+    <small>find out the best winter collection. Offering our best quality product in a Mpahlas winter collection.</small>
+    <button>Buy Now</button>
+</div>
+
+<div class="main-content">
+    <div class="collection">
+        <h2>NEW COLLECTION</h2>
+        <small>Our latest collection is now available. Discover the newest styles and designs.</small>
+    </div>
+    
+
+    <div class="product-content">
+        <div class="card" *ngFor="let clothes of clothesList">
+
+            <img [src]="clothes.imageUrl" [alt]="clothes.name">
+            <h3>{{clothes.name}}</h3>
+            <p>{{clothes.description}}</p>
+            <span class="price">R {{clothes.price}}</span>
+        </div>
+    </div>
+</div>
+
+<div class="venue-cover">
+    <div class="no-image-venue"></div>
+</div>
+
+<div class="venue-description">
+    <h2 class="venue-cover-description">Ama 2K VIBES</h2>
+    <small>A symphony of vibrant colors and dynamic beats that define the essence of modern nightlife.</small>
+    <button>See Details</button>
+</div>
+
+<div class="venue-description">
+</div>
+
+<div class="bottom-nav">
+
+    <div class="email-update">
+
+        <h1>Mpahlas</h1>
+        <h2>Subscribe to our Newsletter</h2>
+        <small>Get the latest updates on new products and upcoming sales.</small>
+        <input type="email" placeholder="Enter your email">
+        <button>Subscribe</button>
+
+    </div>
+
+    <div class="mpahlas">
+
+        <div class="products">
+
+            <h3>Products</h3>
+            <span><a routerLink="/t-shirts">T-shirt</a></span>
+            <span><a routerLink="/Pants">Pants</a></span>
+            <span><a routerLink="/hoodies">Hoodies</a></span>
+            <span><a routerLink="/beanies">Beanies</a></span>
+            <span><a routerLink="/caps">Caps</a></span>
+
+        </div>
+
+        <div class="categories">
+
+            <h3>Categories</h3>
+            <span><a routerLink="/men">Men</a></span>
+            <span><a routerLink="/women">Women</a></span>
+            <span><a routerLink="/kids">Kids</a></span>
+            <span><a routerLink="/new-arrivals">New Arrivals</a></span>
+
+        </div>
+
+        <div class="contacts">
+
+            <h3>Our social media</h3>
+            <span><a href="https://www.facebook.com/mpahlas">Facebook</a></span>
+            <span><a href="https://www.instagram.com/mpahlas">Instagram</a></span>
+            <span><a href="https://wa.me/27834567890">WhatsApp</a></span>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="bottom-banner">
+
+    <div class="est">
+        <small>© 2024 Mpahlas. All rights reserved.</small>
+    </div>
+
+    <div class="policy">
+        <a routerLink="/terms-of-service">Terms & Conditions</a>
+        <a routerLink="/privacy-policy">Privacy Policy</a>
+        <a routerLink="/cookie-policy">Cookie Policy</a>
+    </div>
+</div>
+        
+

@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+a{
+    text-decoration: none;
+    padding-right: 10px;
+    font-weight: 400; 
+}
+
+li{
+    list-style: none;
+}
