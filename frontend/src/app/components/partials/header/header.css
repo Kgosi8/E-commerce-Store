@@ -1,0 +1,22 @@
+.header{
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 30px;
+}
+
+.search-login{
+    display: flex;
+    gap: 12px;
+    
+}
+
+.category{
+    display: flex;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+    padding-right: 10px;
+    font-weight: 400; 
+}
