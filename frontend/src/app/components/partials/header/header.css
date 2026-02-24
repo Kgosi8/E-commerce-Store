@@ -16,3 +16,10 @@ a{
 .category{
     display: flex;
 }
+
+.logo img{
+    padding: 0;
+    height: 80px;
+    width: 200px;
+
+}

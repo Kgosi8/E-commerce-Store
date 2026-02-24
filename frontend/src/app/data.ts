@@ -6,7 +6,7 @@ export const sample_clothes: Clothes[] = [
         name: 'T-shirt',
         price: 25.99,
         description: 'A comfortable and stylish t-shirt.',
-        imageUrl: 'assets/hoodies/tshirt.jpg'
+        imageUrl: 'assets/t-shirts/t-shirt-1.jpg'
     },
     {
         id: '2',
@@ -42,5 +42,12 @@ export const sample_clothes: Clothes[] = [
         price: 99.99,
         description: 'A warm and durable hat for outdoor activities.',
         imageUrl: 'assets/hats/hat.jpg'
+    },
+    {
+        id: '7',
+        name: 'Jacket',
+        price: 149.99,
+        description: 'A stylish and warm jacket for cold weather.',
+        imageUrl: 'assets/jackets/jacket-1.jpg'
     }
 ]
