@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Clothes } from '../../../shared/models/clothes';
-import { Clothes_Service } from '../../../services/clothes';
+import { Clothes_Service } from '../../../services/clothes/clothes';
 import { RouterLink } from "@angular/router";
 
 @Component({

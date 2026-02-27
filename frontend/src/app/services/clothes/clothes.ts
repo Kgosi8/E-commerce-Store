@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Clothes } from '../shared/models/clothes';
-import { sample_clothes } from '../data';
+import { Clothes } from '../../shared/models/clothes';
+import { sample_clothes } from '../../data';
 
 @Injectable({
   providedIn: 'root',

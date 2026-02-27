@@ -1,0 +1,35 @@
+const mongoose=require('mongoose');
+
+const userDetailsSchema=new mongoose.Schema({
+    name:{
+        type:String,
+        required:true,
+        trim:true
+    },
+    email:{
+        type:String,
+        required:true,
+        unique:true,
+        trim:true,
+        lowercase:true
+    },
+    password:{
+        type:String,
+        required:true,
+        minLength:6
+    },
+    address:{
+        type:String,
+        required:true,
+    },
+    phoneNumber:{
+        type:String,
+        required:true,
+        trim:true,
+        minLength:10,
+    }
+},{timestamps:true});
+
+const User=mongoose.model('User',userDetailsSchema);
+
+module.exports=User;
