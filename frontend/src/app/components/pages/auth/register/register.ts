@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../../services/auth/auth-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -13,7 +14,7 @@ export class Register {
 
   registerForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.registerForm = this.fb.group({
       name: ['',Validators.required],
       email: ['',[Validators.required, Validators.email]],
@@ -31,6 +32,7 @@ export class Register {
         {
           next: (data)=> {
             console.log('Registration successful', data);
+            this.router.navigate(['/login']);
           },
           error: (err) => {
             console.error('Registration failed', err);

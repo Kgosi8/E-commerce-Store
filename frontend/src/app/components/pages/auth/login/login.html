@@ -1,1 +1,32 @@
+<div class="register-card">
+  <div class="login-box">
+    <h2>Welcome Back!</h2>
+    <p>Please log in to continue to your account.</p>
 
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" placeholder="email" required formControlName="email" class="form-control" />
+        @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+          <div class="error">Valid email is required.</div>
+        }
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          placeholder="password"
+          formControlName="password"
+          class="form-control"
+          required
+        />
+        @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+          <div class="error">Password is required and must be at least 6 characters long.</div>
+        }
+        <button type="submit" class="btn-primary" [disabled]="loginForm.invalid || loginForm.pending">Login</button>
+      </div>
+    </form>
+
+    <p class="register-link">Don't have an account? <a routerLink="/register">Register here</a></p>
+  </div>
+</div>

@@ -1,266 +1,162 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Jost:wght@300;400;500&display=swap');
+/* =============================================
+   Register Card — Beige & Black Theme (v2)
+   ============================================= */
 
-/* ── Variables ── */
 :root {
-  --beige-light:   #f5f0e8;
-  --beige-mid:     #e8dcc8;
-  --beige-dark:    #d4c4a8;
-  --ink-deep:      #0f0e0c;
-  --ink-dark:      #1c1a16;
-  --ink-mid:       #3a3630;
-  --ink-soft:      #6b6558;
-  --gold-accent:   #c9a96e;
-  --error:         #8b2e2e;
-  --radius:        2px;
-  --transition:    0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --beige-50:  #faf8f5;
+  --beige-100: #f2ece0;
+  --beige-200: #e8dcc8;
+  --beige-300: #cfc0a0;
+  --black-900: #0f0f0f;
+  --black-800: #1a1a1a;
+  --black-700: #2c2c2c;
+  --black-500: #555555;
+  --black-300: #888888;
+  --black-200: #b0b0b0;
+  --error:     #b84444;
+  --radius:    8px;
+  --transition: 0.2s ease;
 }
 
-/* ── Reset / Base ── */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
+/* ── Page background ── */
 body {
+  background-color: #eae6df;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--ink-deep);
-  background-image:
-    radial-gradient(ellipse at 20% 50%, rgba(201, 169, 110, 0.06) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 20%, rgba(245, 240, 232, 0.04) 0%, transparent 50%);
-  font-family: 'Jost', sans-serif;
-  font-weight: 300;
-  color: var(--ink-deep);
-  padding: 2rem;
 }
 
-/* ── Form Card ── */
-form {
-  width: 100%;
-  max-width: 480px;
-  background: var(--beige-light);
-  padding: 3.5rem 3rem;
-  position: relative;
+/* ── Card ── */
+.register-card {
+  background-color: var(--beige-50) !important;
+  border: 1.5px solid var(--beige-300) !important;
+  border-radius: 16px !important;
   box-shadow:
-    0 0 0 1px rgba(201, 169, 110, 0.25),
-    0 32px 80px rgba(0, 0, 0, 0.55),
-    0 8px 24px rgba(0, 0, 0, 0.3);
-  animation: formReveal 0.7s cubic-bezier(0.4, 0, 0.2, 1) both;
+    0 2px 4px rgba(0,0,0,0.06),
+    0 10px 30px rgba(0,0,0,0.10) !important;
+  padding: 2.5rem 2.75rem !important;
+  width: 100%;
+  max-width: 460px;
+  margin: 2rem auto;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  box-sizing: border-box;
 }
 
-form::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 3rem;
-  right: 3rem;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold-accent), transparent);
+/* ── Form ── */
+.register-card form {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1.1rem !important;
 }
 
-@keyframes formReveal {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ── Optional heading (if you add one) ── */
-form h2,
-form .form-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 300;
-  font-size: 2rem;
-  letter-spacing: 0.04em;
-  color: var(--ink-dark);
-  margin-bottom: 2.5rem;
-  text-align: center;
-}
-
-/* ── Form Groups ── */
-.form-group {
-  position: relative;
-  margin-bottom: 1.75rem;
-  animation: fieldReveal 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
-}
-
-.form-group:nth-child(1) { animation-delay: 0.1s; }
-.form-group:nth-child(2) { animation-delay: 0.18s; }
-.form-group:nth-child(3) { animation-delay: 0.26s; }
-.form-group:nth-child(4) { animation-delay: 0.34s; }
-.form-group:nth-child(5) { animation-delay: 0.42s; }
-
-@keyframes fieldReveal {
-  from {
-    opacity: 0;
-    transform: translateX(-12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+/* ── Field group ── */
+.register-card .form-group {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.35rem !important;
 }
 
 /* ── Labels ── */
-.form-group label {
-  display: block;
-  font-family: 'Jost', sans-serif;
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-  margin-bottom: 0.5rem;
-  transition: color var(--transition);
-}
-
-.form-group:focus-within label {
-  color: var(--ink-dark);
+.register-card .form-group label {
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: var(--black-700) !important;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif !important;
 }
 
 /* ── Inputs ── */
-.form-control {
-  display: block;
-  width: 100%;
-  padding: 0.85rem 1rem;
-  font-family: 'Jost', sans-serif;
-  font-size: 0.95rem;
-  font-weight: 300;
-  color: var(--ink-dark);
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--beige-dark);
-  border-radius: 0;
-  outline: none;
-  transition: border-color var(--transition), background var(--transition);
+.register-card .form-control {
+  display: block !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  background-color: #ffffff !important;
+  border: 1.5px solid var(--beige-300) !important;
+  border-radius: var(--radius) !important;
+  color: var(--black-800) !important;
+  font-size: 0.93rem !important;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif !important;
+  padding: 0.65rem 0.85rem !important;
+  outline: none !important;
+  transition: border-color var(--transition), box-shadow var(--transition) !important;
   -webkit-appearance: none;
+  appearance: none;
 }
 
-.form-control::placeholder {
-  color: var(--beige-dark);
-  font-style: italic;
-  font-size: 0.88rem;
+.register-card .form-control::placeholder {
+  color: var(--black-200) !important;
 }
 
-.form-control:focus {
-  border-bottom-color: var(--ink-dark);
-  background: rgba(201, 169, 110, 0.06);
+.register-card .form-control:hover {
+  border-color: var(--black-500) !important;
 }
 
-/* Underline animation */
-.form-group::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: var(--gold-accent);
-  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+.register-card .form-control:focus {
+  border-color: var(--black-800) !important;
+  box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.10) !important;
+  background-color: #fff !important;
 }
 
-.form-group:focus-within::after {
-  width: 100%;
+/* ── Errors ── */
+.register-card .error {
+  font-size: 0.76rem !important;
+  color: red !important;
+  font-weight: 500 !important;
+  margin-top: 0.1rem !important;
+  animation: fadeIn 0.18s ease;
 }
 
-/* ── Submit Button ── */
-button[type="submit"] {
-  display: block;
-  width: 100%;
-  margin-top: 2.5rem;
-  padding: 1rem 2rem;
-  font-family: 'Jost', sans-serif;
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--beige-light);
-  background: var(--ink-dark);
-  border: 1px solid var(--ink-dark);
-  border-radius: var(--radius);
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: color var(--transition), background var(--transition), border-color var(--transition), transform var(--transition), box-shadow var(--transition);
-  animation: fieldReveal 0.5s 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-3px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-button[type="submit"]::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--gold-accent);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 0;
+/* ── Submit button ── */
+.register-card button[type="submit"] {
+  display: block !important;
+  width: 100% !important;
+  margin-top: 0.75rem !important;
+  background-color: var(--black-800) !important;
+  color: #f5f0e8 !important;
+  border: none !important;
+  border-radius: var(--radius) !important;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  padding: 0.82rem 1.2rem !important;
+  cursor: pointer !important;
+  transition:
+    background-color var(--transition),
+    transform var(--transition),
+    box-shadow var(--transition) !important;
 }
 
-button[type="submit"] span,
-button[type="submit"] {
-  position: relative;
-  z-index: 1;
+.register-card button[type="submit"]:hover:not(:disabled) {
+  background-color: var(--black-900) !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.22) !important;
+  transform: translateY(-1px) !important;
 }
 
-button[type="submit"]:not(:disabled):hover {
-  color: var(--ink-deep);
-  border-color: var(--gold-accent);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  transform: translateY(-1px);
+.register-card button[type="submit"]:active:not(:disabled) {
+  transform: translateY(0) !important;
+  box-shadow: none !important;
 }
 
-button[type="submit"]:not(:disabled):hover::before {
-  transform: scaleX(1);
-}
-
-button[type="submit"]:not(:disabled):active {
-  transform: translateY(0);
-  box-shadow: none;
-}
-
-/* ── Disabled State ── */
-button[type="submit"]:disabled {
-  background: var(--beige-dark);
-  border-color: var(--beige-dark);
-  color: var(--ink-soft);
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-button[type="submit"]:disabled::before {
-  display: none;
-}
-
-/* ── Angular Validation States ── */
-.form-control.ng-touched.ng-invalid {
-  border-bottom-color: var(--error);
-}
-
-.form-group:has(.ng-touched.ng-invalid) label {
-  color: var(--error);
-}
-
-.form-group:has(.ng-touched.ng-invalid)::after {
-  background: var(--error);
-  width: 100%;
+.register-card button[type="submit"]:disabled {
+  background-color: var(--black-300) !important;
+  color: #d0ccc5 !important;
+  cursor: not-allowed !important;
 }
 
 /* ── Responsive ── */
-@media (max-width: 540px) {
-  form {
-    padding: 2.5rem 1.75rem;
+@media (max-width: 520px) {
+  .register-card {
+    padding: 1.75rem 1.25rem !important;
+    border-radius: 12px !important;
+    margin: 1rem !important;
   }
-}
-
-.error {
-  color: red;
-  font-size: 0.75rem;
-  margin-top: 0.25rem;
 }
