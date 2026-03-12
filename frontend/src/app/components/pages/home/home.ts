@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Clothes } from '../../../shared/models/clothes';
-import { Clothes_Service } from '../../../services/clothes/clothes';
-import { RouterLink } from "@angular/router";
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
+import { ProductService } from '../../../services/products/product-service';
 
 @Component({
   selector: 'app-home',
@@ -10,12 +9,30 @@ import { RouterLink } from "@angular/router";
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
-export class Home {
+export class Home implements OnInit {
 
-  clothesList: Clothes[] = [];
+  products: any[] = [];
 
-  constructor(private clothesService: Clothes_Service) {
-    this.clothesList = this.clothesService.getAll();
+  constructor(private productService: ProductService, private router: Router) {
+  }
+  ngOnInit(): void {
+    this.loadProducts();
+
+    // Detect when the route is re-visited and reload products
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        if (this.router.url === '/home') {
+          this.loadProducts();
+        }
+      }
+    });
+  }
+
+  loadProducts(): void {
+    this.productService.getProducts().subscribe((products) => {
+      console.log('Products:', products);
+      this.products = products;
+    });
   }
 
 }

@@ -27,9 +27,22 @@ const userDetailsSchema=new mongoose.Schema({
         required:true,
         trim:true,
         minLength:10,
-    }
+    },
+    cart: [
+        {
+            productId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Products'
+          },
+            quantity: {
+              type: Number,
+              default: 1
+            }
+        }
+    ]
+
 },{timestamps:true});
 
-const User=mongoose.model('User',userDetailsSchema);
+const User=mongoose.model('Users',userDetailsSchema);
 
 module.exports=User;

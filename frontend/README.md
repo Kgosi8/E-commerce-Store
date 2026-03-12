@@ -28,5 +28,12 @@
         1. create User.js
     5. create server.js
         1. connect to db using db_connect.js
+    6. Create Api's for:
+        1. Register
+        2. Login
+        3. Get User info
+    7. Create Api for products
+7. Change the Home Page to dynamically show products/clothes.
+8. Generate Add to Cart page
 
 

@@ -1,28 +1,30 @@
 <div class="header">
+  <!-- Categories -->
 
-    <!-- Categories -->
+  <div class="categories">
+    <a routerLink="/men">Men</a>
+    <a routerLink="/women">Women</a>
+    <a routerLink="/kids">Kids</a>
+    <a routerLink="/new">New & featured</a>
+  </div>
 
-    <div class="categories">
-        <a routerLink="/men">Men</a>
-        <a routerLink="/women">Women</a>
-        <a routerLink="/kids">Kids</a>
-        <a routerLink="/new">New & featured</a>
-    </div>
+  <!-- logo -->
+  <div class="logo">
+    <img class="logo" src="assets/logos/logo_white_bg.png" alt="Logo" class="logo" />
+  </div>
 
-    <!-- logo -->
-    <div class="logo">
-        <img class="logo"src="assets/logos/logo_white_bg.png" alt="Logo" class="logo">
-    </div>
-    
-    <!-- search and login -->
+  <!-- search and login -->
 
-    <div class="search-login">
-        <mat-icon>search</mat-icon>
-        <mat-icon>card_giftcard</mat-icon>
-        <a routerLink="/register">Login</a>
-    </div>
+  <div class="search-login">
+    <mat-icon>search</mat-icon>
+    <mat-icon>card_giftcard</mat-icon>
 
-    
+    <!-- Show profile icon if user is logged in, otherwise show login link -->
 
-
+    @if (initials) {
+      <div class="profile-icon">{{ initials }}</div>
+    } @else {
+      <a routerLink="/login">Login</a>
+    }
+  </div>
 </div>
