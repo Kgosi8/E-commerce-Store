@@ -7,19 +7,15 @@ import { Observable } from 'rxjs/internal/Observable';
   providedIn: 'root',
 })
 export class ProductService {
-
   private baseUrl = 'http://localhost:5000/api/products';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getProducts() :Observable<any> {
-    return this.http.get<any>(this.baseUrl).pipe(
-      map(response => response.data)
-    );
+  getProducts(): Observable<any> {
+    return this.http.get<any>(this.baseUrl).pipe(map((response) => response.data));
   }
 
   getProductById(id: string | null) {
-  return this.http.get<any>(`${this.baseUrl}/${id}`);
-}
-  
+    return this.http.get<any>(`http://localhost:5000/api/products/${id}`);
+  }
 }

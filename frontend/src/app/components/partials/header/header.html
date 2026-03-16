@@ -21,9 +21,9 @@
 
     <!-- Show profile icon if user is logged in, otherwise show login link -->
 
-    @if (initials) {
-      <div class="profile-icon">{{ initials }}</div>
-    } @else {
+    @if(isLoggedIn$ | async){
+      <div class="profile-icon">{{initials$ | async}}</div>
+    }@else {
       <a routerLink="/login">Login</a>
     }
   </div>

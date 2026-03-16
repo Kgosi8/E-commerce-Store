@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../../services/products/product-service';
 
@@ -8,7 +8,7 @@ import { ProductService } from '../../../services/products/product-service';
   templateUrl: './add-to-cart.html',
   styleUrl: './add-to-cart.css',
 })
-export class AddToCart {
+export class AddToCart implements OnInit {
 
   product: any;
 
@@ -20,10 +20,12 @@ export class AddToCart {
     this.productServices.getProductById(id).subscribe(
       (product)=>{
         this.product=product;
-        console.log(product);
+        console.log(this.product);
       }
     )
   }
 
-
+  addToCart(product: any){
+    console.log('Added to cart: ',product);
+  }
 }

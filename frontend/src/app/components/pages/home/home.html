@@ -1,5 +1,5 @@
 <div class="model-cover">
-  <img class="no-image" src="assets/models/model-8.jpg" alt="Model Image" />
+  <img class="model-image" src="assets/models/model-8.jpg" alt="Model Image" />
   <h2 class="cover-description">Mpahlas Winter Collection</h2>
   <small
     >find out the best winter collection. Offering our best quality product in a Mpahlas winter
@@ -16,7 +16,7 @@
 
   <div class="product-content">
     <div class="card" *ngFor="let product of products" >
-      <img [src]="product.images[0]" [alt]="product.name" [routerLink]="['/add-to-cart', product._id]" style="cursor:pointer" />
+      <img [src]="product.images[0]" [alt]="product.name" [routerLink]="['/add-to-cart', product._id]" style="cursor:pointer" (click)="productName(product.name)" />
       <h3>{{ product.name }}</h3>
       <p>{{ product.description }}</p>
       <span class="price">R {{ product.price }}</span>

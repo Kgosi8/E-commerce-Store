@@ -1,37 +1,42 @@
-import { Component, NgZone } from '@angular/core';
-import { RouterLink } from "@angular/router";
-import { MatIconModule } from "@angular/material/icon";
-import { HttpClient } from '@angular/common/http';
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from '../../../services/auth/auth-service';
+import { Observable } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, MatIconModule],
+  imports: [RouterLink, MatIconModule,CommonModule],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
 export class Header {
 
-  initials: string | null = null;
-  private baseUrl = 'http://localhost:5000/api/user';
+  initials$!: Observable<string | null>;
+  isLoggedIn$!: Observable<boolean>;
+  
 
-  constructor(private http: HttpClient, private ngZone: NgZone) {}
-
-  ngOnInit(): void {
-    this.http.get<{ status: string; data: any }>(this.baseUrl, { withCredentials: true })
-      .subscribe({
-        next: (res) => {
-          if (res.status === 'success' && res.data) {
-            // Ensure Angular detects change safely
-            this.ngZone.run(() => {
-              this.initials = res.data.initials || null;
-            });
-          }
-        },
-        error: (err) => {
-          console.error('Error fetching user profile:', err);
-          this.initials = null;
-        }
-      });
+  constructor(private authService: AuthService, private cd:ChangeDetectorRef) {
+    this.initials$=this.authService.initials$;
+    this.isLoggedIn$=this.authService.isLoggedIn$;
   }
 }
+  
+
+  // ngOnInit(): void {
+
+    
+  //   // Subscribe to initials observable
+  //   this.authService.initials$.subscribe((initials) => {
+  //     this.initials = initials;
+  //     this.cd.detectChanges();
+  //   });
+
+  //   // Load user when app starts or refreshes
+  //   this.authService.isLoggedIn$.subscribe((status) => {
+  //     this.isLoggedIn = status;
+  //     this.cd.detectChanges();
+  //   });
+  // }
 

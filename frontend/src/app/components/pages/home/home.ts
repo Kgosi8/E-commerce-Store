@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { ProductService } from '../../../services/products/product-service';
@@ -10,29 +10,26 @@ import { ProductService } from '../../../services/products/product-service';
   styleUrl: './home.css',
 })
 export class Home implements OnInit {
-
   products: any[] = [];
 
-  constructor(private productService: ProductService, private router: Router) {
-  }
+  constructor(
+    private productService: ProductService,
+    private router: Router,
+    private cdr: ChangeDetectorRef,
+  ) {}
+
   ngOnInit(): void {
     this.loadProducts();
-
-    // Detect when the route is re-visited and reload products
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        if (this.router.url === '/home') {
-          this.loadProducts();
-        }
-      }
-    });
   }
 
   loadProducts(): void {
     this.productService.getProducts().subscribe((products) => {
-      console.log('Products:', products);
       this.products = products;
+      this.cdr.detectChanges();
     });
   }
 
+  productName(product:string){
+    console.log(product);
+  }
 }

@@ -36,3 +36,25 @@ a{
   font-weight: bold;
   cursor: pointer;
 }
+
+.profile-icon {
+  width: 36px;               /* width of the circle */
+  height: 36px;              /* height of the circle */
+  border-radius: 50%;        /* makes it perfectly round */
+  background-color: #1e88e5; /* blue color, can change */
+  color: white;              /* text color */
+  display: flex;
+  align-items: center;
+  justify-content: center;   /* center initials horizontally + vertically */
+  font-weight: bold;
+  font-size: 14px;           /* initials size */
+  cursor: pointer;           /* optional, indicates clickable */
+  user-select: none;         /* prevents text selection */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* subtle shadow */
+  transition: transform 0.2s, background-color 0.2s; /* hover effect */
+}
+
+.profile-icon:hover {
+  background-color: #1565c0; /* darker blue on hover */
+  transform: scale(1.05);    /* slightly enlarge on hover */
+}
