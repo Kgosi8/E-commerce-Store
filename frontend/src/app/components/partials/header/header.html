@@ -1,6 +1,5 @@
 <div class="header">
   <!-- Categories -->
-
   <div class="categories">
     <a routerLink="/men">Men</a>
     <a routerLink="/women">Women</a>
@@ -8,22 +7,45 @@
     <a routerLink="/new">New & featured</a>
   </div>
 
-  <!-- logo -->
+  <!-- Logo -->
   <div class="logo">
-    <img class="logo" src="assets/logos/logo_white_bg.png" alt="Logo" class="logo" (click)="goTohomePage()" style="cursor:pointer" />
+    <img
+      src="assets/logos/logo_white_bg.png"
+      alt="Logo"
+      class="logo"
+      (click)="goTohomePage()"
+      style="cursor: pointer"
+    />
   </div>
 
-  <!-- search and login -->
-
+  <!-- Search, Cart & Login -->
   <div class="search-login">
     <mat-icon>search</mat-icon>
-    <mat-icon (click)="goTocartPage()" style="cursor: pointer;">card_giftcard</mat-icon>
 
-    <!-- Show profile icon if user is logged in, otherwise show login link -->
+    <!-- Cart icon with badge -->
+    <div class="cart-icon-wrap" (click)="goTocartPage()">
+      <mat-icon class="shopping-bag">shopping_bag</mat-icon>
+      @if (cartCount() > 0) {
+        <span class="cart-badge">
+          {{ cartCount() > 99 ? '99+' : cartCount() }}
+        </span>
+      }
+    </div>
 
-    @if(isLoggedIn$ | async){
-      <div class="profile-icon">{{initials$ | async}}</div>
-    }@else {
+    @if (isLoggedIn$ | async) {
+      <div
+        class="profile-icon"
+        (mouseenter)="showAccountDetails = true"
+        (mouseleave)="showAccountDetails = false"
+      >
+        {{ initials$ | async }}
+      </div>
+      @if (showAccountDetails) {
+        <div class="popup">
+          <account-details></account-details>
+        </div>
+      }
+    } @else {
       <a routerLink="/login">Login</a>
     }
   </div>

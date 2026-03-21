@@ -43,5 +43,7 @@
     6. Add styling on add-to-cart.css
 9. provide router apis for adding items in a cart(backend)
 8. Generate Add to Cart page
+9. show the cart item count on the header
+10. create account-details component.
 
 
