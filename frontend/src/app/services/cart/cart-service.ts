@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { CartResponse } from '../../interfaces/cart-response';
+import { CartItem } from '../../interfaces/cart-item';
 
 @Injectable({
   providedIn: 'root',
@@ -11,48 +13,63 @@ export class CartService {
 
   //cart count observable for header updates
 
-  private cartCount = new BehaviorSubject<number>(0);
+  private cartItemCount$ = new BehaviorSubject<number>(0);
 
-  cartCount$ = this.cartCount.asObservable();
+  cartCount$ = this.cartItemCount$.asObservable();
 
   constructor(private http:HttpClient) { }
 
   //add product to cart
 
-  addToCart(productId: string){
-    return this.http.post<any>(`${this.baseUrl}/add`,{ productId },{ withCredentials: true })
+  addToCart(productId: string): Observable<CartResponse>{
+    return this.http.post<CartResponse>(`${this.baseUrl}/add`,{ productId },{ withCredentials: true }).pipe(
+      tap(response=> this.updateCount(response.cart.items))
+    )
   }
 
-  //fetch cart
-
-  getCart(){
-    return this.http.get<any>(`${this.baseUrl}`,{ withCredentials: true });
+  // Get cart
+  getCart(): Observable<CartResponse> {
+    return this.http.get<CartResponse>(
+      this.baseUrl,
+      { withCredentials: true }
+    ).pipe(
+      tap(response => this.updateCount(response.cart.items))
+    );
   }
 
-  //update cart count
-
-  setCartCount(count: number){
-    this.cartCount.next(count);
+  // Update quantity
+  updateQuantity(productId: string, quantity: number): Observable<CartResponse> {
+    return this.http.put<CartResponse>(
+      `${this.baseUrl}/update`,
+      { productId, quantity },
+      { withCredentials: true }
+    ).pipe(
+      tap(response => this.updateCount(response.cart.items))
+    );
   }
 
-  //remove cart product
-
-  removeFromCart(productId: string){
-    return this.http.delete<any>(`${this.baseUrl}/remove/${productId}`,{ withCredentials: true });
+  // Remove item
+  removeFromCart(productId: string): Observable<CartResponse> {
+    return this.http.delete<CartResponse>(
+      `${this.baseUrl}/remove/${productId}`,
+      { withCredentials: true }
+    ).pipe(
+      tap(response => this.updateCount(response.cart.items))
+    );
   }
 
-  //Update cart product quantity
-
-  updateCartItem(productId: string, quantity: number){
-    return this.http.put<any>(`${this.baseUrl}/update`, { productId, quantity },{ withCredentials: true });
+  // Clear cart
+  clearCart(): Observable<CartResponse> {
+    return this.http.delete<CartResponse>(
+      `${this.baseUrl}/clear`,
+      { withCredentials: true }
+    );
   }
 
-  //CALCULATE CART COUNT FROM CART ITEMS
-
-  calculateCartCount(cartItems: any[]) {
-    const total= cartItems.reduce((sum, item) => sum + item.quantity, 0);
-    this.setCartCount(total);
+  // Keeps cart count badge in sync across the app
+  private updateCount(items: CartItem[]): void {
+    const total = items.reduce((sum, item) => sum + item.quantity, 0);
+    this.cartItemCount$.next(total);
   }
-
   
 }

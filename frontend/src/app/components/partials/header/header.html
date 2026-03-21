@@ -10,14 +10,14 @@
 
   <!-- logo -->
   <div class="logo">
-    <img class="logo" src="assets/logos/logo_white_bg.png" alt="Logo" class="logo" />
+    <img class="logo" src="assets/logos/logo_white_bg.png" alt="Logo" class="logo" (click)="goTohomePage()" style="cursor:pointer" />
   </div>
 
   <!-- search and login -->
 
   <div class="search-login">
     <mat-icon>search</mat-icon>
-    <mat-icon>card_giftcard</mat-icon>
+    <mat-icon (click)="goTocartPage()" style="cursor: pointer;">card_giftcard</mat-icon>
 
     <!-- Show profile icon if user is logged in, otherwise show login link -->
 

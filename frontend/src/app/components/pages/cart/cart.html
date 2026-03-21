@@ -1,0 +1,172 @@
+<div class="cart-page">
+
+  <!-- ── Page Header ── -->
+  <div class="cart-header">
+    <h1 class="cart-title">Your Cart</h1>
+    @if(cartItems.length > 0) {
+      <span class="cart-count">{{ getTotalItems() }} item{{ getTotalItems() > 1 ? 's' : '' }}</span>
+    }
+  </div>
+
+  <!-- ── Loading State ── -->
+  @if(isLoading) {
+    <div class="state-container">
+      <div class="skeleton-list">
+        @for(i of [1,2,3]; track i) {
+          <div class="skeleton-item">
+            <div class="skeleton skeleton--image"></div>
+            <div class="skeleton-lines">
+              <div class="skeleton skeleton--title"></div>
+              <div class="skeleton skeleton--subtitle"></div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- ── Error State ── -->
+  @else if(errorMessage) {
+    <div class="state-container">
+      <div class="empty-state">
+        <span class="empty-icon">⚠️</span>
+        <h2>Something went wrong</h2>
+        <p>{{ errorMessage }}</p>
+        <button class="btn-primary" (click)="loadCart()">Try Again</button>
+      </div>
+    </div>
+  }
+
+  <!-- ── Empty Cart ── -->
+  @else if(cartItems.length === 0) {
+    <div class="state-container">
+      <div class="empty-state">
+        <span class="empty-icon">🛒</span>
+        <h2>Your cart is empty</h2>
+        <p>Looks like you haven't added anything yet.</p>
+        <button class="btn-primary" (click)="continueShopping()">
+          Start Shopping
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- ── Cart Content ── -->
+  @else {
+    <div class="cart-layout">
+
+      <!-- ── Cart Items ── -->
+      <div class="cart-items">
+        @for(item of cartItems; track item.productId) {
+          <div class="cart-item" [class.removing]="removingItemId === item.productId">
+
+            <!-- Product Image -->
+            <div class="item-image-wrap">
+              <img
+                [src]="item.image"
+                [alt]="item.name"
+                class="item-image" />
+            </div>
+
+            <!-- Product Info -->
+            <div class="item-details">
+              <h3 class="item-name">{{ item.name }}</h3>
+              <span class="item-unit-price">R {{ item.price | number:'1.2-2' }} each</span>
+            </div>
+
+            <!-- Quantity Controls -->
+            <div class="item-qty" [class.updating]="updatingItemId === item.productId">
+              <button
+                class="qty-btn"
+                (click)="decreaseQuantity(item)"
+                [disabled]="updatingItemId === item.productId">
+                −
+              </button>
+              <span class="qty-value">{{ item.quantity }}</span>
+              <button
+                class="qty-btn"
+                (click)="increaseQuantity(item)"
+                [disabled]="updatingItemId === item.productId">
+                +
+              </button>
+            </div>
+
+            <!-- Subtotal -->
+            <div class="item-subtotal">
+              R {{ getSubtotal(item) | number:'1.2-2' }}
+            </div>
+
+            <!-- Remove -->
+            <button
+              class="btn-remove"
+              (click)="removeItem(item.productId)"
+              [disabled]="removingItemId === item.productId"
+              title="Remove item">
+              @if(removingItemId === item.productId) {
+                <span class="spinner"></span>
+              } @else {
+                ✕
+              }
+            </button>
+
+          </div>
+        }
+      </div>
+
+      <!-- ── Order Summary ── -->
+      <div class="order-summary">
+        <h2 class="summary-title">Order Summary</h2>
+
+        <!-- Per-item breakdown -->
+        <div class="summary-lines">
+          @for(item of cartItems; track item.productId) {
+            <div class="summary-line">
+              <span class="summary-line-name">
+                {{ item.name }}
+                <span class="summary-line-qty">× {{ item.quantity }}</span>
+              </span>
+              <span>R {{ getSubtotal(item) | number:'1.2-2' }}</span>
+            </div>
+          }
+        </div>
+
+        <hr class="summary-divider" />
+
+        <!-- Delivery note -->
+        <div class="summary-line summary-line--delivery">
+          <span>Delivery</span>
+          <span class="delivery-free">
+            {{ getOrderTotal() >= 500 ? 'Free' : 'R 50.00' }}
+          </span>
+        </div>
+
+        <hr class="summary-divider" />
+
+        <!-- Order Total -->
+        <div class="summary-line summary-line--total">
+          <span>Total</span>
+          <span class="total-amount">
+            R {{ (getOrderTotal() >= 500 ? getOrderTotal() : getOrderTotal() + 50) | number:'1.2-2' }}
+          </span>
+        </div>
+
+        @if(getOrderTotal() < 500) {
+          <p class="delivery-nudge">
+            Add R {{ (500 - getOrderTotal()) | number:'1.2-2' }} more for free delivery
+          </p>
+        }
+
+        <!-- Actions -->
+        <button class="btn-checkout" (click)="proceedToCheckout()">
+          Proceed to Checkout
+        </button>
+
+        <button class="btn-continue" (click)="continueShopping()">
+          ← Continue Shopping
+        </button>
+
+      </div>
+    </div>
+  }
+
+</div>

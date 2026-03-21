@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../../services/auth/auth-service';
 import { Observable } from 'rxjs';
@@ -17,26 +17,17 @@ export class Header {
   isLoggedIn$!: Observable<boolean>;
   
 
-  constructor(private authService: AuthService, private cd:ChangeDetectorRef) {
+  constructor(private authService: AuthService, private cd:ChangeDetectorRef, private router: Router) {
     this.initials$=this.authService.initials$;
     this.isLoggedIn$=this.authService.isLoggedIn$;
   }
+
+  goTohomePage(){
+    this.router.navigate(['/']);
+  }
+
+  goTocartPage(){
+    this.router.navigate(['/cart']);
+  }
 }
   
-
-  // ngOnInit(): void {
-
-    
-  //   // Subscribe to initials observable
-  //   this.authService.initials$.subscribe((initials) => {
-  //     this.initials = initials;
-  //     this.cd.detectChanges();
-  //   });
-
-  //   // Load user when app starts or refreshes
-  //   this.authService.isLoggedIn$.subscribe((status) => {
-  //     this.isLoggedIn = status;
-  //     this.cd.detectChanges();
-  //   });
-  // }
-

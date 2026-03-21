@@ -16,6 +16,6 @@ export class ProductService {
   }
 
   getProductById(id: string | null) {
-    return this.http.get<any>(`http://localhost:5000/api/products/${id}`);
+    return this.http.get<any>(`${this.baseUrl}/${id}`);
   }
 }

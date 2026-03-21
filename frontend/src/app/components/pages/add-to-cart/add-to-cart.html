@@ -1,0 +1,81 @@
+@if(product$ | async; as product) {
+  <div class="product-page">
+
+    <!-- ── Image Gallery ── -->
+    <div class="gallery">
+      <div class="slider-track">
+        @for(image of product.images; track image; let i = $index) {
+          <div class="slide" [class.active]="i === activeIndex">
+            <img [src]="image" [alt]="product.name + ' angle ' + (i + 1)" />
+          </div>
+        }
+      </div>
+
+      <button class="arrow arrow--left" (click)="prev()" [disabled]="activeIndex === 0">&#8592;</button>
+      <button class="arrow arrow--right" (click)="next()" [disabled]="activeIndex === product.images.length - 1">&#8594;</button>
+
+      <div class="dots">
+        @for(image of product.images; track image; let i = $index) {
+          <button class="dot" [class.active]="i === activeIndex" (click)="goToSlide(i)"></button>
+        }
+      </div>
+
+      <div class="thumbnails">
+        @for(image of product.images; track image; let i = $index) {
+          <img
+            [src]="image"
+            [alt]="'Thumbnail ' + (i + 1)"
+            class="thumb"
+            [class.active]="i === activeIndex"
+            (click)="goToSlide(i)" />
+        }
+      </div>
+    </div>
+
+    <!-- ── Product Info ── -->
+    <div class="info">
+      <span class="badge">In Stock</span>
+      <h1 class="product-name">{{ product.name }}</h1>
+      <p class="product-desc">{{ product.description }}</p>
+
+      <hr class="divider" />
+
+      <div class="price-row">
+        <span class="price">R {{ product.price }}</span>
+      </div>
+
+      <!-- Error message -->
+      @if(errorMessage) {
+        <div class="alert alert--error">{{ errorMessage }}</div>
+      }
+
+      <!-- Success message -->
+      @if(addedToCart) {
+        <div class="alert alert--success">✓ Added to your cart!</div>
+      }
+
+      <div class="actions">
+        <button
+          class="btn-cart"
+          [class.btn-cart--added]="addedToCart"
+          [disabled]="isAdding"
+          (click)="addToCart(product._id)">
+          @if(isAdding) {
+            <span class="spinner"></span> Adding...
+          } @else if(addedToCart) {
+            ✓ Added to Cart
+          } @else {
+            Add to Cart
+          }
+        </button>
+        <button class="btn-wish">&#9825;</button>
+      </div>
+
+      <div class="meta">
+        <span class="meta-icon">🚚</span>
+        <span>Free delivery on orders over R500</span>
+      </div>
+    </div>
+
+  </div>
+}

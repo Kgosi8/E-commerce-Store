@@ -34,6 +34,14 @@
         3. Get User info
     7. Create Api for products
 7. Change the Home Page to dynamically show products/clothes.
+8. Generate Add-to-cart page
+    1. create a add-to-cart Service
+    2. create cart-item interface
+    3. create cart-response interface
+    4. subscribe to add-to-cart service in          add-to-cart.ts
+    5.  code add-to-cart html
+    6. Add styling on add-to-cart.css
+9. provide router apis for adding items in a cart(backend)
 8. Generate Add to Cart page
 
 
