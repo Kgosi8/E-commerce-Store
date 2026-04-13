@@ -5,9 +5,10 @@ const cookieParser = require('cookie-parser');
 const connectDB = require('./connection/db_connect');
 
 // Routes
-const authRoutes = require('./routes/auth.js');
-const productRoutes = require('./routes/product.js');
-const cartRoutes = require('./routes/cart.js');
+const authRoutes = require('./routes/customer/auth.js');
+const productRoutes = require('./routes/customer/product.js');
+const cartRoutes = require('./routes/customer/cart.js');
+const adminRoutes = require('./routes/admin/admin_auth.js'); // adjust path
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ connectDB();
 app.use('/api', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/admin', adminRoutes);
 
 // ── Server ──
 const PORT = process.env.PORT || 5000;
