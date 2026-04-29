@@ -4,6 +4,7 @@ import { Login } from './components/pages/auth/login/login';
 import { Register } from './components/pages/auth/register/register';
 import { AddToCart } from './components/pages/add-to-cart/add-to-cart';
 import { Cart } from './components/pages/cart/cart';
+import { Checkout } from './components/pages/checkout/checkout';
 import { adminGuard } from './guards/admin-guard';
 import { create } from 'domain';
 import { CreateProduct } from './components/pages/create-product/create-product';
@@ -24,6 +25,10 @@ export const routes: Routes = [
     },{
         path:'add-to-cart/:id',
         component:AddToCart
+    },
+    {
+        path: 'checkout',
+        component: Checkout
     },
     {
         path:'cart',

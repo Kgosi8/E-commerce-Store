@@ -1,1 +1,277 @@
-<p>checkout works!</p>
+<div class="checkout-page">
+
+  <!-- ── Page Header ── -->
+  <div class="checkout-header">
+    <button class="btn-back" (click)="goBack()">← Back to Cart</button>
+    <div class="checkout-steps">
+      <span class="step step--active">1 · Delivery</span>
+      <span class="step-sep">—</span>
+      <span class="step" [class.step--active]="currentStep >= 2">2 · Payment</span>
+      <span class="step-sep">—</span>
+      <span class="step" [class.step--active]="currentStep >= 3">3 · Confirm</span>
+    </div>
+  </div>
+
+  <!-- ── Success State ── -->
+  @if(orderPlaced) {
+    <div class="state-container">
+      <div class="success-state">
+        <div class="success-icon-wrap">
+          <span class="success-icon">✓</span>
+        </div>
+        <h2>Order Placed!</h2>
+        <p>Thank you, <strong>{{ checkoutForm.firstName }}</strong>. Your order <span class="order-ref">#{{ orderRef }}</span> has been confirmed.</p>
+        <p class="success-sub">A confirmation will be sent to <strong>{{ checkoutForm.email }}</strong></p>
+        <button class="btn-primary" (click)="continueShopping()">Continue Shopping</button>
+      </div>
+    </div>
+  }
+
+  @else {
+    <div class="checkout-layout">
+
+      <!-- LEFT COLUMN -->
+      <div class="checkout-forms">
+
+        <!-- STEP 1 -->
+        <section class="form-section" [class.form-section--collapsed]="currentStep > 1">
+          <div class="section-header" (click)="currentStep > 1 && goToStep(1)">
+            <span class="section-number">01</span>
+            <h2 class="section-title">Delivery Details</h2>
+            @if(currentStep > 1) {
+              <span class="section-edit">Edit</span>
+            }
+          </div>
+
+          @if(currentStep === 1) {
+            <div class="form-body">
+
+              <div class="field-row">
+                <div class="field-group">
+                  <label class="field-label" for="firstName">First Name</label>
+                  <input id="firstName"
+                         class="field-input"
+                         type="text"
+                         [(ngModel)]="checkoutForm.firstName"
+                         placeholder="Jane"
+                         [class.field-input--error]="errors['firstName']" />
+                  @if(errors['firstName']) {
+                    <span class="field-error">{{ errors['firstName'] }}</span>
+                  }
+                </div>
+
+                <div class="field-group">
+                  <label class="field-label" for="lastName">Last Name</label>
+                  <input id="lastName"
+                         class="field-input"
+                         type="text"
+                         [(ngModel)]="checkoutForm.lastName"
+                         placeholder="Doe"
+                         [class.field-input--error]="errors['lastName']" />
+                  @if(errors['lastName']) {
+                    <span class="field-error">{{ errors['lastName'] }}</span>
+                  }
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label class="field-label" for="email">Email Address</label>
+                <input id="email"
+                       class="field-input"
+                       type="email"
+                       [(ngModel)]="checkoutForm.email"
+                       placeholder="jane@example.com"
+                       [class.field-input--error]="errors['email']" />
+                @if(errors['email']) {
+                  <span class="field-error">{{ errors['email'] }}</span>
+                }
+              </div>
+
+              <div class="field-group">
+                <label class="field-label" for="phone">Phone Number</label>
+                <input id="phone"
+                       class="field-input"
+                       type="tel"
+                       [(ngModel)]="checkoutForm.phone"
+                       placeholder="+27 82 000 0000"
+                       [class.field-input--error]="errors['phone']" />
+                @if(errors['phone']) {
+                  <span class="field-error">{{ errors['phone'] }}</span>
+                }
+              </div>
+
+              <div class="field-group">
+                <label class="field-label" for="address">Street Address</label>
+                <input id="address"
+                       class="field-input"
+                       type="text"
+                       [(ngModel)]="checkoutForm.address"
+                       placeholder="12 Main Street, Apt 3B"
+                       [class.field-input--error]="errors['address']" />
+                @if(errors['address']) {
+                  <span class="field-error">{{ errors['address'] }}</span>
+                }
+              </div>
+
+              <div class="field-row">
+                <div class="field-group">
+                  <label class="field-label" for="city">City</label>
+                  <input id="city"
+                         class="field-input"
+                         type="text"
+                         [(ngModel)]="checkoutForm.city"
+                         placeholder="Johannesburg"
+                         [class.field-input--error]="errors['city']" />
+                  @if(errors['city']) {
+                    <span class="field-error">{{ errors['city'] }}</span>
+                  }
+                </div>
+
+                <div class="field-group">
+                  <label class="field-label" for="province">Province</label>
+                  <select id="province"
+                          class="field-input field-select"
+                          [(ngModel)]="checkoutForm.province"
+                          [class.field-input--error]="errors['province']">
+
+                    <option value="" disabled selected>Select…</option>
+                    <option>Gauteng</option>
+                    <option>Western Cape</option>
+                    <option>KwaZulu-Natal</option>
+                    <option>Eastern Cape</option>
+                    <option>Limpopo</option>
+                    <option>Mpumalanga</option>
+                    <option>North West</option>
+                    <option>Free State</option>
+                    <option>Northern Cape</option>
+                  </select>
+
+                  @if(errors['province']) {
+                    <span class="field-error">{{ errors['province'] }}</span>
+                  }
+                </div>
+              </div>
+
+              <div class="field-group field-group--half">
+                <label class="field-label" for="postalCode">Postal Code</label>
+                <input id="postalCode"
+                       class="field-input"
+                       type="text"
+                       [(ngModel)]="checkoutForm.postalCode"
+                       placeholder="2000"
+                       [class.field-input--error]="errors['postalCode']" />
+                @if(errors['postalCode']) {
+                  <span class="field-error">{{ errors['postalCode'] }}</span>
+                }
+              </div>
+
+              <div class="field-group">
+                <label class="field-label" for="note">Delivery Note <span class="field-label--optional">(optional)</span></label>
+                <textarea id="note"
+                          class="field-input field-textarea"
+                          [(ngModel)]="checkoutForm.note"
+                          rows="3"></textarea>
+              </div>
+
+              <button class="btn-next" (click)="goToStep(2)">
+                Continue to Payment →
+              </button>
+
+            </div>
+          }
+
+        </section>
+
+        <!-- STEP 2 -->
+        <section class="form-section"
+                 [class.form-section--locked]="currentStep < 2"
+                 [class.form-section--collapsed]="currentStep > 2">
+
+          <div class="section-header" (click)="currentStep > 2 && goToStep(2)">
+            <span class="section-number">02</span>
+            <h2 class="section-title">Payment</h2>
+            @if(currentStep > 2) {
+              <span class="section-edit">Edit</span>
+            }
+          </div>
+
+          @if(currentStep === 2) {
+            <div class="form-body">
+
+              <div class="payment-tabs">
+                <button class="payment-tab"
+                        [class.payment-tab--active]="paymentMethod === 'card'"
+                        (click)="paymentMethod = 'card'">💳 Card</button>
+
+                <button class="payment-tab"
+                        [class.payment-tab--active]="paymentMethod === 'eft'"
+                        (click)="paymentMethod = 'eft'">🏦 EFT</button>
+
+                <button class="payment-tab"
+                        [class.payment-tab--active]="paymentMethod === 'payflex'"
+                        (click)="paymentMethod = 'payflex'">⚡ Payflex</button>
+              </div>
+
+              @if(paymentMethod === 'card') {
+                <div class="card-fields">
+
+                  <div class="field-group">
+                    <label class="field-label">Name on Card</label>
+                    <input class="field-input"
+                           [(ngModel)]="checkoutForm.cardName"
+                           [class.field-input--error]="errors['cardName']" />
+                    @if(errors['cardName']) {
+                      <span class="field-error">{{ errors['cardName'] }}</span>
+                    }
+                  </div>
+
+                  <div class="field-group">
+                    <label class="field-label">Card Number</label>
+                    <input class="field-input"
+                           [(ngModel)]="checkoutForm.cardNumber"
+                           [class.field-input--error]="errors['cardNumber']" />
+                    @if(errors['cardNumber']) {
+                      <span class="field-error">{{ errors['cardNumber'] }}</span>
+                    }
+                  </div>
+
+                  <div class="field-row">
+                    <div class="field-group">
+                      <label class="field-label">Expiry</label>
+                      <input class="field-input"
+                             [(ngModel)]="checkoutForm.expiry"
+                             [class.field-input--error]="errors['expiry']" />
+                      @if(errors['expiry']) {
+                        <span class="field-error">{{ errors['expiry'] }}</span>
+                      }
+                    </div>
+
+                    <div class="field-group">
+                      <label class="field-label">CVV</label>
+                      <input class="field-input"
+                             [(ngModel)]="checkoutForm.cvv"
+                             [class.field-input--error]="errors['cvv']" />
+                      @if(errors['cvv']) {
+                        <span class="field-error">{{ errors['cvv'] }}</span>
+                      }
+                    </div>
+                  </div>
+
+                </div>
+              }
+
+              <button class="btn-next" (click)="goToStep(3)">
+                Review Order →
+              </button>
+
+            </div>
+          }
+
+        </section>
+
+      </div>
+
+    </div>
+  }
+
+</div>

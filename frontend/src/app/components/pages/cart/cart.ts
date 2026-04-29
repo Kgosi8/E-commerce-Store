@@ -113,7 +113,7 @@ export class Cart implements OnInit {
 
   // ── Navigation ──
   continueShopping() {
-    this.router.navigate(['/products']);
+    this.router.navigate(['/']);
   }
 
   proceedToCheckout() {
