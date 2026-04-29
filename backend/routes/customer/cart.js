@@ -19,9 +19,9 @@ router.post("/add", async (req, res) => {
         .json({ status: "error", message: "Product not found" });
     }
 
-    let cart = await Cart.findOne({ userId: req.userId });
+    let cart = await Cart.findOne({ userId: req.user.id });
     if (!cart) {
-      cart = new Cart({ userId: req.userId, items: [] });
+      cart = new Cart({ userId: req.user.id, items: [] });
     }
 
     const existingItem = cart.items.find(
@@ -56,7 +56,7 @@ router.post("/add", async (req, res) => {
 // GET /api/cart
 router.get("/", async (req, res) => {
   try {
-    const cart = await Cart.findOne({ userId: req.userId }).populate(
+    const cart = await Cart.findOne({ userId: req.user.id }).populate(
       "items.productId",
       "name price images",
     );

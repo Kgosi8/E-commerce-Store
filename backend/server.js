@@ -3,6 +3,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const connectDB = require('./connection/db_connect');
+const path = require('path');
 
 // Routes
 const authRoutes = require('./routes/customer/auth.js');
@@ -30,6 +31,9 @@ app.use('/api', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Serve uploaded images
+
+
 
 // ── Server ──
 const PORT = process.env.PORT || 5000;

@@ -1,19 +1,21 @@
-<div class="dashboard">
-  <aside class="sidebar">
-    <h2>Admin</h2>
-    <ul>
-      <li routerLink="/admin/products">Products</li>
-      <li routerLink="/admin/create">Add Product</li>
-    </ul>
-  </aside>
+<h2>Add Product</h2>
 
-  <div class="main">
-    <header class="navbar">
-      <h3>Admin Dashboard</h3>
-    </header>
+<input type="text" [(ngModel)]="product.name" placeholder="Name" />
+<input type="number" [(ngModel)]="product.price" placeholder="Price" />
+<input type="text" [(ngModel)]="product.description" placeholder="Description" />
+<input type="number" [(ngModel)]="product.stock" placeholder="Stock" />
+<input type="text" [(ngModel)]="product.category" placeholder="Category" />
 
-    <section class="content">
-      <div>router Outlet</div>
-    </section>
-  </div>
+<input type="file" multiple (change)="onFileSelected($event)" />
+
+<div class="preview-container">
+  
+  @for(img of previewUrls; track img){
+    <div class="preview-card"><img [src]="img" alt="Image Preview" width="100" /></div>
+    
+  }
+
+  <button (click)="submit()">Add Product</button>
+    
 </div>
+

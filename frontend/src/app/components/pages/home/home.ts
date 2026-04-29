@@ -31,5 +31,8 @@ export class Home implements OnInit {
 
   productName(product:string){
     console.log(product);
+    
+    
   }
+
 }

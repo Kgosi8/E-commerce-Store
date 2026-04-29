@@ -12,10 +12,18 @@ export class ProductService {
   constructor(private http: HttpClient) {}
 
   getProducts(): Observable<any> {
-    return this.http.get<any>(this.baseUrl).pipe(map((response) => response.data));
+    return this.http.get<any>(this.baseUrl);
   }
 
   getProductById(id: string | null) {
     return this.http.get<any>(`${this.baseUrl}/${id}`);
+  }
+
+  createProduct(formData: FormData) {
+    return this.http.post<any>(this.baseUrl, formData);
+  }
+
+  deleteProduct(id: string) {
+    return this.http.delete(`${this.baseUrl}/${id}`);
   }
 }

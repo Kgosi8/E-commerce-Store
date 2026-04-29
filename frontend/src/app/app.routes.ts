@@ -34,10 +34,10 @@ export const routes: Routes = [
         loadComponent() {
             return import('./components/pages/admin-dashboard/admin-dashboard').then(m => m.AdminDashboard);
         },
-        canActivate: [adminGuard],
-        children: [
-            {path:'create', component:CreateProduct},
-            {path:'products', component:ProductList},
-        ]
+        // canActivate: [adminGuard],
+        // children: [
+        //     {path:'create', component:CreateProduct},
+        //     {path:'products', component:ProductList},
+        // ]
     }
 ];
