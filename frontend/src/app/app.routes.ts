@@ -9,6 +9,7 @@ import { adminGuard } from './guards/admin-guard';
 import { create } from 'domain';
 import { CreateProduct } from './components/pages/create-product/create-product';
 import { ProductList } from './components/pages/product-list/product-list';
+import { Payment } from './components/pages/payment/payment';
 
 
 export const routes: Routes = [
@@ -33,6 +34,10 @@ export const routes: Routes = [
     {
         path:'cart',
         component:Cart
+    },
+    {
+        path:'payment',
+        component: Payment
     },
     {
         path:'admin-dashboard',

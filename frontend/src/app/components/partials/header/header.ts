@@ -17,6 +17,7 @@ export class Header implements OnInit {
   isLoggedIn$: any;
   initials$: any;
   showAccountDetails=false;
+  showMenu=false;
 
 
 
@@ -44,4 +45,8 @@ export class Header implements OnInit {
 
   goTohomePage() { this.router.navigate(['/']); }
   goTocartPage()  { this.router.navigate(['/cart']); }
+
+  toggleMenu() {
+    this.showMenu = !this.showMenu;
+  }
 }

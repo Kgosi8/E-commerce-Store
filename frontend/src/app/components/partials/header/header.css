@@ -95,3 +95,8 @@ a{
 .shopping-bag{
     margin-right: 10px;
 }
+
+.menu-category{
+  display: flex;
+  gap: 20px;
+}

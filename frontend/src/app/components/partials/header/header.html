@@ -1,4 +1,14 @@
 <div class="header">
+  <div class="menu-category">
+
+  <div class="menu">
+   <mat-icon (click)="toggleMenu()">menu</mat-icon>
+    @if(showMenu){
+      <div class="shops">
+        <h3>Shop our Stores</h3>
+      </div>
+    }
+  </div>
   <!-- Categories -->
   <div class="categories">
     <a routerLink="/men">Men</a>
@@ -6,6 +16,9 @@
     <a routerLink="/kids">Kids</a>
     <a routerLink="/new">New & featured</a>
   </div>
+
+  </div>
+  
 
   <!-- Logo -->
   <div class="logo">
@@ -49,4 +62,7 @@
       <a routerLink="/login">Login</a>
     }
   </div>
+
+  
+  
 </div>
