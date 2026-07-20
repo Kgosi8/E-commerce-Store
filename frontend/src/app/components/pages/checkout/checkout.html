@@ -33,7 +33,7 @@
       <!-- LEFT COLUMN -->
       <div class="checkout-forms">
 
-        <!-- STEP 1 -->
+        <!-- STEP 1: Delivery Details — unchanged -->
         <section class="form-section" [class.form-section--collapsed]="currentStep > 1">
           <div class="section-header" (click)="currentStep > 1 && goToStep(1)">
             <span class="section-number">01</span>
@@ -133,7 +133,6 @@
                           class="field-input field-select"
                           [(ngModel)]="checkoutForm.province"
                           [class.field-input--error]="errors['province']">
-
                     <option value="" disabled selected>Select…</option>
                     <option>Gauteng</option>
                     <option>Western Cape</option>
@@ -145,7 +144,6 @@
                     <option>Free State</option>
                     <option>Northern Cape</option>
                   </select>
-
                   @if(errors['province']) {
                     <span class="field-error">{{ errors['province'] }}</span>
                   }
@@ -182,7 +180,7 @@
 
         </section>
 
-        <!-- STEP 2 -->
+        <!-- STEP 2: Payment — updated -->
         <section class="form-section"
                  [class.form-section--locked]="currentStep < 2"
                  [class.form-section--collapsed]="currentStep > 2">
@@ -198,69 +196,84 @@
           @if(currentStep === 2) {
             <div class="form-body">
 
+              <!-- Payment method tabs -->
               <div class="payment-tabs">
                 <button class="payment-tab"
-                        [class.payment-tab--active]="paymentMethod === 'card'"
-                        (click)="paymentMethod = 'card'">💳 Card</button>
-
-                <button class="payment-tab"
                         [class.payment-tab--active]="paymentMethod === 'eft'"
-                        (click)="paymentMethod = 'eft'">🏦 EFT</button>
+                        (click)="paymentMethod = 'eft'"
+                        type="button">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+                       [attr.stroke]="paymentMethod === 'eft' ? '#c9a96e' : '#aaa'"
+                       stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/>
+                  </svg>
+                  EFT
+                </button>
 
                 <button class="payment-tab"
-                        [class.payment-tab--active]="paymentMethod === 'payflex'"
-                        (click)="paymentMethod = 'payflex'">⚡ Payflex</button>
+                        [class.payment-tab--active]="paymentMethod === 'cod'"
+                        (click)="paymentMethod = 'cod'"
+                        type="button">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+                       [attr.stroke]="paymentMethod === 'cod' ? '#c9a96e' : '#aaa'"
+                       stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="2" y="6" width="20" height="12" rx="2"/>
+                    <circle cx="12" cy="12" r="2"/>
+                    <path d="M6 12h.01M18 12h.01"/>
+                  </svg>
+                  Cash on Delivery
+                </button>
               </div>
 
-              @if(paymentMethod === 'card') {
-                <div class="card-fields">
-
-                  <div class="field-group">
-                    <label class="field-label">Name on Card</label>
-                    <input class="field-input"
-                           [(ngModel)]="checkoutForm.cardName"
-                           [class.field-input--error]="errors['cardName']" />
-                    @if(errors['cardName']) {
-                      <span class="field-error">{{ errors['cardName'] }}</span>
-                    }
-                  </div>
-
-                  <div class="field-group">
-                    <label class="field-label">Card Number</label>
-                    <input class="field-input"
-                           [(ngModel)]="checkoutForm.cardNumber"
-                           [class.field-input--error]="errors['cardNumber']" />
-                    @if(errors['cardNumber']) {
-                      <span class="field-error">{{ errors['cardNumber'] }}</span>
-                    }
-                  </div>
-
-                  <div class="field-row">
-                    <div class="field-group">
-                      <label class="field-label">Expiry</label>
-                      <input class="field-input"
-                             [(ngModel)]="checkoutForm.expiry"
-                             [class.field-input--error]="errors['expiry']" />
-                      @if(errors['expiry']) {
-                        <span class="field-error">{{ errors['expiry'] }}</span>
-                      }
+              <!-- EFT panel -->
+              @if(paymentMethod === 'eft') {
+                <div class="eft-panel">
+                  <div class="bank-grid">
+                    <div class="bank-box">
+                      <div class="bank-label">Bank</div>
+                      <div class="bank-value">{{ bank.bankName }}</div>
                     </div>
-
-                    <div class="field-group">
-                      <label class="field-label">CVV</label>
-                      <input class="field-input"
-                             [(ngModel)]="checkoutForm.cvv"
-                             [class.field-input--error]="errors['cvv']" />
-                      @if(errors['cvv']) {
-                        <span class="field-error">{{ errors['cvv'] }}</span>
-                      }
+                    <div class="bank-box">
+                      <div class="bank-label">Account Type</div>
+                      <div class="bank-value">{{ bank.accountType }}</div>
+                    </div>
+                    <div class="bank-box">
+                      <div class="bank-label">Account Number</div>
+                      <div class="bank-value bank-value--mono">{{ bank.accountNumber }}</div>
+                    </div>
+                    <div class="bank-box">
+                      <div class="bank-label">Branch Code</div>
+                      <div class="bank-value bank-value--mono">{{ bank.branchCode }}</div>
                     </div>
                   </div>
-
+                  <div class="eft-notice">
+                    Your unique EFT reference will be shown on the confirmation screen — use it exactly as shown when making your payment.
+                  </div>
                 </div>
               }
 
-              <button class="btn-next" (click)="goToStep(3)">
+              <!-- COD panel -->
+              @if(paymentMethod === 'cod') {
+                <div class="cod-panel">
+                  <div class="cod-row">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a96e"
+                         stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true" style="flex-shrink:0; margin-top:2px">
+                      <rect x="2" y="6" width="20" height="12" rx="2"/>
+                      <circle cx="12" cy="12" r="2"/>
+                      <path d="M6 12h.01M18 12h.01"/>
+                    </svg>
+                    <div>
+                      <div class="cod-title">Pay when your order arrives</div>
+                      <div class="cod-desc">Have the exact amount ready for the courier. Our drivers cannot provide change.</div>
+                    </div>
+                  </div>
+                </div>
+              }
+
+              <button class="btn-next"
+                      [disabled]="!paymentMethod"
+                      (click)="goToStep(3)">
                 Review Order →
               </button>
 

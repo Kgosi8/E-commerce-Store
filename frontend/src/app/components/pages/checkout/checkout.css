@@ -966,3 +966,130 @@
     animation: none !important;
   }
 }
+
+:root {
+  --gold: #c9a96e;
+  --gold-light: #fdf8f1;
+  --gold-border: #ede7db;
+  --cream: #f0ede6;
+  --dark: #1a1a1a;
+  --muted: #888;
+}
+
+/* Payment tabs (replaces the old 3-tab layout) */
+.payment-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.payment-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 50px;
+  border-radius: 10px;
+  border: 1.5px solid #e8e3db;
+  background: #fff;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.payment-tab:hover {
+  border-color: var(--gold);
+}
+
+.payment-tab--active {
+  border-color: var(--gold);
+  background: var(--gold-light);
+  color: var(--dark);
+}
+
+ ── EFT panel ─────────────────────────────────────────────────────
+.eft-panel {
+  margin-bottom: 8px;
+}
+
+.bank-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.bank-box {
+  background: var(--gold-light);
+  border: 1px solid var(--gold-border);
+  border-radius: 10px;
+  padding: 13px 15px;
+}
+
+.bank-label {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 5px;
+}
+
+.bank-value {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--dark);
+
+  &--mono {
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+}
+
+.eft-notice {
+  background: var(--gold-light);
+  border: 1px solid var(--gold-border);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 10px 10px 0;
+  padding: 12px 15px;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 13px;
+  color: #777;
+  line-height: 1.6;
+}
+
+ ── COD panel ─────────────────────────────────────────────────────
+.cod-panel {
+  background: var(--gold-light);
+  border: 1px solid var(--gold-border);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 8px;
+}
+
+.cod-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+}
+
+.cod-title {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--dark);
+  margin-bottom: 5px;
+}
+
+.cod-desc {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.55;
+}

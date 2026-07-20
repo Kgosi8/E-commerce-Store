@@ -30,6 +30,21 @@ export interface CheckoutForm {
   cvv: string;
 }
 
+export interface BankDetails {
+  bankName: string;
+  accountNumber: string;
+  branchCode: string;
+  accountType: string;
+}
+
+export const BANK_DETAILS: BankDetails = {
+  bankName: 'First National Bank',
+  accountNumber: '62 4401 8820',
+  branchCode: '250 655',
+  accountType: 'Cheque / Current',
+};
+
+
 @Component({
   selector: 'app-checkout',
   imports: [FormsModule],
@@ -42,13 +57,14 @@ export class Checkout implements OnInit {
  
   // ── State ──────────────────────────────────────────────────
   currentStep = 1;
-  paymentMethod: 'card' | 'eft' | 'payflex' = 'card';
+  paymentMethod: 'card' | 'eft' | 'cod'|''='';
   agreedToTerms = false;
   isPlacingOrder = false;
   orderPlaced = false;
   orderRef = '';
  
   errors: Record<string, string> = {};
+  bank=BANK_DETAILS;
  
   // ── Cart Items (replace with your CartService injection) ───
   cartItems: CartItem[] = [

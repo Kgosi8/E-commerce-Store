@@ -2,13 +2,33 @@
   <div class="menu-category">
 
   <div class="menu">
-   <mat-icon (click)="toggleMenu()">menu</mat-icon>
-    @if(showMenu){
-      <div class="shops">
-        <h3>Shop our Stores</h3>
-      </div>
-    }
+  <mat-icon (click)="toggleMenu()">menu</mat-icon>
+</div>
+
+@if (showMenu) {
+  <div class="overlay"  (click)="toggleMenu()"></div>
+}
+
+
+
+<div class="side-panel" [class.open]="showMenu">
+  <div class="panel-header">
+    <mat-icon (click)="toggleMenu()">close</mat-icon>
   </div>
+
+  <div class="shops">
+    <h3>Shop our Stores</h3>
+
+    <div class="store-grid">
+      <div class="store">Mpahlas Men</div>
+      <div class="store">Mpahlas Women</div>
+      <div class="store">Mpahlas Kids</div>
+      <div class="store">Winter Collection</div>
+      <div class="store">Accessories</div>
+      <div class="store">Footwear</div>
+    </div>
+  </div>
+</div>
   <!-- Categories -->
   <div class="categories">
     <a routerLink="/men">Men</a>

@@ -100,3 +100,68 @@ a{
   display: flex;
   gap: 20px;
 }
+
+/*side panel*/
+
+/* Dark overlay */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+}
+
+/* Side panel */
+.side-panel {
+  position: fixed;
+  top: 0;
+  left: -450px;
+  width: 450px;
+  height: 100vh;
+  background: #000;
+  color: white;
+  z-index: 999;
+
+  overflow-y: auto;
+
+  transition: left 0.3s ease-in-out;
+}
+
+.side-panel.open {
+  left: 0;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem;
+}
+
+.panel-header mat-icon {
+  cursor: pointer;
+}
+
+.shops {
+  padding: 1rem;
+}
+
+.store-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.store {
+  border: 1px solid #222;
+  height: 120px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
+}
+
+.store:hover {
+  background: #111;
+}
+
