@@ -10,6 +10,7 @@ const authRoutes = require('./routes/customer/auth.js');
 const productRoutes = require('./routes/customer/product.js');
 const cartRoutes = require('./routes/customer/cart.js');
 const adminRoutes = require('./routes/admin/admin_auth.js'); // adjust path
+const orderRoutes = require('./routes/customer/order.js'); // adjust path 
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ app.use('/api', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/orders', orderRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Serve uploaded images
 
 
