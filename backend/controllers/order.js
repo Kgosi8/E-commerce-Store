@@ -1,4 +1,4 @@
-const order=require('../models/order');
+const Order=require('../model/Order');
 const {generateId}=require('../utils/generateId');
 const {validateOrder}=require('../utils/validateOrder');
 
@@ -63,7 +63,7 @@ async function createOrder(req,res){
         if (err.code === 11000) {
             return res.status(409).json({ success: false, message: 'Duplicate orderId or eftReference. Please try again.' });
         }
-        console.error('Error creating order:', err);
+        console.error('[createOrder]', err);
         return res.status(500).json({ success: false, message: 'Internal server error.' });
     }
 }
@@ -115,6 +115,36 @@ async function getAllOrders(req,res){
     }
 }
 
+// ── GET /api/orders ───────────────────────────────────────────────
+// (Admin use — list all orders, newest first)
+async function listOrders(req, res) {
+  try {
+    const { status, paymentMethod, page = 1, limit = 20 } = req.query;
+
+    const filter = {};
+    if (status)        filter.status = status;
+    if (paymentMethod) filter.paymentMethod = paymentMethod;
+
+    const orders = await Order.find(filter)
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
+
+    const total = await Order.countDocuments(filter);
+
+    return res.json({
+      success: true,
+      total,
+      page: Number(page),
+      pages: Math.ceil(total / limit),
+      orders,
+    });
+  } catch (err) {
+    console.error('[listOrders]', err);
+    return res.status(500).json({ success: false, message: 'Server error.' });
+  }
+}
+
 // ── PATCH /api/orders/:orderId/status ─────────────────────────────
 // (Admin use — update order status)
 
@@ -153,4 +183,4 @@ async function updateOrderStatus(req, res) {
   }
 }
 
-module.exports = { createOrder, getOrder, listOrders, updateOrderStatus };
+module.exports = { createOrder, getOrder, listOrders, updateOrderStatus, getAllOrders, listOrders };

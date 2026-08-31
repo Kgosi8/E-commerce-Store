@@ -1,139 +1,178 @@
 <div class="checkout-page">
 
-  <!-- ── Page Header ── -->
+  <!-- ── Header ── -->
   <div class="checkout-header">
     <button class="btn-back" (click)="goBack()">← Back to Cart</button>
     <div class="checkout-steps">
       <span class="step step--active">1 · Delivery</span>
       <span class="step-sep">—</span>
-      <span class="step" [class.step--active]="currentStep >= 2">2 · Payment</span>
+      <span class="step" [class.step--active]="currentStep() >= 2">2 · Payment</span>
       <span class="step-sep">—</span>
-      <span class="step" [class.step--active]="currentStep >= 3">3 · Confirm</span>
+      <span class="step" [class.step--active]="currentStep() >= 3">3 · Confirm</span>
     </div>
   </div>
 
-  <!-- ── Success State ── -->
+  <!-- ── Success state ── -->
   @if(orderPlaced) {
     <div class="state-container">
       <div class="success-state">
+
         <div class="success-icon-wrap">
           <span class="success-icon">✓</span>
         </div>
+
         <h2>Order Placed!</h2>
-        <p>Thank you, <strong>{{ checkoutForm.firstName }}</strong>. Your order <span class="order-ref">#{{ orderRef }}</span> has been confirmed.</p>
-        <p class="success-sub">A confirmation will be sent to <strong>{{ checkoutForm.email }}</strong></p>
+        <p>
+          Thank you, <strong>{{ placedOrder?.customer?.firstName }}</strong>.
+          Your order <span class="order-ref">{{ orderRef }}</span> has been confirmed.
+        </p>
+        <p class="success-sub">
+          A confirmation will be sent to <strong>{{ placedOrder?.customer?.email }}</strong>
+        </p>
+
+        @if(placedOrder?.paymentMethod === 'eft') {
+          <div class="success-eft">
+            <p class="success-eft__heading">Complete your payment</p>
+            <div class="success-bank-grid">
+              <div class="success-bank-box">
+                <div class="bank-label">Bank</div>
+                <div class="bank-value">{{ bank.bankName }}</div>
+              </div>
+              <div class="success-bank-box">
+                <div class="bank-label">Account Number</div>
+                <div class="bank-value bank-value--mono">{{ bank.accountNumber }}</div>
+              </div>
+              <div class="success-bank-box">
+                <div class="bank-label">Branch Code</div>
+                <div class="bank-value bank-value--mono">{{ bank.branchCode }}</div>
+              </div>
+              <div class="success-bank-box">
+                <div class="bank-label">Account Type</div>
+                <div class="bank-value">{{ bank.accountType }}</div>
+              </div>
+            </div>
+            <div class="success-ref-box">
+              <div class="bank-label">Your EFT Reference — use exactly as shown</div>
+              <div class="success-ref-value">{{ placedOrder?.eftReference }}</div>
+            </div>
+            <p class="success-eft__note">
+              Please make payment within 48 hours to avoid cancellation.
+            </p>
+          </div>
+        }
+
+        @if(placedOrder?.paymentMethod === 'cod') {
+          <div class="success-cod">
+            <p>
+              Have <strong>R {{ placedOrder?.total | number:'1.2-2' }}</strong>
+              ready in cash when your order arrives.
+            </p>
+          </div>
+        }
+
         <button class="btn-primary" (click)="continueShopping()">Continue Shopping</button>
+
       </div>
     </div>
   }
 
   @else {
     <div class="checkout-layout">
-
-      <!-- LEFT COLUMN -->
       <div class="checkout-forms">
 
-        <!-- STEP 1: Delivery Details — unchanged -->
-        <section class="form-section" [class.form-section--collapsed]="currentStep > 1">
-          <div class="section-header" (click)="currentStep > 1 && goToStep(1)">
+        <!-- ── STEP 1: Delivery ── -->
+        <section class="form-section" [class.form-section--collapsed]="currentStep() > 1">
+          <div class="section-header" (click)="currentStep() > 1 && goToStep(1)">
             <span class="section-number">01</span>
             <h2 class="section-title">Delivery Details</h2>
-            @if(currentStep > 1) {
+            @if(currentStep() > 1) {
               <span class="section-edit">Edit</span>
             }
           </div>
 
-          @if(currentStep === 1) {
+          @if(currentStep() === 1) {
             <div class="form-body">
 
               <div class="field-row">
                 <div class="field-group">
                   <label class="field-label" for="firstName">First Name</label>
-                  <input id="firstName"
-                         class="field-input"
-                         type="text"
-                         [(ngModel)]="checkoutForm.firstName"
+                  <input id="firstName" class="field-input" type="text"
+                         [value]="form().firstName"
+                         (input)="checkout.updateField('firstName', $any($event.target).value)"
                          placeholder="Jane"
-                         [class.field-input--error]="errors['firstName']" />
-                  @if(errors['firstName']) {
-                    <span class="field-error">{{ errors['firstName'] }}</span>
+                         [class.field-input--error]="errors()['firstName']" />
+                  @if(errors()['firstName']) {
+                    <span class="field-error">{{ errors()['firstName'] }}</span>
                   }
                 </div>
-
                 <div class="field-group">
                   <label class="field-label" for="lastName">Last Name</label>
-                  <input id="lastName"
-                         class="field-input"
-                         type="text"
-                         [(ngModel)]="checkoutForm.lastName"
+                  <input id="lastName" class="field-input" type="text"
+                         [value]="form().lastName"
+                         (input)="checkout.updateField('lastName', $any($event.target).value)"
                          placeholder="Doe"
-                         [class.field-input--error]="errors['lastName']" />
-                  @if(errors['lastName']) {
-                    <span class="field-error">{{ errors['lastName'] }}</span>
+                         [class.field-input--error]="errors()['lastName']" />
+                  @if(errors()['lastName']) {
+                    <span class="field-error">{{ errors()['lastName'] }}</span>
                   }
                 </div>
               </div>
 
               <div class="field-group">
                 <label class="field-label" for="email">Email Address</label>
-                <input id="email"
-                       class="field-input"
-                       type="email"
-                       [(ngModel)]="checkoutForm.email"
+                <input id="email" class="field-input" type="email"
+                       [value]="form().email"
+                       (input)="checkout.updateField('email', $any($event.target).value)"
                        placeholder="jane@example.com"
-                       [class.field-input--error]="errors['email']" />
-                @if(errors['email']) {
-                  <span class="field-error">{{ errors['email'] }}</span>
+                       [class.field-input--error]="errors()['email']" />
+                @if(errors()['email']) {
+                  <span class="field-error">{{ errors()['email'] }}</span>
                 }
               </div>
 
               <div class="field-group">
                 <label class="field-label" for="phone">Phone Number</label>
-                <input id="phone"
-                       class="field-input"
-                       type="tel"
-                       [(ngModel)]="checkoutForm.phone"
+                <input id="phone" class="field-input" type="tel"
+                       [value]="form().phone"
+                       (input)="checkout.updateField('phone', $any($event.target).value)"
                        placeholder="+27 82 000 0000"
-                       [class.field-input--error]="errors['phone']" />
-                @if(errors['phone']) {
-                  <span class="field-error">{{ errors['phone'] }}</span>
+                       [class.field-input--error]="errors()['phone']" />
+                @if(errors()['phone']) {
+                  <span class="field-error">{{ errors()['phone'] }}</span>
                 }
               </div>
 
               <div class="field-group">
                 <label class="field-label" for="address">Street Address</label>
-                <input id="address"
-                       class="field-input"
-                       type="text"
-                       [(ngModel)]="checkoutForm.address"
+                <input id="address" class="field-input" type="text"
+                       [value]="form().address"
+                       (input)="checkout.updateField('address', $any($event.target).value)"
                        placeholder="12 Main Street, Apt 3B"
-                       [class.field-input--error]="errors['address']" />
-                @if(errors['address']) {
-                  <span class="field-error">{{ errors['address'] }}</span>
+                       [class.field-input--error]="errors()['address']" />
+                @if(errors()['address']) {
+                  <span class="field-error">{{ errors()['address'] }}</span>
                 }
               </div>
 
               <div class="field-row">
                 <div class="field-group">
                   <label class="field-label" for="city">City</label>
-                  <input id="city"
-                         class="field-input"
-                         type="text"
-                         [(ngModel)]="checkoutForm.city"
+                  <input id="city" class="field-input" type="text"
+                         [value]="form().city"
+                         (input)="checkout.updateField('city', $any($event.target).value)"
                          placeholder="Johannesburg"
-                         [class.field-input--error]="errors['city']" />
-                  @if(errors['city']) {
-                    <span class="field-error">{{ errors['city'] }}</span>
+                         [class.field-input--error]="errors()['city']" />
+                  @if(errors()['city']) {
+                    <span class="field-error">{{ errors()['city'] }}</span>
                   }
                 </div>
-
                 <div class="field-group">
                   <label class="field-label" for="province">Province</label>
-                  <select id="province"
-                          class="field-input field-select"
-                          [(ngModel)]="checkoutForm.province"
-                          [class.field-input--error]="errors['province']">
-                    <option value="" disabled selected>Select…</option>
+                  <select id="province" class="field-input field-select"
+                          [value]="form().province"
+                          (change)="checkout.updateField('province', $any($event.target).value)"
+                          [class.field-input--error]="errors()['province']">
+                    <option value="" disabled>Select…</option>
                     <option>Gauteng</option>
                     <option>Western Cape</option>
                     <option>KwaZulu-Natal</option>
@@ -144,30 +183,31 @@
                     <option>Free State</option>
                     <option>Northern Cape</option>
                   </select>
-                  @if(errors['province']) {
-                    <span class="field-error">{{ errors['province'] }}</span>
+                  @if(errors()['province']) {
+                    <span class="field-error">{{ errors()['province'] }}</span>
                   }
                 </div>
               </div>
 
               <div class="field-group field-group--half">
                 <label class="field-label" for="postalCode">Postal Code</label>
-                <input id="postalCode"
-                       class="field-input"
-                       type="text"
-                       [(ngModel)]="checkoutForm.postalCode"
+                <input id="postalCode" class="field-input" type="text"
+                       [value]="form().postalCode"
+                       (input)="checkout.updateField('postalCode', $any($event.target).value)"
                        placeholder="2000"
-                       [class.field-input--error]="errors['postalCode']" />
-                @if(errors['postalCode']) {
-                  <span class="field-error">{{ errors['postalCode'] }}</span>
+                       [class.field-input--error]="errors()['postalCode']" />
+                @if(errors()['postalCode']) {
+                  <span class="field-error">{{ errors()['postalCode'] }}</span>
                 }
               </div>
 
               <div class="field-group">
-                <label class="field-label" for="note">Delivery Note <span class="field-label--optional">(optional)</span></label>
-                <textarea id="note"
-                          class="field-input field-textarea"
-                          [(ngModel)]="checkoutForm.note"
+                <label class="field-label" for="note">
+                  Delivery Note <span class="field-label--optional">(optional)</span>
+                </label>
+                <textarea id="note" class="field-input field-textarea"
+                          [value]="form().note"
+                          (input)="checkout.updateField('note', $any($event.target).value)"
                           rows="3"></textarea>
               </div>
 
@@ -177,46 +217,45 @@
 
             </div>
           }
-
         </section>
 
-        <!-- STEP 2: Payment — updated -->
+        <!-- ── STEP 2: Payment ── -->
         <section class="form-section"
-                 [class.form-section--locked]="currentStep < 2"
-                 [class.form-section--collapsed]="currentStep > 2">
+                 [class.form-section--locked]="currentStep() < 2"
+                 [class.form-section--collapsed]="currentStep() > 2">
 
-          <div class="section-header" (click)="currentStep > 2 && goToStep(2)">
+          <div class="section-header" (click)="currentStep() > 2 && goToStep(2)">
             <span class="section-number">02</span>
             <h2 class="section-title">Payment</h2>
-            @if(currentStep > 2) {
+            @if(currentStep() > 2) {
               <span class="section-edit">Edit</span>
             }
           </div>
 
-          @if(currentStep === 2) {
+          @if(currentStep() === 2) {
             <div class="form-body">
 
-              <!-- Payment method tabs -->
               <div class="payment-tabs">
                 <button class="payment-tab"
-                        [class.payment-tab--active]="paymentMethod === 'eft'"
-                        (click)="paymentMethod = 'eft'"
+                        [class.payment-tab--active]="paymentMethod() === 'eft'"
+                        (click)="checkout.paymentMethod.set('eft')"
                         type="button">
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
-                       [attr.stroke]="paymentMethod === 'eft' ? '#c9a96e' : '#aaa'"
-                       stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                       [attr.stroke]="paymentMethod() === 'eft' ? '#c9a96e' : '#aaa'"
+                       stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                       aria-hidden="true">
                     <path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/>
                   </svg>
                   EFT
                 </button>
-
                 <button class="payment-tab"
-                        [class.payment-tab--active]="paymentMethod === 'cod'"
-                        (click)="paymentMethod = 'cod'"
+                        [class.payment-tab--active]="paymentMethod() === 'cod'"
+                        (click)="checkout.paymentMethod.set('cod')"
                         type="button">
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
-                       [attr.stroke]="paymentMethod === 'cod' ? '#c9a96e' : '#aaa'"
-                       stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                       [attr.stroke]="paymentMethod() === 'cod' ? '#c9a96e' : '#aaa'"
+                       stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                       aria-hidden="true">
                     <rect x="2" y="6" width="20" height="12" rx="2"/>
                     <circle cx="12" cy="12" r="2"/>
                     <path d="M6 12h.01M18 12h.01"/>
@@ -225,8 +264,7 @@
                 </button>
               </div>
 
-              <!-- EFT panel -->
-              @if(paymentMethod === 'eft') {
+              @if(paymentMethod() === 'eft') {
                 <div class="eft-panel">
                   <div class="bank-grid">
                     <div class="bank-box">
@@ -252,8 +290,7 @@
                 </div>
               }
 
-              <!-- COD panel -->
-              @if(paymentMethod === 'cod') {
+              @if(paymentMethod() === 'cod') {
                 <div class="cod-panel">
                   <div class="cod-row">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a96e"
@@ -271,19 +308,150 @@
                 </div>
               }
 
+              @if(errors()['paymentMethod']) {
+                <span class="field-error">{{ errors()['paymentMethod'] }}</span>
+              }
+
               <button class="btn-next"
-                      [disabled]="!paymentMethod"
-                      (click)="goToStep(3)">
+                      [disabled]="!paymentMethod()"
+                      (click)="goToStep(3)"
+                      type="button">
                 Review Order →
               </button>
 
             </div>
           }
+        </section>
 
+        <!-- ── STEP 3: Review & Confirm ── -->
+        <section class="form-section"
+                 [class.form-section--locked]="currentStep() < 3">
+
+          <div class="section-header">
+            <span class="section-number">03</span>
+            <h2 class="section-title">Review Order</h2>
+          </div>
+
+          @if(currentStep() === 3) {
+            <div class="form-body">
+
+              <!-- Delivery summary -->
+              <div class="review-block">
+                <div class="review-block__header">
+                  <span class="review-block__title">Delivery Details</span>
+                  <button class="review-edit-btn" (click)="goToStep(1)" type="button">Edit</button>
+                </div>
+                <div class="review-block__body">
+                  <p class="review-line">{{ form().firstName }} {{ form().lastName }}</p>
+                  <p class="review-line">{{ form().email }}</p>
+                  <p class="review-line">{{ form().phone }}</p>
+                  <p class="review-line">
+                    {{ form().address }}, {{ form().city }},
+                    {{ form().province }}, {{ form().postalCode }}
+                  </p>
+                  @if(form().note) {
+                    <p class="review-line review-line--muted">Note: {{ form().note }}</p>
+                  }
+                </div>
+              </div>
+
+              <!-- Payment summary -->
+              <div class="review-block">
+                <div class="review-block__header">
+                  <span class="review-block__title">Payment Method</span>
+                  <button class="review-edit-btn" (click)="goToStep(2)" type="button">Edit</button>
+                </div>
+                <div class="review-block__body">
+                  @if(paymentMethod() === 'eft') {
+                    <div class="review-payment-row">
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#c9a96e"
+                           stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                           aria-hidden="true">
+                        <path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/>
+                      </svg>
+                      <span>Manual EFT</span>
+                    </div>
+                    <p class="review-line review-line--muted">
+                      {{ bank.bankName }} · {{ bank.accountNumber }}
+                    </p>
+                  }
+                  @if(paymentMethod() === 'cod') {
+                    <div class="review-payment-row">
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#c9a96e"
+                           stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                           aria-hidden="true">
+                        <rect x="2" y="6" width="20" height="12" rx="2"/>
+                        <circle cx="12" cy="12" r="2"/>
+                        <path d="M6 12h.01M18 12h.01"/>
+                      </svg>
+                      <span>Cash on Delivery</span>
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Items -->
+              <div class="review-block">
+                <div class="review-block__header">
+                  <span class="review-block__title">Items</span>
+                </div>
+                <div class="review-block__body">
+                  @for(item of cartItems(); track item.productId) {
+                    <div class="review-item">
+                      <div class="review-item__info">
+                        @if(item.image) {
+                          <img [src]="item.image" [alt]="item.name" class="review-item__img" />
+                        }
+                        <div>
+                          <p class="review-item__name">{{ item.name }}</p>
+                          <p class="review-item__qty">Qty: {{ item.quantity }}</p>
+                        </div>
+                      </div>
+                      <span class="review-item__price">
+                        R {{ (item.price * item.quantity) | number:'1.2-2' }}
+                      </span>
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Totals -->
+              <div class="review-totals">
+                <div class="review-total-row">
+                  <span>Subtotal</span>
+                  <span>R {{ subtotal() | number:'1.2-2' }}</span>
+                </div>
+                <div class="review-total-row">
+                  <span>Delivery</span>
+                  <span>R {{ deliveryFee() | number:'1.2-2' }}</span>
+                </div>
+                <div class="review-total-row review-total-row--total">
+                  <span>Total</span>
+                  <span>R {{ total() | number:'1.2-2' }}</span>
+                </div>
+              </div>
+
+              @if(submitError) {
+                <div class="submit-error" role="alert">{{ submitError }}</div>
+              }
+
+              <button class="btn-next"
+                      [class.btn-next--loading]="isSubmitting"
+                      [disabled]="isSubmitting"
+                      (click)="placeOrder()"
+                      type="button">
+                @if(isSubmitting) {
+                  <span class="spinner"></span> Placing Order…
+                } @else {
+                  Place Order →
+                }
+              </button>
+
+            </div>
+          }
         </section>
 
       </div>
-
     </div>
   }
 
