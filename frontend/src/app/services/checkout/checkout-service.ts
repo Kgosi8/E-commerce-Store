@@ -1,42 +1,44 @@
-import { computed, Injectable, signal } from '@angular/core';
-import { CartItem } from '../../interfaces/cart-item';
+import { computed, Injectable, OnDestroy, signal } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
+
+import { CartService } from '../cart/cart-service';               // TODO: adjust path to your CartService
+import { CartItem }       from '../../interfaces/cart-item';
 import { CheckoutForm, CheckoutValidationErrors } from '../../interfaces/checkout';
-import { sign } from 'crypto';
-import { PaymentMethod } from '../../interfaces/order';
+import { PaymentMethod }  from '../../interfaces/order';
 
-
-const DELIVERY_FEE = 80; // Fixed delivery fee
+const DELIVERY_FEE = 80;
 
 const EMPTY_FORM: CheckoutForm = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  phone: '',
-  address: '',
-  city: '',
-  province: '',
+  firstName:  '',
+  lastName:   '',
+  email:      '',
+  phone:      '',
+  address:    '',
+  city:       '',
+  province:   '',
   postalCode: '',
-  note: '',
+  note:       '',
 };
 
-@Injectable({
-  providedIn: 'root',
-})
-export class CheckoutService {
+@Injectable({ providedIn: 'root' })
+export class CheckoutService implements OnDestroy {
 
-  readonly currentStep= signal<number>(1);
+  // ── Step
+  readonly currentStep   = signal<number>(1);
 
-  readonly form= signal<CheckoutForm>({ ...EMPTY_FORM });
-  readonly errors=signal<CheckoutValidationErrors>({});
+  // ── Form
+  readonly form          = signal<CheckoutForm>({ ...EMPTY_FORM });
+  readonly errors        = signal<CheckoutValidationErrors>({});
 
-  readonly paymentMethod= signal<PaymentMethod |''>('');
+  // ── Payment
+  readonly paymentMethod = signal<PaymentMethod | ''>('');
 
-  // ── Cart
-  // TODO: replace with your real CartService items signal
-  readonly cartItems = signal<CartItem[]>([
-    { productId: 'p1', name: 'Product A', price: 450, quantity: 1 },
-    { productId: 'p2', name: 'Product B', price: 280, quantity: 2 },
-  ]);
+  // ── Cart items — driven by real CartService
+  readonly cartItems     = signal<CartItem[]>([]);
+
+  // ── Loading state while cart is being fetched
+  readonly cartLoading   = signal<boolean>(true);
+  readonly cartError     = signal<string | null>(null);
 
   // ── Computed totals
   readonly subtotal    = computed(() =>
@@ -45,7 +47,32 @@ export class CheckoutService {
   readonly deliveryFee = signal<number>(DELIVERY_FEE);
   readonly total       = computed(() => this.subtotal() + this.deliveryFee());
 
-  // ── Navigation
+  private readonly destroy$ = new Subject<void>();
+
+  constructor(private cartService: CartService) {
+    this.loadCart();
+  }
+
+  // ── Load real cart from backend ─────────────────────────────────
+  private loadCart(): void {
+    this.cartLoading.set(true);
+    this.cartError.set(null);
+
+    this.cartService.getCart()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.cartItems.set(response.cart.items);
+          this.cartLoading.set(false);
+        },
+        error: () => {
+          this.cartError.set('Failed to load cart. Please go back and try again.');
+          this.cartLoading.set(false);
+        },
+      });
+  }
+
+  // ── Navigation ──────────────────────────────────────────────────
   goToStep(step: number): void {
     if (step === 2 && !this.validateStep1()) return;
     if (step === 3 && !this.validateStep2()) return;
@@ -53,7 +80,7 @@ export class CheckoutService {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // ── Validation
+  // ── Validation ──────────────────────────────────────────────────
   validateStep1(): boolean {
     const errs: CheckoutValidationErrors = {};
     const f = this.form();
@@ -84,7 +111,7 @@ export class CheckoutService {
     return true;
   }
 
-  // ── Build order payload
+  // ── Build order payload ─────────────────────────────────────────
   buildOrderPayload() {
     const f = this.form();
     return {
@@ -110,20 +137,21 @@ export class CheckoutService {
     };
   }
 
-  // ── Reset after successful order
+  // ── Reset after successful order ────────────────────────────────
   reset(): void {
     this.currentStep.set(1);
     this.form.set({ ...EMPTY_FORM });
     this.errors.set({});
     this.paymentMethod.set('');
-    this.cartItems.set([]);
-    // TODO: call your real CartService.clearCart() here
   }
 
-  // ── Field updater helper (used in template via event binding)
+  // ── Field updater (called from template) ────────────────────────
   updateField(field: keyof CheckoutForm, value: string): void {
     this.form.update(f => ({ ...f, [field]: value }));
   }
 
-  
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

@@ -63,6 +63,15 @@ async function createOrder(req,res){
         if (err.code === 11000) {
             return res.status(409).json({ success: false, message: 'Duplicate orderId or eftReference. Please try again.' });
         }
+
+         if (err.name === 'ValidationError' || err.name === 'CastError') {
+        return res.status(400).json({
+            success: false,
+            message: err.message,
+            errors: err.errors,
+        });
+        }
+
         console.error('[createOrder]', err);
         return res.status(500).json({ success: false, message: 'Internal server error.' });
     }
@@ -183,4 +192,4 @@ async function updateOrderStatus(req, res) {
   }
 }
 
-module.exports = { createOrder, getOrder, listOrders, updateOrderStatus, getAllOrders, listOrders };
+module.exports = { createOrder, getOrder, listOrders, updateOrderStatus, getAllOrders };

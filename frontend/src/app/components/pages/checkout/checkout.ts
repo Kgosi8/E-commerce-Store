@@ -1,97 +1,81 @@
-import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { CheckoutService } from '../../../services/checkout/checkout-service';
-import {Order} from '../../../interfaces/order';
-import { OrderService } from '../../../services/order/order';
-
-
- 
-
-
-
+import { Component, OnInit, Signal }  from '@angular/core';
+import { CommonModule }        from '@angular/common';
+import { Router }              from '@angular/router';
+import { CheckoutService }    from '../../../services/checkout/checkout-service';
+import { OrderService }       from '../../../services/order/order';
+import { CartService }        from '../../../services/cart/cart-service';       // TODO: adjust path
+import { BankDetails, Order, PaymentMethod }              from '../../../interfaces/order';
+import { CheckoutForm, CheckoutValidationErrors } from '../../../interfaces/checkout';
+import { CartItem } from '../../../interfaces/cart-item';
 
 @Component({
-  selector: 'app-checkout',
-  imports: [FormsModule,CommonModule],
+  selector:    'app-checkout',
+  imports:     [CommonModule],
   templateUrl: './checkout.html',
-  styleUrl: './checkout.css',
+  styleUrls:   ['./checkout.css'],
 })
+export class Checkout implements OnInit {  
 
 
-export class Checkout implements OnInit {
 
+  // ── Signals — assigned in constructor, not at declaration
+  currentStep:   Signal<number>;
+  form:          Signal<CheckoutForm>;
+  errors:        Signal<CheckoutValidationErrors>;
+  paymentMethod: Signal<PaymentMethod | ''>;
+  cartItems:     Signal<CartItem[]>;
+  subtotal:      Signal<number>;
+  deliveryFee:   Signal<number>;
+  total:         Signal<number>;
+  cartLoading:   Signal<boolean>;
+  cartError:     Signal<string | null>;
+  bank:          BankDetails;
 
-  // ── Exposed service signals directly to template
-  readonly currentStep;
+  // ── Local UI state
+  orderPlaced  = false;
+  isSubmitting = false;
+  submitError: string | null = null;
+  placedOrder: Order | null  = null;
 
-  readonly form;
-  readonly errors;
-  readonly paymentMethod;
-  readonly cartItems;
-  readonly subtotal;
-  readonly deliveryFee;
-  readonly total;
-  readonly bank;
- 
-  // ── State ──────────────────────────────────────────────────
-
-  agreedToTerms = false;
-  isPlacingOrder = false;
-  orderPlaced = false;
-  isSubmitting: boolean = false;
-  submitError: string| null = null;
-  placedOrder: Order | null = null;
-
- 
- 
-
- get orderRef(): string {
+  get orderRef(): string {
     return this.placedOrder?.orderId ?? '';
   }
-  
- 
-  // ── Constructor ────────────────────────────────────────────
+
   constructor(
-    private router: Router,
-    public checkout: CheckoutService,
-    private orderService: OrderService
-
+    public  checkout:     CheckoutService,
+    private orderService: OrderService,
+    private cartService:  CartService,
+    private router:       Router,
   ) {
-    this.currentStep= this.checkout.currentStep;
-    this.form= this.checkout.form;
-    this.errors= this.checkout.errors;
-    this.paymentMethod= this.checkout.paymentMethod;
-    this.cartItems = this.checkout.cartItems;
-    this.subtotal    = this.checkout.subtotal;
-    this.deliveryFee = this.checkout.deliveryFee;
-    this.total       = this.checkout.total;
-    this.bank = this.orderService.bankDetails;
+    // ── Safe to reference injected services here
+    this.currentStep   = this.checkout.currentStep;
+    this.form          = this.checkout.form;
+    this.errors        = this.checkout.errors;
+    this.paymentMethod = this.checkout.paymentMethod;
+    this.cartItems     = this.checkout.cartItems;
+    this.subtotal      = this.checkout.subtotal;
+    this.deliveryFee   = this.checkout.deliveryFee;
+    this.total         = this.checkout.total;
+    this.cartLoading   = this.checkout.cartLoading;
+    this.cartError     = this.checkout.cartError;
+    this.bank          = this.orderService.bankDetails;
   }
 
-  
+  ngOnInit(): void {}
 
-
- 
-  // ── Lifecycle ──────────────────────────────────────────────
-  ngOnInit(): void {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
+  // ── Navigation
   goBack(): void {
     this.router.navigate(['/cart']);
   }
-  
+
   continueShopping(): void {
     this.checkout.reset();
     this.router.navigate(['/']);
   }
- 
+
   goToStep(step: number): void {
     this.checkout.goToStep(step);
   }
-
 
   // ── Place order
   placeOrder(): void {
@@ -107,24 +91,22 @@ export class Checkout implements OnInit {
         this.placedOrder  = res.order;
         this.orderPlaced  = true;
         this.isSubmitting = false;
-        this.checkout.reset();
+
+        this.cartService.clearCart().subscribe({
+          next:  () => this.checkout.reset(),
+          error: () => this.checkout.reset(),
+        });
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
       },
       error: (err) => {
         this.isSubmitting = false;
         this.submitError  =
-          err?.error?.message   ??
+          err?.error?.message     ??
           err?.error?.errors?.[0] ??
           'Something went wrong. Please try again.';
       },
     });
   }
- 
-  
+
 }
- 
-  
- 
-  
- 
-  

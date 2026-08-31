@@ -5,10 +5,7 @@ import { Register } from './components/pages/auth/register/register';
 import { AddToCart } from './components/pages/add-to-cart/add-to-cart';
 import { Cart } from './components/pages/cart/cart';
 import { Checkout } from './components/pages/checkout/checkout';
-import { adminGuard } from './guards/admin-guard';
-import { create } from 'domain';
-import { CreateProduct } from './components/pages/create-product/create-product';
-import { ProductList } from './components/pages/product-list/product-list';
+
 import { Payment } from './components/pages/payment/payment';
 
 
