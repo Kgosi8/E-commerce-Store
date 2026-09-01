@@ -20,7 +20,7 @@ export interface UpdateStatusPayload {
   providedIn: 'root',
 })
 export class AdminOrderService {
-  private readonly baseUrl = '/api/admin/orders';
+  private readonly baseUrl = 'http://localhost:5000/api/orders';
 
   constructor(private http: HttpClient) {}
 
