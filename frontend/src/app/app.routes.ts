@@ -7,6 +7,7 @@ import { Cart } from './components/pages/cart/cart';
 import { Checkout } from './components/pages/checkout/checkout';
 
 import { Payment } from './components/pages/payment/payment';
+import { AdminOrders } from './components/pages/admin-orders/admin-orders';
 
 
 export const routes: Routes = [
@@ -27,6 +28,10 @@ export const routes: Routes = [
     {
         path: 'checkout',
         component: Checkout
+    },
+    {
+        path: 'admin-orders',
+        component: AdminOrders
     },
     {
         path:'cart',
