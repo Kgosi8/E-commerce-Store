@@ -40,6 +40,9 @@ async function createOrder(req,res){
             paymentStatus:'awaiting_payment',
         });
 
+        //email confirmation
+        // sendOrderConfirmation(order);
+
         return res.status(201).json({
             success:true,
             order:{
