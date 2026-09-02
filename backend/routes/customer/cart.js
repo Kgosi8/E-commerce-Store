@@ -87,15 +87,17 @@ router.put("/update", async (req, res) => {
       });
     }
 
-    const cart = await Cart.findOne({ userId: req.userId });
+    const cart = await Cart.findOne({ userId: req.user.id });
     if (!cart) {
       return res
         .status(404)
         .json({ status: "error", message: "Cart not found" });
     }
 
+    const productIdValue= typeof productId === "object"? productId._id: productId;
+
     const item = cart.items.find(
-      (item) => item.productId.toString() === productId,
+      (item) => item.productId.toString() === productIdValue.toString(),
     );
     if (!item) {
       return res
@@ -118,7 +120,7 @@ router.delete("/remove/:productId", async (req, res) => {
   try {
     const { productId } = req.params;
 
-    const cart = await Cart.findOne({ userId: req.userId });
+    const cart = await Cart.findOne({ userId: req.user.id });
     if (!cart) {
       return res
         .status(404)
@@ -153,7 +155,7 @@ router.delete("/remove/:productId", async (req, res) => {
 // DELETE /api/cart/clear
 router.delete("/clear", async (req, res) => {
   try {
-    const cart = await Cart.findOne({ userId: req.userId });
+    const cart = await Cart.findOne({ userId: req.user.id });
     if (!cart) {
       return res
         .status(404)
