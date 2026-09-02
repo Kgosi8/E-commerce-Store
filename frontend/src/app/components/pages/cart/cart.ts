@@ -65,7 +65,7 @@ export class Cart implements OnInit {
   decreaseQuantity(item: CartItem) {
     if (item.quantity === 1) {
       // If quantity is 1 and user decreases, remove the item instead
-      this.removeItem(item.productId);
+      this.removeItem(item);
       return;
     }
     this.updatingItemId = item.productId;
@@ -83,20 +83,25 @@ export class Cart implements OnInit {
   }
 
   // ── Remove Item ──
-  removeItem(productId: string) {
-    this.removingItemId = productId;
-    this.cartService.removeFromCart(productId).subscribe({
-      next: (response) => {
-        this.cartItems = response.cart.items;
-        this.removingItemId = null;
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.removingItemId = null;
-        this.cdr.detectChanges();
-      },
-    });
-  }
+  // ── Remove Item ──
+removeItem(item: CartItem) {
+  const productId = (item.productId as any)._id ?? item.productId; // Handle both string and object cases
+
+  this.removingItemId = productId;
+
+  this.cartService.removeFromCart(productId).subscribe({
+    next: (response) => {
+      this.cartItems = response.cart.items;
+      this.removingItemId = null;
+      this.cdr.detectChanges();
+    },
+    error: (error) => {
+      console.error('Remove item error:', error);
+      this.removingItemId = null;
+      this.cdr.detectChanges();
+    },
+  });
+}
 
   // ── Computed Totals ──
   getSubtotal(item: CartItem): number {

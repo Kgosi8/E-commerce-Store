@@ -8,9 +8,13 @@ const transporter = nodemailer.createTransport({
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
+  tls: {
+    // Bypasses the self-signed certificate check
+    rejectUnauthorized: false,
+  },
 });
 
-// Verify connection on startup (non-fatal — just logs)
+// Verify connection on startup
 transporter.verify((err) => {
   if (err) {
     console.warn('[Mailer] SMTP connection failed:', err.message);

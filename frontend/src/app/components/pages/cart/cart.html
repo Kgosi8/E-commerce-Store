@@ -99,7 +99,7 @@
             <!-- Remove -->
             <button
               class="btn-remove"
-              (click)="removeItem(item.productId)"
+              (click)="removeItem(item)"
               [disabled]="removingItemId === item.productId"
               title="Remove item">
               @if(removingItemId === item.productId) {
