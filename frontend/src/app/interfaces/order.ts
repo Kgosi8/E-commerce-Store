@@ -45,6 +45,8 @@ export interface Order {
   total:         number;
   status:        OrderStatus;
   paymentStatus: PaymentStatus;
+  popImageUrl?:  string | null; // URL of the uploaded proof of payment image
+  popUploadAt?:  string | null; // Date when the proof of payment was uploaded  
   createdAt:     string;
 }
 

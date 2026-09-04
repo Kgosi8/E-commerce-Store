@@ -47,6 +47,9 @@ const OrderSchema = new mongoose.Schema({
     enum: ['awaiting_payment', 'paid', 'failed'],
     default: 'awaiting_payment',
   },
+  popImageUrl: { type: String, default: null }, // URL of the uploaded proof of payment image
+  popPublicId: { type: String, default: null }, // Cloudinary public ID for the uploaded proof of payment image
+  popUploadAt: { type: Date, default: null }, // Date when the proof of payment was uploaded
 }, { timestamps: true }); // adds createdAt + updatedAt automatically
 
 module.exports = mongoose.model('Order', OrderSchema);

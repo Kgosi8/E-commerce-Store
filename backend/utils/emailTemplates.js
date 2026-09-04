@@ -207,4 +207,77 @@ function orderConfirmationEmail(order) {
   };
 }
 
-module.exports = { orderConfirmationEmail };
+function popNotificationEmail(order) {
+  const html = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8"/>
+      <style>${baseStyles}</style>
+    </head>
+    <body>
+      <div class="wrapper">
+        <div class="card">
+          <div class="header">
+            <div class="header-num">Action required</div>
+            <h1 class="header-title">Proof of payment received</h1>
+          </div>
+          <div class="body">
+            <p style="font-size:14px; color:#555; margin:0 0 20px; line-height:1.6">
+              A customer has uploaded proof of payment for an EFT order.
+              Please verify and confirm below.
+            </p>
+
+            <div class="info-box">
+              <div class="info-label">Order ID</div>
+              <div class="info-value-mono">${order.orderId}</div>
+            </div>
+
+            <div class="info-box">
+              <div class="info-label">EFT Reference</div>
+              <div class="info-value-mono">${order.eftReference}</div>
+            </div>
+
+            <div class="info-box">
+              <div class="info-label">Customer</div>
+              <div class="info-value">
+                ${order.customer.firstName} ${order.customer.lastName}
+                — ${order.customer.email}
+              </div>
+            </div>
+
+            <div class="info-box">
+              <div class="info-label">Order total</div>
+              <div class="info-value">${formatCurrency(order.total)}</div>
+            </div>
+
+            <div class="info-box">
+              <div class="info-label">Uploaded at</div>
+              <div class="info-value">${formatDate(order.popUploadedAt)}</div>
+            </div>
+
+            <a href="${order.popImageUrl}" target="_blank" class="btn">
+              View Proof of Payment
+            </a>
+
+            <div class="notice" style="margin-top:20px">
+              Log in to the admin panel to confirm payment and process this order.
+            </div>
+          </div>
+
+          <div class="footer">
+            ${STORE_NAME} Admin Notification
+          </div>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return {
+    subject: `POP received — ${order.orderId} | ${STORE_NAME}`,
+    html,
+  };
+}
+
+module.exports = { orderConfirmationEmail, popNotificationEmail };
