@@ -21,4 +21,18 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-module.exports = verifyToken;
+// ── Require admin role ───────────────────────────────────────────
+// Use after verifyToken: router.get('/...', verifyToken, requireAdmin, handler)
+const requireAdmin = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({ status: "error", message: "Unauthorized" });
+  }
+
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ status: "error", message: "Forbidden. Admins only." });
+  }
+
+  next();
+};
+
+module.exports = { verifyToken, requireAdmin };

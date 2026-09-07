@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../../model/User.js");
-const verifyToken = require("../../middleware/auth.js"); // adjust path if needed
+const {verifyToken} = require("../../middleware/auth.js"); // adjust path if needed
 
 const JWT_SECRET = process.env.JWT_SECRET;
 

@@ -50,7 +50,7 @@ async function uploadPOP(req, res) {
         const stream= cloudinary.uploader.upload_stream(
             {
                 folder:'orders/pop',
-                public_id: '${orderId}-pop',
+                public_id: `${orderId}-pop`,
                 resource_type: req.file.mimetype==='application/pdf'?'raw':'image',
                 overwrite: true,
                 tags: [orderId, order.eftReference],
@@ -68,7 +68,7 @@ async function uploadPOP(req, res) {
 
     order.popImageUrl= result.secure_url;
     order.popPublicId= result.public_id;
-    order.popUploadAt= new Date();
+    order.popUploadedAt= new Date();
 
     await order.save();
 
@@ -78,7 +78,7 @@ async function uploadPOP(req, res) {
     res.status(200).json({
         success: true,
         popImageUrl: order.popImageUrl,
-        uploadedAt: order.popUploadAt,
+        uploadedAt: order.popUploadedAt,
         message: 'POP uploaded successfully.',
     });
 
@@ -96,7 +96,7 @@ async function uploadPOP(req, res) {
 
     return res.status(500).json({
         success: false,
-        message: 'An error occurred while uploading the proof of payment.',
+        message: console.error('[uploadPOP]') ? 'An error occurred while uploading the proof of payment.' : 'An unexpected error occurred.',
     });
   }
 }

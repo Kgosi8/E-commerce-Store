@@ -1,5 +1,4 @@
 <div class="checkout-page">
-
   <!-- ── Header ── -->
   <div class="checkout-header">
     <button class="btn-back" (click)="goBack()">← Back to Cart</button>
@@ -13,24 +12,23 @@
   </div>
 
   <!-- ── Success state ── -->
-  @if(orderPlaced) {
+  @if (orderPlaced) {
     <div class="state-container">
       <div class="success-state">
-
         <div class="success-icon-wrap">
           <span class="success-icon">✓</span>
         </div>
 
         <h2>Order Placed!</h2>
         <p>
-          Thank you, <strong>{{ placedOrder?.customer?.firstName }}</strong>.
-          Your order <span class="order-ref">{{ orderRef }}</span> has been confirmed.
+          Thank you, <strong>{{ placedOrder?.customer?.firstName }}</strong
+          >. Your order <span class="order-ref">{{ orderRef }}</span> has been confirmed.
         </p>
         <p class="success-sub">
           A confirmation will be sent to <strong>{{ placedOrder?.customer?.email }}</strong>
         </p>
 
-        @if(placedOrder?.paymentMethod === 'eft') {
+        @if (placedOrder?.paymentMethod === 'eft') {
           <div class="success-eft">
             <p class="success-eft__heading">Complete your payment</p>
             <div class="success-bank-grid">
@@ -58,61 +56,71 @@
             <p class="success-eft__note">
               Please make payment within 48 hours to avoid cancellation.
             </p>
+
+            <app-pop-upload
+              [orderId]="placedOrder!.orderId"
+              [eftReference]="placedOrder!.eftReference!"
+            >
+            </app-pop-upload>
           </div>
+          <!-- ← ADD the component just before this closing div -->
         }
 
-        @if(placedOrder?.paymentMethod === 'cod') {
+        @if (placedOrder?.paymentMethod === 'cod') {
           <div class="success-cod">
             <p>
-              Have <strong>R {{ placedOrder?.total | number:'1.2-2' }}</strong>
+              Have <strong>R {{ placedOrder?.total | number: '1.2-2' }}</strong>
               ready in cash when your order arrives.
             </p>
           </div>
         }
 
         <button class="btn-primary" (click)="continueShopping()">Continue Shopping</button>
-
       </div>
     </div>
-  }
-
-  @else {
+  } @else {
     <div class="checkout-layout">
       <div class="checkout-forms">
-
         <!-- ── STEP 1: Delivery ── -->
         <section class="form-section" [class.form-section--collapsed]="currentStep() > 1">
           <div class="section-header" (click)="currentStep() > 1 && goToStep(1)">
             <span class="section-number">01</span>
             <h2 class="section-title">Delivery Details</h2>
-            @if(currentStep() > 1) {
+            @if (currentStep() > 1) {
               <span class="section-edit">Edit</span>
             }
           </div>
 
-          @if(currentStep() === 1) {
+          @if (currentStep() === 1) {
             <div class="form-body">
-
               <div class="field-row">
                 <div class="field-group">
                   <label class="field-label" for="firstName">First Name</label>
-                  <input id="firstName" class="field-input" type="text"
-                         [value]="form().firstName"
-                         (input)="checkout.updateField('firstName', $any($event.target).value)"
-                         placeholder="Jane"
-                         [class.field-input--error]="errors()['firstName']" />
-                  @if(errors()['firstName']) {
+                  <input
+                    id="firstName"
+                    class="field-input"
+                    type="text"
+                    [value]="form().firstName"
+                    (input)="checkout.updateField('firstName', $any($event.target).value)"
+                    placeholder="Jane"
+                    [class.field-input--error]="errors()['firstName']"
+                  />
+                  @if (errors()['firstName']) {
                     <span class="field-error">{{ errors()['firstName'] }}</span>
                   }
                 </div>
                 <div class="field-group">
                   <label class="field-label" for="lastName">Last Name</label>
-                  <input id="lastName" class="field-input" type="text"
-                         [value]="form().lastName"
-                         (input)="checkout.updateField('lastName', $any($event.target).value)"
-                         placeholder="Doe"
-                         [class.field-input--error]="errors()['lastName']" />
-                  @if(errors()['lastName']) {
+                  <input
+                    id="lastName"
+                    class="field-input"
+                    type="text"
+                    [value]="form().lastName"
+                    (input)="checkout.updateField('lastName', $any($event.target).value)"
+                    placeholder="Doe"
+                    [class.field-input--error]="errors()['lastName']"
+                  />
+                  @if (errors()['lastName']) {
                     <span class="field-error">{{ errors()['lastName'] }}</span>
                   }
                 </div>
@@ -120,36 +128,48 @@
 
               <div class="field-group">
                 <label class="field-label" for="email">Email Address</label>
-                <input id="email" class="field-input" type="email"
-                       [value]="form().email"
-                       (input)="checkout.updateField('email', $any($event.target).value)"
-                       placeholder="jane@example.com"
-                       [class.field-input--error]="errors()['email']" />
-                @if(errors()['email']) {
+                <input
+                  id="email"
+                  class="field-input"
+                  type="email"
+                  [value]="form().email"
+                  (input)="checkout.updateField('email', $any($event.target).value)"
+                  placeholder="jane@example.com"
+                  [class.field-input--error]="errors()['email']"
+                />
+                @if (errors()['email']) {
                   <span class="field-error">{{ errors()['email'] }}</span>
                 }
               </div>
 
               <div class="field-group">
                 <label class="field-label" for="phone">Phone Number</label>
-                <input id="phone" class="field-input" type="tel"
-                       [value]="form().phone"
-                       (input)="checkout.updateField('phone', $any($event.target).value)"
-                       placeholder="+27 82 000 0000"
-                       [class.field-input--error]="errors()['phone']" />
-                @if(errors()['phone']) {
+                <input
+                  id="phone"
+                  class="field-input"
+                  type="tel"
+                  [value]="form().phone"
+                  (input)="checkout.updateField('phone', $any($event.target).value)"
+                  placeholder="+27 82 000 0000"
+                  [class.field-input--error]="errors()['phone']"
+                />
+                @if (errors()['phone']) {
                   <span class="field-error">{{ errors()['phone'] }}</span>
                 }
               </div>
 
               <div class="field-group">
                 <label class="field-label" for="address">Street Address</label>
-                <input id="address" class="field-input" type="text"
-                       [value]="form().address"
-                       (input)="checkout.updateField('address', $any($event.target).value)"
-                       placeholder="12 Main Street, Apt 3B"
-                       [class.field-input--error]="errors()['address']" />
-                @if(errors()['address']) {
+                <input
+                  id="address"
+                  class="field-input"
+                  type="text"
+                  [value]="form().address"
+                  (input)="checkout.updateField('address', $any($event.target).value)"
+                  placeholder="12 Main Street, Apt 3B"
+                  [class.field-input--error]="errors()['address']"
+                />
+                @if (errors()['address']) {
                   <span class="field-error">{{ errors()['address'] }}</span>
                 }
               </div>
@@ -157,21 +177,28 @@
               <div class="field-row">
                 <div class="field-group">
                   <label class="field-label" for="city">City</label>
-                  <input id="city" class="field-input" type="text"
-                         [value]="form().city"
-                         (input)="checkout.updateField('city', $any($event.target).value)"
-                         placeholder="Johannesburg"
-                         [class.field-input--error]="errors()['city']" />
-                  @if(errors()['city']) {
+                  <input
+                    id="city"
+                    class="field-input"
+                    type="text"
+                    [value]="form().city"
+                    (input)="checkout.updateField('city', $any($event.target).value)"
+                    placeholder="Johannesburg"
+                    [class.field-input--error]="errors()['city']"
+                  />
+                  @if (errors()['city']) {
                     <span class="field-error">{{ errors()['city'] }}</span>
                   }
                 </div>
                 <div class="field-group">
                   <label class="field-label" for="province">Province</label>
-                  <select id="province" class="field-input field-select"
-                          [value]="form().province"
-                          (change)="checkout.updateField('province', $any($event.target).value)"
-                          [class.field-input--error]="errors()['province']">
+                  <select
+                    id="province"
+                    class="field-input field-select"
+                    [value]="form().province"
+                    (change)="checkout.updateField('province', $any($event.target).value)"
+                    [class.field-input--error]="errors()['province']"
+                  >
                     <option value="" disabled>Select…</option>
                     <option>Gauteng</option>
                     <option>Western Cape</option>
@@ -183,7 +210,7 @@
                     <option>Free State</option>
                     <option>Northern Cape</option>
                   </select>
-                  @if(errors()['province']) {
+                  @if (errors()['province']) {
                     <span class="field-error">{{ errors()['province'] }}</span>
                   }
                 </div>
@@ -191,12 +218,16 @@
 
               <div class="field-group field-group--half">
                 <label class="field-label" for="postalCode">Postal Code</label>
-                <input id="postalCode" class="field-input" type="text"
-                       [value]="form().postalCode"
-                       (input)="checkout.updateField('postalCode', $any($event.target).value)"
-                       placeholder="2000"
-                       [class.field-input--error]="errors()['postalCode']" />
-                @if(errors()['postalCode']) {
+                <input
+                  id="postalCode"
+                  class="field-input"
+                  type="text"
+                  [value]="form().postalCode"
+                  (input)="checkout.updateField('postalCode', $any($event.target).value)"
+                  placeholder="2000"
+                  [class.field-input--error]="errors()['postalCode']"
+                />
+                @if (errors()['postalCode']) {
                   <span class="field-error">{{ errors()['postalCode'] }}</span>
                 }
               </div>
@@ -205,66 +236,86 @@
                 <label class="field-label" for="note">
                   Delivery Note <span class="field-label--optional">(optional)</span>
                 </label>
-                <textarea id="note" class="field-input field-textarea"
-                          [value]="form().note"
-                          (input)="checkout.updateField('note', $any($event.target).value)"
-                          rows="3"></textarea>
+                <textarea
+                  id="note"
+                  class="field-input field-textarea"
+                  [value]="form().note"
+                  (input)="checkout.updateField('note', $any($event.target).value)"
+                  rows="3"
+                ></textarea>
               </div>
 
-              <button class="btn-next" (click)="goToStep(2)">
-                Continue to Payment →
-              </button>
-
+              <button class="btn-next" (click)="goToStep(2)">Continue to Payment →</button>
             </div>
           }
         </section>
 
         <!-- ── STEP 2: Payment ── -->
-        <section class="form-section"
-                 [class.form-section--locked]="currentStep() < 2"
-                 [class.form-section--collapsed]="currentStep() > 2">
-
+        <section
+          class="form-section"
+          [class.form-section--locked]="currentStep() < 2"
+          [class.form-section--collapsed]="currentStep() > 2"
+        >
           <div class="section-header" (click)="currentStep() > 2 && goToStep(2)">
             <span class="section-number">02</span>
             <h2 class="section-title">Payment</h2>
-            @if(currentStep() > 2) {
+            @if (currentStep() > 2) {
               <span class="section-edit">Edit</span>
             }
           </div>
 
-          @if(currentStep() === 2) {
+          @if (currentStep() === 2) {
             <div class="form-body">
-
               <div class="payment-tabs">
-                <button class="payment-tab"
-                        [class.payment-tab--active]="paymentMethod() === 'eft'"
-                        (click)="checkout.paymentMethod.set('eft')"
-                        type="button">
-                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
-                       [attr.stroke]="paymentMethod() === 'eft' ? '#c9a96e' : '#aaa'"
-                       stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                       aria-hidden="true">
-                    <path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/>
+                <button
+                  class="payment-tab"
+                  [class.payment-tab--active]="paymentMethod() === 'eft'"
+                  (click)="checkout.paymentMethod.set('eft')"
+                  type="button"
+                >
+                  <svg
+                    width="17"
+                    height="17"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    [attr.stroke]="paymentMethod() === 'eft' ? '#c9a96e' : '#aaa'"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"
+                    />
                   </svg>
                   EFT
                 </button>
-                <button class="payment-tab"
-                        [class.payment-tab--active]="paymentMethod() === 'cod'"
-                        (click)="checkout.paymentMethod.set('cod')"
-                        type="button">
-                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
-                       [attr.stroke]="paymentMethod() === 'cod' ? '#c9a96e' : '#aaa'"
-                       stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                       aria-hidden="true">
-                    <rect x="2" y="6" width="20" height="12" rx="2"/>
-                    <circle cx="12" cy="12" r="2"/>
-                    <path d="M6 12h.01M18 12h.01"/>
+                <button
+                  class="payment-tab"
+                  [class.payment-tab--active]="paymentMethod() === 'cod'"
+                  (click)="checkout.paymentMethod.set('cod')"
+                  type="button"
+                >
+                  <svg
+                    width="17"
+                    height="17"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    [attr.stroke]="paymentMethod() === 'cod' ? '#c9a96e' : '#aaa'"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <rect x="2" y="6" width="20" height="12" rx="2" />
+                    <circle cx="12" cy="12" r="2" />
+                    <path d="M6 12h.01M18 12h.01" />
                   </svg>
                   Cash on Delivery
                 </button>
               </div>
 
-              @if(paymentMethod() === 'eft') {
+              @if (paymentMethod() === 'eft') {
                 <div class="eft-panel">
                   <div class="bank-grid">
                     <div class="bank-box">
@@ -285,56 +336,67 @@
                     </div>
                   </div>
                   <div class="eft-notice">
-                    Your unique EFT reference will be shown on the confirmation screen — use it exactly as shown when making your payment.
+                    Your unique EFT reference will be shown on the confirmation screen — use it
+                    exactly as shown when making your payment.
                   </div>
                 </div>
               }
 
-              @if(paymentMethod() === 'cod') {
+              @if (paymentMethod() === 'cod') {
                 <div class="cod-panel">
                   <div class="cod-row">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a96e"
-                         stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                         aria-hidden="true" style="flex-shrink:0; margin-top:2px">
-                      <rect x="2" y="6" width="20" height="12" rx="2"/>
-                      <circle cx="12" cy="12" r="2"/>
-                      <path d="M6 12h.01M18 12h.01"/>
+                    <svg
+                      width="22"
+                      height="22"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#c9a96e"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                      style="flex-shrink: 0; margin-top: 2px"
+                    >
+                      <rect x="2" y="6" width="20" height="12" rx="2" />
+                      <circle cx="12" cy="12" r="2" />
+                      <path d="M6 12h.01M18 12h.01" />
                     </svg>
                     <div>
                       <div class="cod-title">Pay when your order arrives</div>
-                      <div class="cod-desc">Have the exact amount ready for the courier. Our drivers cannot provide change.</div>
+                      <div class="cod-desc">
+                        Have the exact amount ready for the courier. Our drivers cannot provide
+                        change.
+                      </div>
                     </div>
                   </div>
                 </div>
               }
 
-              @if(errors()['paymentMethod']) {
+              @if (errors()['paymentMethod']) {
                 <span class="field-error">{{ errors()['paymentMethod'] }}</span>
               }
 
-              <button class="btn-next"
-                      [disabled]="!paymentMethod()"
-                      (click)="goToStep(3)"
-                      type="button">
+              <button
+                class="btn-next"
+                [disabled]="!paymentMethod()"
+                (click)="goToStep(3)"
+                type="button"
+              >
                 Review Order →
               </button>
-
             </div>
           }
         </section>
 
         <!-- ── STEP 3: Review & Confirm ── -->
-        <section class="form-section"
-                 [class.form-section--locked]="currentStep() < 3">
-
+        <section class="form-section" [class.form-section--locked]="currentStep() < 3">
           <div class="section-header">
             <span class="section-number">03</span>
             <h2 class="section-title">Review Order</h2>
           </div>
 
-          @if(currentStep() === 3) {
+          @if (currentStep() === 3) {
             <div class="form-body">
-
               <!-- Delivery summary -->
               <div class="review-block">
                 <div class="review-block__header">
@@ -346,10 +408,10 @@
                   <p class="review-line">{{ form().email }}</p>
                   <p class="review-line">{{ form().phone }}</p>
                   <p class="review-line">
-                    {{ form().address }}, {{ form().city }},
-                    {{ form().province }}, {{ form().postalCode }}
+                    {{ form().address }}, {{ form().city }}, {{ form().province }},
+                    {{ form().postalCode }}
                   </p>
-                  @if(form().note) {
+                  @if (form().note) {
                     <p class="review-line review-line--muted">Note: {{ form().note }}</p>
                   }
                 </div>
@@ -362,12 +424,22 @@
                   <button class="review-edit-btn" (click)="goToStep(2)" type="button">Edit</button>
                 </div>
                 <div class="review-block__body">
-                  @if(paymentMethod() === 'eft') {
+                  @if (paymentMethod() === 'eft') {
                     <div class="review-payment-row">
-                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#c9a96e"
-                           stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                           aria-hidden="true">
-                        <path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/>
+                      <svg
+                        width="17"
+                        height="17"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#c9a96e"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"
+                        />
                       </svg>
                       <span>Manual EFT</span>
                     </div>
@@ -375,14 +447,22 @@
                       {{ bank.bankName }} · {{ bank.accountNumber }}
                     </p>
                   }
-                  @if(paymentMethod() === 'cod') {
+                  @if (paymentMethod() === 'cod') {
                     <div class="review-payment-row">
-                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#c9a96e"
-                           stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                           aria-hidden="true">
-                        <rect x="2" y="6" width="20" height="12" rx="2"/>
-                        <circle cx="12" cy="12" r="2"/>
-                        <path d="M6 12h.01M18 12h.01"/>
+                      <svg
+                        width="17"
+                        height="17"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#c9a96e"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <rect x="2" y="6" width="20" height="12" rx="2" />
+                        <circle cx="12" cy="12" r="2" />
+                        <path d="M6 12h.01M18 12h.01" />
                       </svg>
                       <span>Cash on Delivery</span>
                     </div>
@@ -396,10 +476,10 @@
                   <span class="review-block__title">Items</span>
                 </div>
                 <div class="review-block__body">
-                  @for(item of cartItems(); track item.productId) {
+                  @for (item of cartItems(); track item.productId) {
                     <div class="review-item">
                       <div class="review-item__info">
-                        @if(item.image) {
+                        @if (item.image) {
                           <img [src]="item.image" [alt]="item.name" class="review-item__img" />
                         }
                         <div>
@@ -408,7 +488,7 @@
                         </div>
                       </div>
                       <span class="review-item__price">
-                        R {{ (item.price * item.quantity) | number:'1.2-2' }}
+                        R {{ item.price * item.quantity | number: '1.2-2' }}
                       </span>
                     </div>
                   }
@@ -419,40 +499,39 @@
               <div class="review-totals">
                 <div class="review-total-row">
                   <span>Subtotal</span>
-                  <span>R {{ subtotal() | number:'1.2-2' }}</span>
+                  <span>R {{ subtotal() | number: '1.2-2' }}</span>
                 </div>
                 <div class="review-total-row">
                   <span>Delivery</span>
-                  <span>R {{ deliveryFee() | number:'1.2-2' }}</span>
+                  <span>R {{ deliveryFee() | number: '1.2-2' }}</span>
                 </div>
                 <div class="review-total-row review-total-row--total">
                   <span>Total</span>
-                  <span>R {{ total() | number:'1.2-2' }}</span>
+                  <span>R {{ total() | number: '1.2-2' }}</span>
                 </div>
               </div>
 
-              @if(submitError) {
+              @if (submitError) {
                 <div class="submit-error" role="alert">{{ submitError }}</div>
               }
 
-              <button class="btn-next"
-                      [class.btn-next--loading]="isSubmitting"
-                      [disabled]="isSubmitting"
-                      (click)="placeOrder()"
-                      type="button">
-                @if(isSubmitting) {
+              <button
+                class="btn-next"
+                [class.btn-next--loading]="isSubmitting"
+                [disabled]="isSubmitting"
+                (click)="placeOrder()"
+                type="button"
+              >
+                @if (isSubmitting) {
                   <span class="spinner"></span> Placing Order…
                 } @else {
                   Place Order →
                 }
               </button>
-
             </div>
           }
         </section>
-
       </div>
     </div>
   }
-
 </div>

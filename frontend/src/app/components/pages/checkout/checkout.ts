@@ -7,10 +7,11 @@ import { CartService }        from '../../../services/cart/cart-service';       
 import { BankDetails, Order, PaymentMethod }              from '../../../interfaces/order';
 import { CheckoutForm, CheckoutValidationErrors } from '../../../interfaces/checkout';
 import { CartItem } from '../../../interfaces/cart-item';
+import { PopUpload } from "../pop-upload/pop-upload";
 
 @Component({
   selector:    'app-checkout',
-  imports:     [CommonModule],
+  imports: [CommonModule, PopUpload],
   templateUrl: './checkout.html',
   styleUrls:   ['./checkout.css'],
 })

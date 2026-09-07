@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Cart = require("../../model/Cart.js");
 const Product = require("../../model/Product.js");
-const verifyToken = require("../../middleware/auth.js");
+const {verifyToken} = require("../../middleware/auth.js");
 
 // All cart routes are protected — verifyToken runs first on every route
 router.use(verifyToken);

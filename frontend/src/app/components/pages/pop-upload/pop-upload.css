@@ -1,0 +1,302 @@
+:root {
+  --gold:        #c9a96e;
+  --gold-light:  #fdf8f1;
+  --gold-border: #ede7db;
+  --cream:       #f0ede6;
+  --dark:        #1a1a1a;
+  --muted:       #888;
+  --radius:      10px;
+}
+
+/* ── Wrap ────────────────────────────────────────────────────────── */
+.pop-wrap {
+  background: var(--gold-light);
+  border: 1px solid var(--gold-border);
+  border-radius: 12px;
+  padding: 22px 24px;
+  margin-top: 20px;
+}
+
+/* ── Header ──────────────────────────────────────────────────────── */
+.pop-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.pop-section-num {
+  font-size: 20px;
+  margin-top: 2px;
+}
+
+.pop-title {
+  font-family: 'Georgia', serif;
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--dark);
+  margin: 0 0 4px;
+}
+
+.pop-subtitle {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0;
+}
+
+.pop-ref {
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  color: var(--gold);
+  font-size: 13px;
+}
+
+/* ── Drop zone ───────────────────────────────────────────────────── */
+.pop-dropzone {
+  display: block;
+  border: 1.5px dashed var(--gold-border);
+  border-radius: var(--radius);
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+
+.pop-dropzone:hover {
+  border-color: var(--gold);
+  background: var(--gold-light);
+}
+
+.pop-dropzone.pop-dropzone--has-file {
+  border-style: solid;
+  border-color: var(--gold);
+}
+
+.pop-file-input {
+  display: none;
+}
+
+.pop-dropzone-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 28px 20px;
+  color: var(--muted);
+}
+
+.pop-dropzone-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--dark);
+  margin: 0;
+}
+
+.pop-dropzone-hint {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* ── File preview ────────────────────────────────────────────────── */
+.pop-file-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+}
+
+.pop-preview-img {
+  width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  border-radius: 6px;
+  border: 1px solid var(--gold-border);
+}
+
+.pop-pdf-icon {
+  width: 56px;
+  height: 56px;
+  background: var(--gold-light);
+  border: 1px solid var(--gold-border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+}
+
+.pop-file-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--dark);
+  margin: 0;
+  text-align: center;
+  word-break: break-all;
+}
+
+.pop-change-hint {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* ── Error ───────────────────────────────────────────────────────── */
+.pop-error {
+  background: #fee2e2;
+  border: 1px solid #fbc8c8;
+  border-left: 3px solid #e05454;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #c0392b;
+  margin-bottom: 14px;
+}
+
+/* ── Progress bar ────────────────────────────────────────────────── */
+.pop-progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.pop-progress-bar {
+  flex: 1;
+  height: 6px;
+  background: #e8e3db;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.pop-progress-fill {
+  height: 100%;
+  background: var(--gold);
+  border-radius: 99px;
+  transition: width 0.2s ease;
+}
+
+.pop-progress-label {
+  font-size: 12px;
+  color: var(--muted);
+  min-width: 32px;
+  text-align: right;
+}
+
+/* ── Upload button ───────────────────────────────────────────────── */
+.pop-upload-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 44px;
+  background: var(--dark);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+}
+
+.pop-upload-btn:hover:not(:disabled) {
+  background: #333;
+}
+
+.pop-upload-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.pop-upload-btn.pop-upload-btn--loading {
+  opacity: 0.8;
+  cursor: default;
+}
+
+/* ── Success state ───────────────────────────────────────────────── */
+.pop-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 10px 0 4px;
+  gap: 8px;
+}
+
+.pop-success-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #d1fae5;
+  color: #065f46;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.pop-success-title {
+  font-family: 'Georgia', serif;
+  font-size: 17px;
+  color: var(--dark);
+  margin: 0;
+}
+
+.pop-success-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.pop-view-btn {
+  display: inline-block;
+  font-size: 13px;
+  color: var(--gold);
+  text-decoration: none;
+  border: 1px solid var(--gold-border);
+  border-radius: var(--radius);
+  padding: 8px 16px;
+  transition: background 0.15s;
+}
+
+.pop-view-btn:hover {
+  background: #fff;
+}
+
+.pop-replace-btn {
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  text-decoration: underline;
+  margin-top: 4px;
+}
+
+.pop-replace-btn:hover {
+  color: var(--dark);
+}
+
+/* ── Spinner ─────────────────────────────────────────────────────── */
+.pop-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: pop-spin 0.7s linear infinite;
+}
+
+@keyframes pop-spin {
+  to { transform: rotate(360deg); }
+}

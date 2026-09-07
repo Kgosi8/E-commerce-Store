@@ -1,6 +1,6 @@
 const transporter              = require('../config/mailer');
 const { orderConfirmationEmail } = require('../utils/emailTemplates');
-
+const { popNotificationEmail } = require('../utils/emailTemplates');
 /**
  * Sends the order confirmation email to the customer.
  * Non-fatal — logs error but does not throw so order creation still succeeds.
@@ -25,4 +25,21 @@ async function sendOrderConfirmation(order) {
   }
 }
 
-module.exports = { sendOrderConfirmation };
+async function sendPOPNotification(order) {
+  try {
+    const { subject, html } = popNotificationEmail(order);
+
+    await transporter.sendMail({
+      from:    process.env.EMAIL_FROM,
+      to:      process.env.ADMIN_EMAIL,   // add ADMIN_EMAIL to .env
+      subject,
+      html,
+    });
+
+    console.log(`[Email] POP notification sent to admin for ${order.orderId}`);
+  } catch (err) {
+    console.error(`[Email] Failed to send POP notification for ${order.orderId}:`, err.message);
+  }
+}
+
+module.exports = { sendOrderConfirmation, sendPOPNotification };

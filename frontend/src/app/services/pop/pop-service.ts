@@ -18,7 +18,7 @@ export class PopService {
 
   constructor(private http: HttpClient) {}
 
-  private readonly apiUrl = 'http://localhost:5000/api';
+  private readonly apiUrl = 'http://localhost:5000/api/orders';
 
   uploadPOP(orderId: string, file:File): Observable<UploadProgress> {
     const formData = new FormData();
