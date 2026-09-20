@@ -88,3 +88,113 @@ exports.getProductById = async (req, res) => {
     });
   } 
 };
+
+
+// ── GET /api/products/tag/:tag ────────────────────────────────────
+
+async function getProductsByTag(req, res) {
+  try{
+    const { tag } = req.params;
+    const {page=1, limit=12}= req.query;
+
+    const skip= (Number(page)-1)*Number(limit);
+    const filter= {tags: {$in: [tag]}};
+
+    const [products, total] = await Promise.all([
+      Product.find(filter)
+      .sort({createdAt: -1})
+      .skip(skip)
+      .limit(Number(limit))
+      .lean(),
+      Product.countDocuments(filter)
+    ]);
+
+    return res.json({
+      success: true,
+      tag,
+      total,
+      page: Number(page),
+      pages: Math.ceil(total/Number(limit)),
+      products
+    });
+  } catch(err){
+    console.error("[getProductsByTag]", err);
+    return res.status(500).json({ success: false, message: "Internal server error." });
+  }
+}
+
+
+// ── GET /api/products/category/:category ──────────────────────────
+async function getProductsByCategory(req, res) {
+  try {
+    const { category } = req.params;
+    const { page = 1, limit = 12 } = req.query;
+
+    const skip   = (Number(page) - 1) * Number(limit);
+    // Case-insensitive match
+    const filter = { category: { $regex: new RegExp(`^${category}$`, 'i') } };
+
+    const [products, total] = await Promise.all([
+      Product.find(filter)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(Number(limit))
+        .lean(),
+      Product.countDocuments(filter),
+    ]);
+
+    return res.json({
+      success: true,
+      category,
+      total,
+      page:    Number(page),
+      pages:   Math.ceil(total / Number(limit)),
+      products,
+    });
+
+  } catch (err) {
+    console.error('[getProductsByCategory]', err);
+    return res.status(500).json({ success: false, message: 'Server error.' });
+  }
+}
+
+// ── GET /api/products/search?q= ───────────────────────────────────
+async function searchProducts(req, res) {
+  try {
+    const { q, tag, category, page = 1, limit = 12 } = req.query;
+
+    const filter = {};
+    if (q)        filter.$text     = { $search: q };
+    if (tag)      filter.tags      = { $in: [tag] };
+    if (category) filter.category  = { $regex: new RegExp(`^${category}$`, 'i') };
+
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const [products, total] = await Promise.all([
+      Product.find(filter)
+        .sort(q ? { score: { $meta: 'textScore' } } : { createdAt: -1 })
+        .skip(skip)
+        .limit(Number(limit))
+        .lean(),
+      Product.countDocuments(filter),
+    ]);
+
+    return res.json({
+      success: true,
+      total,
+      page:    Number(page),
+      pages:   Math.ceil(total / Number(limit)),
+      products,
+    });
+
+  } catch (err) {
+    console.error('[searchProducts]', err);
+    return res.status(500).json({ success: false, message: 'Server error.' });
+  }
+}
+
+module.exports = {
+  getProductsByTag,
+  getProductsByCategory,
+  searchProducts,
+}

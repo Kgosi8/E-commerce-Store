@@ -31,11 +31,16 @@ export class AdminOrderService {
     if (filters.page) params['page'] = String(filters.page);
     if (filters.limit) params['limit'] = String(filters.limit);
 
-    return this.http.get<ListOrdersResponse>(this.baseUrl, { params });
+    return this.http.get<ListOrdersResponse>(this.baseUrl, {
+       params,
+       withCredentials: true, // Include credentials for authentication
+      });
   }
 
   getOrder(orderId: string): Observable<{ success: boolean; order: Order }> {
-    return this.http.get<{ success: boolean; order: Order }>(`${this.baseUrl}/${orderId}`);
+    return this.http.get<{ success: boolean; order: Order }>(`${this.baseUrl}/${orderId}`, {
+      withCredentials: true,
+    });
   }
 
   updateStatus(
@@ -45,6 +50,9 @@ export class AdminOrderService {
     return this.http.patch<{ success: boolean; order: Order }>(
       `${this.baseUrl}/${orderId}/status`,
       payload,
+      {
+        withCredentials: true,
+      }
     );
   }
 }

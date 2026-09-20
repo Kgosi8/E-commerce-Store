@@ -29,10 +29,17 @@ const productSchema=new mongoose.Schema({
     images:{
         type:[String],
         trim:true
+    },
+    tags:{
+        type:[String],
+        default:[],
     }
 },{
     timestamps:true
 });
+
+productSchema.index({tags:1});
+productSchema.index({name:'text', description:'text', tags:'text'});
 
 const Product=mongoose.model('Product',productSchema,'Product');
 
