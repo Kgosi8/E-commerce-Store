@@ -1,13 +1,12 @@
-const Product = require("../model/Product");
-const fs = require('fs');
+const Product = require('../model/Product');
+const fs      = require('fs');
 
-exports.createProduct = async (req, res) => {
-  try{
-    const {name,description,price,category,stock} = req.body;
+// ── Create product ────────────────────────────────────────────────
+async function createProduct(req, res) {
+  try {
+    const { name, description, price, category, stock } = req.body;
 
-    //Handle uploaded images
-
-    const imageUrls= req.files.map(file =>
+    const imageUrls = req.files.map(file =>
       `${req.protocol}://${req.get('host')}/uploads/${file.filename}`
     );
 
@@ -17,122 +16,76 @@ exports.createProduct = async (req, res) => {
       price,
       category,
       stock,
-      images: imageUrls
+      images: imageUrls,
     });
 
-    res.status(201).json({
-      status: "success",
-      data: product
-    });
-  } catch(err){
-    res.status(500).json({
-      status: "error",
-      message: err.message
-    });
+    res.status(201).json({ status: 'success', data: product });
+
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: err.message });
   }
-};
+}
 
-// GET ALL PRODUCTS
-
-exports.getAllProducts = async (req, res) => {
-  try{
+// ── Get all products ──────────────────────────────────────────────
+async function getAllProducts(req, res) {
+  try {
     const products = await Product.find();
-    res.json(products);
-  } catch(err){
-    res.status(500).json({
-      status: "error",
-      message: err.message
+    res.json({
+      success: true,
+      total: products.length,
+      page: 1,
+      pages: 1,
+      products,
     });
+  }catch (err) {
+    res.status(500).json({ status: 'error', message: err.message });
   }
-  
-};
+}
 
-//DELETE PRODUCT + IMAGES
-exports.deleteProduct = async (req, res) => {
-  try{
-    const {id} = req.params;
+// ── Get product by ID ─────────────────────────────────────────────
+async function getProductById(req, res) {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ status: 'error', message: 'Product not found' });
+    }
+    res.json({ status: 'success', data: product });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: err.message });
+  }
+}
+
+// ── Delete product + images ───────────────────────────────────────
+async function deleteProduct(req, res) {
+  try {
+    const { id } = req.params;
     const product = await Product.findById(id);
 
-    //Delete images from uploads folder
-    if(product.images && product.images.length > 0){
+    if (product.images && product.images.length > 0) {
       product.images.forEach(img => {
-        const filename = img.split("/uploads/")[1];
+        const filename = img.split('/uploads/')[1];
         fs.unlink(`uploads/${filename}`, err => {
-          if(err) console.log("File deletion error:", err);
+          if (err) console.error('File deletion error:', err);
         });
       });
     }
 
     await Product.findByIdAndDelete(id);
-    res.status(200).json({ status: "success", message: "Product deleted" });
+    res.status(200).json({ status: 'success', message: 'Product deleted' });
+
   } catch (err) {
-    res.status(500).json({ status: "error", message: err.message });
-  }
-};
-
-exports.getProductById = async (req, res) => {
-  try{
-    const product = await Product.findById(req.params.id);
-
-    if(!product){
-      return res.status(404).json({ status: "error", message: "Product not found" });
-    }
-    res.json({
-      status:"success",
-      data: product
-    });
-  } catch(err){
-    res.status(500).json({
-      status: "error",
-      message: err.message
-    });
-  } 
-};
-
-
-// ── GET /api/products/tag/:tag ────────────────────────────────────
-
-async function getProductsByTag(req, res) {
-  try{
-    const { tag } = req.params;
-    const {page=1, limit=12}= req.query;
-
-    const skip= (Number(page)-1)*Number(limit);
-    const filter= {tags: {$in: [tag]}};
-
-    const [products, total] = await Promise.all([
-      Product.find(filter)
-      .sort({createdAt: -1})
-      .skip(skip)
-      .limit(Number(limit))
-      .lean(),
-      Product.countDocuments(filter)
-    ]);
-
-    return res.json({
-      success: true,
-      tag,
-      total,
-      page: Number(page),
-      pages: Math.ceil(total/Number(limit)),
-      products
-    });
-  } catch(err){
-    console.error("[getProductsByTag]", err);
-    return res.status(500).json({ success: false, message: "Internal server error." });
+    res.status(500).json({ status: 'error', message: err.message });
   }
 }
 
-
-// ── GET /api/products/category/:category ──────────────────────────
-async function getProductsByCategory(req, res) {
+// ── Get products by tag ───────────────────────────────────────────
+async function getProductsByTag(req, res) {
   try {
-    const { category } = req.params;
+    const { tag }             = req.params;
     const { page = 1, limit = 12 } = req.query;
 
     const skip   = (Number(page) - 1) * Number(limit);
-    // Case-insensitive match
-    const filter = { category: { $regex: new RegExp(`^${category}$`, 'i') } };
+    const filter = { tags: { $in: [tag] } };
 
     const [products, total] = await Promise.all([
       Product.find(filter)
@@ -145,10 +98,43 @@ async function getProductsByCategory(req, res) {
 
     return res.json({
       success: true,
+      tag,
+      total,
+      page:  Number(page),
+      pages: Math.ceil(total / Number(limit)),
+      products,
+    });
+
+  } catch (err) {
+    console.error('[getProductsByTag]', err);
+    return res.status(500).json({ success: false, message: 'Server error.' });
+  }
+}
+
+// ── Get products by category ──────────────────────────────────────
+async function getProductsByCategory(req, res) {
+  try {
+    const { category }        = req.params;
+    const { page = 1, limit = 12 } = req.query;
+
+    const skip   = (Number(page) - 1) * Number(limit);
+    const filter = { category: { $regex: new RegExp(`^${category}$`, 'i') } };
+
+    const [products, total] = await Promise.all([
+      Product.find(filter)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(Number(limit))
+        .lean(),
+      Product.countDocuments(filter),
+    ]);
+
+    return res.json({
+      success:  true,
       category,
       total,
-      page:    Number(page),
-      pages:   Math.ceil(total / Number(limit)),
+      page:     Number(page),
+      pages:    Math.ceil(total / Number(limit)),
       products,
     });
 
@@ -158,15 +144,15 @@ async function getProductsByCategory(req, res) {
   }
 }
 
-// ── GET /api/products/search?q= ───────────────────────────────────
+// ── Search products ───────────────────────────────────────────────
 async function searchProducts(req, res) {
   try {
     const { q, tag, category, page = 1, limit = 12 } = req.query;
 
     const filter = {};
-    if (q)        filter.$text     = { $search: q };
-    if (tag)      filter.tags      = { $in: [tag] };
-    if (category) filter.category  = { $regex: new RegExp(`^${category}$`, 'i') };
+    if (q)        filter.$text    = { $search: q };
+    if (tag)      filter.tags     = { $in: [tag] };
+    if (category) filter.category = { $regex: new RegExp(`^${category}$`, 'i') };
 
     const skip = (Number(page) - 1) * Number(limit);
 
@@ -193,8 +179,13 @@ async function searchProducts(req, res) {
   }
 }
 
+// ── Exports ───────────────────────────────────────────────────────
 module.exports = {
+  createProduct,
+  getAllProducts,
+  getProductById,
+  deleteProduct,
   getProductsByTag,
   getProductsByCategory,
   searchProducts,
-}
+};

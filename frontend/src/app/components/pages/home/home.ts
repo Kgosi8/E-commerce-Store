@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { ProductService } from '../../../services/products/product-service';
+import { Product } from '../../../interfaces/product';
 
 @Component({
   selector: 'app-home',
@@ -10,7 +11,9 @@ import { ProductService } from '../../../services/products/product-service';
   styleUrl: './home.css',
 })
 export class Home implements OnInit {
-  products: any[] = [];
+  products: Product[] = [];
+  isLoading = true;
+  error: string | null = null;
 
   constructor(
     private productService: ProductService,
@@ -23,16 +26,36 @@ export class Home implements OnInit {
   }
 
   loadProducts(): void {
-    this.productService.getProducts().subscribe((products) => {
-      this.products = products;
-      this.cdr.detectChanges();
+    this.productService.getProducts().subscribe({
+      next: (res) => {
+        this.products = res.products;
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.error = 'Failed to load products. Please try again later.';
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
     });
   }
 
-  productName(product:string){
-    console.log(product);
-    
-    
+  loadByTag(tag: string): void {
+    this.isLoading = true;
+    this.productService.getByTag(tag).subscribe({
+      next: (res) => {
+        this.products = res.products;
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.error = `Failed to load products for "${tag}".`;
+        this.isLoading = false;
+      },
+    });
   }
 
+  productName(product: string) {
+    console.log(product);
+  }
 }

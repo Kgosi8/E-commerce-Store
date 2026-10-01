@@ -6,11 +6,16 @@ const controller = require("../../controllers/product.js");
 
 // GET /api/products
 router.get("/", controller.getAllProducts);
+router.get('/search', controller.searchProducts);
+router.get('/tag/:tag', controller.getProductsByTag);
+router.get('/category/:category', controller.getProductsByCategory);
 
 // GET /api/products/:id
 router.get("/:id", controller.getProductById);
 router.post("/", upload.array("images", 5), controller.createProduct);
 router.delete("/:id", controller.deleteProduct);
+
+
 
 
 module.exports = router;
