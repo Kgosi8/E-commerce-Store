@@ -9,47 +9,70 @@ import { Checkout } from './components/pages/checkout/checkout';
 import { Payment } from './components/pages/payment/payment';
 import { AdminOrders } from './components/pages/admin-orders/admin-orders';
 
-
 export const routes: Routes = [
-    {
-        path:'',
-        component: Home,
+  {
+    path: '',
+    component: Home,
+  },
+  {
+    path: 'men',
+    loadComponent: () =>
+      import('./components/partials/product-list/product-list').then((m) => m.ProductList),
+  },
+  {
+    path: 'women',
+    loadComponent: () =>
+      import('./components/partials/product-list/product-list').then((m) => m.ProductList),
+  },
+  {
+    path: 'kids',
+    loadComponent: () =>
+      import('./components/partials/product-list/product-list').then((m) => m.ProductList),
+  },
+  {
+    path: 'new',
+    loadComponent: () =>
+      import('./components/partials/product-list/product-list').then((m) => m.ProductList),
+  },
+  {
+    path: 'login',
+    component: Login,
+  },
+  {
+    path: 'register',
+    component: Register,
+  },
+  {
+    path: 'add-to-cart/:id',
+    component: AddToCart,
+  },
+  {
+    path: 'checkout',
+    component: Checkout,
+  },
+  {
+    path: 'admin-orders',
+    component: AdminOrders,
+  },
+  {
+    path: 'cart',
+    component: Cart,
+  },
+  {
+    path: 'payment',
+    component: Payment,
+  },
+  {
+    path: 'admin-dashboard',
+    loadComponent() {
+      return import('./components/pages/admin-dashboard/admin-dashboard').then(
+        (m) => m.AdminDashboard,
+      );
     },
-    {
-        path: 'login',
-        component: Login,
-    },{
-        path: 'register',
-        component: Register
-    },{
-        path:'add-to-cart/:id',
-        component:AddToCart
-    },
-    {
-        path: 'checkout',
-        component: Checkout
-    },
-    {
-        path: 'admin-orders',
-        component: AdminOrders
-    },
-    {
-        path:'cart',
-        component:Cart
-    },
-    {
-        path:'payment',
-        component: Payment
-    },
-    {
-        path:'admin-dashboard',
-        loadComponent() {
-            return import('./components/pages/admin-dashboard/admin-dashboard').then(m => m.AdminDashboard);
-        },
-        // canActivate: [adminGuard],
-        // children: [
-        //     {path:'create', component:CreateProduct},
-        //     {path:'products', component:ProductList},
-        // ]
-    }
+    // canActivate: [adminGuard],
+    // children: [
+    //     {path:'create', component:CreateProduct},
+    //     {path:'products', component:ProductList},
+    // ]
+  },
 ];

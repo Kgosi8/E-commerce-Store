@@ -1,0 +1,50 @@
+<div class="pl-page">
+
+  <!-- Page title -->
+  <div class="pl-header">
+    <h1 class="pl-title">{{ pageTitle() }}</h1>
+    <p class="pl-count" *ngIf="!isLoading()">{{ total() }} products</p>
+  </div>
+
+  <!-- Loading -->
+  @if(isLoading()) {
+    <div class="pl-loading">
+      <span class="pl-spinner"></span>
+      <p>Loading products…</p>
+    </div>
+  }
+
+  <!-- Error -->
+  @else if(error()) {
+    <div class="pl-error" role="alert">{{ error() }}</div>
+  }
+
+  <!-- Empty -->
+  @else if(products().length === 0) {
+    <div class="pl-empty">
+      <p>No products found in this category.</p>
+    </div>
+  }
+
+  <!-- Grid -->
+  @else {
+    <div class="pl-grid">
+      @for(product of products(); track product._id) {
+        <div class="pl-card" [routerLink]="['/product', product._id]">
+          <div class="pl-card-img-wrap">
+            <img
+              [src]="product.images[0] || 'assets/placeholder.png'"
+              [alt]="product.name"
+              class="pl-card-img" />
+          </div>
+          <div class="pl-card-body">
+            <p class="pl-card-name">{{ product.name }}</p>
+            <p class="pl-card-category">{{ product.category }}</p>
+            <p class="pl-card-price">R {{ product.price | number:'1.2-2' }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+</div>

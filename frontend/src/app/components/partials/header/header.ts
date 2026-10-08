@@ -6,6 +6,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../services/auth/auth-service';
 import { CartService } from '../../../services/cart/cart-service';
 import { AccountDetails } from "../account-details/account-details";
+import {ViewChild, ElementRef} from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -18,6 +19,10 @@ export class Header implements OnInit {
   initials$: any;
   showAccountDetails=false;
   showMenu=false;
+  searchOpen= false;
+  searchQuery= '';
+
+  @ViewChild('searchInput') searchInputRef!: ElementRef<HTMLInputElement>;
 
 
 
@@ -48,5 +53,23 @@ export class Header implements OnInit {
 
   toggleMenu() {
     this.showMenu = !this.showMenu;
+  }
+
+  openSearch(): void {
+    this.searchOpen = true;
+
+    setTimeout(()=> this.searchInputRef.nativeElement.focus(), 50);
+  }
+
+  closeSearch(): void {
+    this.searchOpen = false;
+    this.searchQuery = '';
+  }
+
+  submitSearch(): void {
+    const q = this.searchQuery.trim();
+    if (!q) return;
+    this.closeSearch();
+    this.router.navigate(['/search'], { queryParams: {  q } });
   }
 }
