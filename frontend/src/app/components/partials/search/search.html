@@ -1,1 +1,63 @@
-<p>search works!</p>
+<div class="sr-page">
+
+  <!-- Header -->
+  <div class="sr-header">
+    @if(query()) {
+      <h1 class="sr-title">
+        Results for <span class="sr-query">"{{ query() }}"</span>
+      </h1>
+      @if(!isLoading()) {
+        <p class="sr-count">{{ total() }} product{{ total() !== 1 ? 's' : '' }} found</p>
+      }
+    }
+  </div>
+
+  <!-- Loading -->
+  @if(isLoading()) {
+    <div class="sr-loading">
+      <span class="sr-spinner"></span>
+      <p>Searching…</p>
+    </div>
+  }
+
+  <!-- Error -->
+  @else if(error()) {
+    <div class="sr-error" role="alert">{{ error() }}</div>
+  }
+
+  <!-- No results -->
+  @else if(query() && products().length === 0) {
+    <div class="sr-empty">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.2"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <p>No products found for <strong>"{{ query() }}"</strong></p>
+      <p class="sr-empty-hint">Try a different search term or browse our categories.</p>
+    </div>
+  }
+
+  <!-- Results grid -->
+  @else if(products().length > 0) {
+    <div class="sr-grid">
+      @for(product of products(); track product._id) {
+        <div class="sr-card" [routerLink]="['/product', product._id]">
+          <div class="sr-card-img-wrap">
+            <img
+              [src]="product.images[0] || 'assets/placeholder.png'"
+              [alt]="product.name"
+              class="sr-card-img" />
+          </div>
+          <div class="sr-card-body">
+            <p class="sr-card-name">{{ product.name }}</p>
+            <p class="sr-card-category">{{ product.category }}</p>
+            <p class="sr-card-price">R {{ product.price | number:'1.2-2' }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+</div>

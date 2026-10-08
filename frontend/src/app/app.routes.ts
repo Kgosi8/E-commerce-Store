@@ -35,6 +35,11 @@ export const routes: Routes = [
       import('./components/partials/product-list/product-list').then((m) => m.ProductList),
   },
   {
+    path: 'search',
+    loadComponent: () =>
+      import('./components/partials/search/search').then((m) => m.Search),
+  },
+  {
     path: 'login',
     component: Login,
   },
