@@ -77,18 +77,16 @@
     </div>
 
     @if (isLoggedIn$ | async) {
-      <div
-        class="profile-icon"
-        (mouseenter)="showAccountDetails = true"
-        (mouseleave)="showAccountDetails = false"
-      >
-        {{ initials$ | async }}
-      </div>
-      @if (showAccountDetails) {
-        <div class="popup">
-          <account-details></account-details>
+      <div class="account-container">
+        <div class="profile-icon" (click)="showAccountDetails = !showAccountDetails">
+          {{ initials$ | async }}
         </div>
-      }
+        @if (showAccountDetails) {
+          <div class="popup">
+            <account-details></account-details>
+          </div>
+        }
+      </div>
     } @else {
       <a routerLink="/login">Login</a>
     }

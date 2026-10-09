@@ -1,0 +1,166 @@
+<div class="ac-wrap">
+
+  <!-- Loading -->
+  @if(isLoadingUser()) {
+    <div class="ac-loading">
+      <span class="ac-spinner"></span>
+    </div>
+  }
+
+  @else if(user()) {
+
+    <!-- User header -->
+    <div class="ac-user-header">
+      <div class="ac-avatar">{{ user()!.initials ?? user()!.name[0] }}</div>
+      <div>
+        <p class="ac-user-name">{{ user()!.name }}</p>
+        <p class="ac-user-email">{{ user()!.email }}</p>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="ac-tabs">
+      <button class="ac-tab" [class.ac-tab--active]="activeTab() === 'overview'"
+              (click)="setTab('overview')" type="button">Overview</button>
+      <button class="ac-tab" [class.ac-tab--active]="activeTab() === 'orders'"
+              (click)="setTab('orders')" type="button">Orders</button>
+      <button class="ac-tab" [class.ac-tab--active]="activeTab() === 'address'"
+              (click)="setTab('address')" type="button">Address</button>
+      <button class="ac-tab" [class.ac-tab--active]="activeTab() === 'returns'"
+              (click)="setTab('returns')" type="button">Returns</button>
+    </div>
+
+    <!-- ── Overview ── -->
+    @if(activeTab() === 'overview') {
+      <div class="ac-section">
+        <div class="ac-kv">
+          <span class="ac-kv-key">Name</span>
+          <span class="ac-kv-val">{{ user()!.name }}</span>
+        </div>
+        <div class="ac-kv">
+          <span class="ac-kv-key">Email</span>
+          <span class="ac-kv-val">{{ user()!.email }}</span>
+        </div>
+        <div class="ac-kv">
+          <span class="ac-kv-key">Phone</span>
+          <span class="ac-kv-val">{{ user()!.phoneNumber ?? '—' }}</span>
+        </div>
+        <div class="ac-kv">
+          <span class="ac-kv-key">Address</span>
+          <span class="ac-kv-val">{{ user()!.address ?? '—' }}</span>
+        </div>
+      </div>
+    }
+
+    <!-- ── Orders ── -->
+    @if(activeTab() === 'orders') {
+      <div class="ac-section">
+
+        @if(isLoadingOrders()) {
+          <div class="ac-loading"><span class="ac-spinner"></span></div>
+        }
+
+        @else if(ordersError()) {
+          <div class="ac-error">{{ ordersError() }}</div>
+        }
+
+        @else if(orders().length === 0) {
+          <p class="ac-empty">No orders yet.</p>
+        }
+
+        @else {
+          @for(order of orders(); track order.orderId) {
+            <div class="ac-order-card">
+              <div class="ac-order-top">
+                <span class="ac-order-id">{{ order.orderId }}</span>
+                <span class="ac-status-badge ac-status-badge--{{ order.status }}">
+                  {{ statusLabel(order.status) }}
+                </span>
+              </div>
+              <p class="ac-order-date">{{ formatDate(order.createdAt!) }}</p>
+              <div class="ac-order-items">
+                @for(item of order.items; track item.productId) {
+                  <span class="ac-order-item">
+                    {{ item.name }} × {{ item.quantity }}
+                  </span>
+                }
+              </div>
+              <div class="ac-order-footer">
+                <span class="ac-payment-badge ac-payment-badge--{{ order.paymentStatus }}">
+                  {{ statusLabel(order.paymentStatus) }}
+                </span>
+                <span class="ac-order-total">R {{ order.total | number:'1.2-2' }}</span>
+              </div>
+            </div>
+          }
+        }
+
+      </div>
+    }
+
+    <!-- ── Address ── -->
+    @if(activeTab() === 'address') {
+      <div class="ac-section">
+
+        <div class="ac-field">
+          <label class="ac-label">Street address</label>
+          <input class="ac-input" type="text"
+                 [value]="addressForm.address"
+                 (input)="addressForm.address = $any($event.target).value"
+                 placeholder="12 Main Street" />
+        </div>
+
+        <div class="ac-field">
+          <label class="ac-label">Phone number</label>
+          <input class="ac-input" type="tel"
+                 [value]="addressForm.phoneNumber"
+                 (input)="addressForm.phoneNumber = $any($event.target).value"
+                 placeholder="+27 82 000 0000" />
+        </div>
+
+        @if(saveSuccess()) {
+          <div class="ac-success">✓ Address updated successfully</div>
+        }
+        @if(saveError()) {
+          <div class="ac-error">{{ saveError() }}</div>
+        }
+
+        <button class="ac-btn-save"
+                [disabled]="isSaving()"
+                (click)="saveAddress()"
+                type="button">
+          @if(isSaving()) { Saving… } @else { Save changes }
+        </button>
+
+      </div>
+    }
+
+    <!-- ── Returns ── -->
+    @if(activeTab() === 'returns') {
+      <div class="ac-section">
+        <p class="ac-empty">No returns found.</p>
+        <p class="ac-returns-note">
+          To request a return, contact us at
+          <a href="mailto:support@mpahlas.com">support&#64;mpahlas.com</a>
+          with your order ID.
+        </p>
+      </div>
+    }
+
+    <!-- Logout -->
+    <div class="ac-footer">
+      <button class="ac-btn-logout" (click)="logout()" type="button">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Log out
+      </button>
+    </div>
+
+  }
+
+</div>

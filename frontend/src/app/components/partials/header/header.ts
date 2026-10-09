@@ -5,8 +5,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../services/auth/auth-service';
 import { CartService } from '../../../services/cart/cart-service';
-import { AccountDetails } from "../account-details/account-details";
 import {ViewChild, ElementRef} from '@angular/core';
+import { AccountDetails } from '../../pages/account-details/account-details';
+
 
 @Component({
   selector: 'app-header',

@@ -3,8 +3,8 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../../model/User.js");
-const {verifyToken} = require("../../middleware/auth.js"); // adjust path if needed
-
+const { verifyToken } = require("../../middleware/auth.js"); // adjust path if needed
+const Order = require("../../model/Order.js");
 const JWT_SECRET = process.env.JWT_SECRET;
 
 // POST /api/register
@@ -130,6 +130,78 @@ router.get("/user", verifyToken, async (req, res) => {
     });
   } catch (err) {
     console.error("Error in profile:", err);
+    res.status(500).json({ status: "error", message: "Server error" });
+  }
+});
+
+// PUT /api/user/address - update address
+
+router.put("/user/address", verifyToken, async (req, res) => {
+  try {
+    const { address, PhoneNumber } = req.body;
+
+    if (!address && !PhoneNumber) {
+      return res.status(400).json({
+        status: "error",
+        message: "Provide address or PhoneNumber to update",
+      });
+    }
+
+    const update = {};
+    if (address) {
+      update.address = address;
+    }
+    if (PhoneNumber) {
+      update.PhoneNumber = PhoneNumber;
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { $set: update },
+      { new: true },
+    ).select("-password");
+
+    if (!user) {
+      return res.status(404).json({
+        status: "error",
+        message: "User not found",
+      });
+    }
+    return res.status(200).json({
+      status: "success",
+      message: "User updated successfully",
+      data: user,
+    });
+  } catch (err) {
+    console.error("Error in updating user:", err);
+    res.status(500).json({ status: "error", message: "Server error" });
+  }
+});
+
+// GET /api/user/orders - get logged in user's orders
+
+router.get("/user/orders", verifyToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("email");
+
+    if (!user) {
+      return res.status(404).json({
+        status: "error",
+        message: "User not found",
+      });
+    }
+
+    //Match orders by customer email
+    const orders = await Order.find({ "customer.email": user.email })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    return res.json({
+      status: "success",
+      data: orders,
+    });
+  } catch (err) {
+    console.error("Error in fetching orders:", err);
     res.status(500).json({ status: "error", message: "Server error" });
   }
 });

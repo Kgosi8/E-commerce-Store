@@ -5,9 +5,8 @@ import { Register } from './components/pages/auth/register/register';
 import { AddToCart } from './components/pages/add-to-cart/add-to-cart';
 import { Cart } from './components/pages/cart/cart';
 import { Checkout } from './components/pages/checkout/checkout';
-
-import { Payment } from './components/pages/payment/payment';
 import { AdminOrders } from './components/pages/admin-orders/admin-orders';
+import { AccountDetails } from './components/pages/account-details/account-details';
 
 export const routes: Routes = [
   {
@@ -64,8 +63,8 @@ export const routes: Routes = [
     component: Cart,
   },
   {
-    path: 'payment',
-    component: Payment,
+    path: 'account-details',
+    component: AccountDetails,
   },
   {
     path: 'admin-dashboard',
