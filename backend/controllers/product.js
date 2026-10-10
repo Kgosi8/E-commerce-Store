@@ -4,7 +4,7 @@ const fs      = require('fs');
 // ── Create product ────────────────────────────────────────────────
 async function createProduct(req, res) {
   try {
-    const { name, description, price, category, stock } = req.body;
+    const { name, description, price, category, stock,tags } = req.body;
 
     const imageUrls = req.files.map(file =>
       `${req.protocol}://${req.get('host')}/uploads/${file.filename}`
@@ -17,6 +17,7 @@ async function createProduct(req, res) {
       category,
       stock,
       images: imageUrls,
+      tags: tags ? JSON.parse(tags) : [],
     });
 
     res.status(201).json({ status: 'success', data: product });
