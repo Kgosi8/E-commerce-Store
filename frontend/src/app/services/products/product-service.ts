@@ -21,7 +21,9 @@ export class ProductService {
     const params: Record<string, string> = {};
     if (filters.page) params['page'] = String(filters.page);
     if (filters.limit) params['limit'] = String(filters.limit);
-    return this.http.get<ProductListResponse>(this.baseUrl, { params });
+    return this.http.get<ProductListResponse>(this.baseUrl, { 
+      withCredentials: true,
+      params });
   }
 
   // Get by tag — e.g. 'Men', 'Caps', 'Jackets'
@@ -30,6 +32,7 @@ export class ProductService {
     if (filters.page) params['page'] = String(filters.page);
     if (filters.limit) params['limit'] = String(filters.limit);
     return this.http.get<ProductListResponse>(`${this.baseUrl}/tag/${encodeURIComponent(tag)}`, {
+      withCredentials: true,
       params,
     });
   }
@@ -41,7 +44,7 @@ export class ProductService {
     if (filters.limit) params['limit'] = String(filters.limit);
     return this.http.get<ProductListResponse>(
       `${this.baseUrl}/category/${encodeURIComponent(category)}`,
-      { params },
+      { withCredentials: true, params },
     );
   }
 
@@ -55,7 +58,7 @@ export class ProductService {
     if (filters.category) params['category'] = filters.category;
     if (filters.page) params['page'] = String(filters.page);
     if (filters.limit) params['limit'] = String(filters.limit);
-    return this.http.get<ProductListResponse>(`${this.baseUrl}/search`, { params });
+    return this.http.get<ProductListResponse>(`${this.baseUrl}/search`, { withCredentials: true, params });
   }
 
   // Get single product
@@ -68,7 +71,9 @@ export class ProductService {
   }
 
   createProduct(formData: FormData) {
-    return this.http.post<any>(this.baseUrl, formData);
+    return this.http.post<any>(this.baseUrl, formData,{
+      withCredentials: true, // Include credentials for authentication
+    });
   }
 
   deleteProduct(id: string) {

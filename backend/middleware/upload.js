@@ -1,22 +1,24 @@
-const multer= require('multer');
-const path = require('path');
+const multer = require('multer');
+const path   = require('path');
 
-const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-        const uniqueName= Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname);
-        cb(null, uniqueName);
-    }
-});
+const ALLOWED_TYPES = /jpg|jpeg|png|webp/;
+const MAX_SIZE_MB   = 5;
+
+// Memory storage — files go to Cloudinary, not disk
+const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
-    const allowed= /jpg|jpeg|png|webp/;
-    const ext = allowed.test(path.extname(file.originalname).toLowerCase());
-
-    if(ext) cb(null, true);
-    else cb(new Error('Only images are allowed'));
+  const ext = ALLOWED_TYPES.test(
+    path.extname(file.originalname).toLowerCase()
+  );
+  if (ext) cb(null, true);
+  else     cb(new Error('Only JPG, PNG and WEBP images are allowed'));
 };
 
-module.exports = multer({ storage, fileFilter });
+const upload = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: MAX_SIZE_MB * 1024 * 1024 },
+});
+
+module.exports = upload;

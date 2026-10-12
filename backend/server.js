@@ -33,7 +33,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/orders', orderRoutes);
-app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Serve uploaded images
+
 
 
 
