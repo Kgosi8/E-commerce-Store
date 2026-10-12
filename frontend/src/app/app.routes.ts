@@ -35,8 +35,7 @@ export const routes: Routes = [
   },
   {
     path: 'search',
-    loadComponent: () =>
-      import('./components/partials/search/search').then((m) => m.Search),
+    loadComponent: () => import('./components/partials/search/search').then((m) => m.Search),
   },
   {
     path: 'login',
@@ -54,10 +53,7 @@ export const routes: Routes = [
     path: 'checkout',
     component: Checkout,
   },
-  {
-    path: 'admin-orders',
-    component: AdminOrders,
-  },
+
   {
     path: 'cart',
     component: Cart,
@@ -66,17 +62,24 @@ export const routes: Routes = [
     path: 'account-details',
     component: AccountDetails,
   },
+  // {
+  //   path: 'admin-dashboard',
+  //   loadComponent() {
+  //     return import('./components/pages/admin-dashboard/admin-dashboard').then(
+  //       (m) => m.AdminDashboard,
+  //     );
+  //   },
+  //   // canActivate: [adminGuard],
+  //   // children: [
+  //   //     {path:'create', component:CreateProduct},
+  //   //     {path:'products', component:ProductList},
+  //   // ]
+  // },
+
   {
-    path: 'admin-dashboard',
-    loadComponent() {
-      return import('./components/pages/admin-dashboard/admin-dashboard').then(
-        (m) => m.AdminDashboard,
-      );
-    },
-    // canActivate: [adminGuard],
-    // children: [
-    //     {path:'create', component:CreateProduct},
-    //     {path:'products', component:ProductList},
-    // ]
+    path: 'admin',
+    loadChildren: () => import('./admin/routes/admin-routes').then((m) => m.ADMIN_ROUTES),
   },
+
+  
 ];

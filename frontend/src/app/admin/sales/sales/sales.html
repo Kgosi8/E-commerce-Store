@@ -1,0 +1,68 @@
+<div class="sl-page">
+
+  <div class="sl-header">
+    <h1 class="sl-title">Sales</h1>
+    <p class="sl-subtitle">Revenue and order breakdown</p>
+  </div>
+
+  @if(isLoading()) {
+    <div class="sl-loading"><span class="sl-spinner"></span></div>
+  }
+
+  @else if(stats()) {
+
+    <!-- Revenue cards -->
+    <div class="sl-grid">
+      <div class="sl-card sl-card--gold">
+        <span class="sl-label">Total revenue</span>
+        <span class="sl-value">{{ formatCurrency(stats().totalRevenue) }}</span>
+      </div>
+      <div class="sl-card">
+        <span class="sl-label">Total orders</span>
+        <span class="sl-value">{{ stats().totalOrders }}</span>
+      </div>
+      <div class="sl-card">
+        <span class="sl-label">Avg. order value</span>
+        <span class="sl-value">{{ formatCurrency(stats().avgOrderValue) }}</span>
+      </div>
+    </div>
+
+    <div class="sl-row">
+
+      <!-- Orders by status -->
+      <div class="sl-breakdown-card">
+        <p class="sl-breakdown-title">Orders by status</p>
+        @for(item of entries(stats().byStatus); track item.key) {
+          <div class="sl-breakdown-row">
+            <span class="sl-breakdown-label">{{ statusLabel(item.key) }}</span>
+            <span class="sl-breakdown-value">{{ item.value }}</span>
+          </div>
+        }
+      </div>
+
+      <!-- Payment status -->
+      <div class="sl-breakdown-card">
+        <p class="sl-breakdown-title">Payment status</p>
+        @for(item of entries(stats().byPaymentStatus); track item.key) {
+          <div class="sl-breakdown-row">
+            <span class="sl-breakdown-label">{{ statusLabel(item.key) }}</span>
+            <span class="sl-breakdown-value">{{ item.value }}</span>
+          </div>
+        }
+      </div>
+
+      <!-- Payment method -->
+      <div class="sl-breakdown-card">
+        <p class="sl-breakdown-title">Payment method</p>
+        @for(item of entries(stats().byPaymentMethod); track item.key) {
+          <div class="sl-breakdown-row">
+            <span class="sl-breakdown-label">{{ item.key === 'eft' ? 'EFT' : 'Cash on delivery' }}</span>
+            <span class="sl-breakdown-value">{{ item.value }}</span>
+          </div>
+        }
+      </div>
+
+    </div>
+  }
+
+</div><p>sales works!</p>

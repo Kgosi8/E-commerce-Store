@@ -1,0 +1,96 @@
+<div class="ov-page">
+
+  <div class="ov-header">
+    <h1 class="ov-title">Overview</h1>
+    <p class="ov-subtitle">Welcome back — here's what's happening today</p>
+  </div>
+
+  @if(isLoading()) {
+    <div class="ov-loading"><span class="ov-spinner"></span></div>
+  } @else {
+
+    <!-- Stat cards -->
+    <div class="ov-stats-grid">
+      <div class="ov-stat-card">
+        <span class="ov-stat-label">Total orders</span>
+        <span class="ov-stat-value">{{ stats()?.totalOrders ?? 0 }}</span>
+      </div>
+      <div class="ov-stat-card ov-stat-card--gold">
+        <span class="ov-stat-label">Total revenue</span>
+        <span class="ov-stat-value">{{ formatCurrency(stats()?.totalRevenue ?? 0) }}</span>
+      </div>
+      <div class="ov-stat-card">
+        <span class="ov-stat-label">Avg. order value</span>
+        <span class="ov-stat-value">{{ formatCurrency(stats()?.avgOrderValue ?? 0) }}</span>
+      </div>
+      <div class="ov-stat-card ov-stat-card--warn">
+        <span class="ov-stat-label">Pending orders</span>
+        <span class="ov-stat-value">{{ stats()?.byStatus?.pending ?? 0 }}</span>
+      </div>
+      <div class="ov-stat-card ov-stat-card--alert">
+        <span class="ov-stat-label">Awaiting payment</span>
+        <span class="ov-stat-value">{{ stats()?.byPaymentStatus?.awaiting_payment ?? 0 }}</span>
+      </div>
+      <div class="ov-stat-card ov-stat-card--success">
+        <span class="ov-stat-label">Paid orders</span>
+        <span class="ov-stat-value">{{ stats()?.byPaymentStatus?.paid ?? 0 }}</span>
+      </div>
+    </div>
+
+    <!-- Quick actions -->
+    <div class="ov-actions">
+      <a routerLink="/admin/products/add" class="ov-action-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Add product
+      </a>
+      <a routerLink="/admin/orders" class="ov-action-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+        </svg>
+        View orders
+      </a>
+    </div>
+
+    <!-- Recent orders -->
+    <div class="ov-card">
+      <div class="ov-card-header">
+        <span class="ov-card-title">Recent orders</span>
+        <a routerLink="/admin/orders" class="ov-card-link">View all →</a>
+      </div>
+      @if(recentOrders().length === 0) {
+        <p class="ov-empty">No orders yet.</p>
+      } @else {
+        <table class="ov-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for(order of recentOrders(); track order.orderId) {
+              <tr>
+                <td class="ov-id">{{ order.orderId }}</td>
+                <td>{{ order.customer.firstName }} {{ order.customer.lastName }}</td>
+                <td>{{ formatDate(order.createdAt) }}</td>
+                <td>
+                  <span class="ov-badge ov-badge--{{ order.status }}">
+                    {{ statusLabel(order.status) }}
+                  </span>
+                </td>
+                <td class="ov-total">{{ formatCurrency(order.total) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+
+  }
+</div>

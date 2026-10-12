@@ -41,7 +41,7 @@ export class Login {
               if (role === 'admin') {
                 // 🔹 Redirect to admin dashboard
                 this.toastr.success(res.message, res.status);
-                this.router.navigate(['/admin-dashboard']);
+                this.router.navigate(['/admin']);
               } else {
                 // 🔹 Redirect to home
                 this.router.navigate(['/']);

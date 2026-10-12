@@ -1,0 +1,110 @@
+.cu-page {
+  padding: 2rem 2.5rem;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+.cu-header { margin-bottom: 2rem; }
+
+.cu-title {
+  font-family: 'Georgia', serif;
+  font-size: 26px;
+  font-weight: 400;
+  color: #1a1a1a;
+  margin: 0 0 4px;
+}
+
+.cu-subtitle { font-size: 13px; color: #888; margin: 0; }
+
+.cu-table-wrap {
+  background: #fff;
+  border: 1px solid #e8e3db;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.cu-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.cu-table thead tr {
+  background: #fdf8f1;
+  border-bottom: 1px solid #ede7db;
+}
+
+.cu-table th {
+  padding: 11px 16px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #c9a96e;
+}
+
+.cu-row {
+  border-bottom: 1px solid #f5f1eb;
+  transition: background 0.12s;
+}
+
+.cu-row:last-child { border-bottom: none; }
+.cu-row:hover { background: #fdfaf6; }
+
+.cu-table td {
+  padding: 13px 16px;
+  color: #1a1a1a;
+}
+
+.cu-rank { font-size: 16px; text-align: center; }
+.cu-name { font-weight: 500; }
+.cu-email { color: #888; font-size: 12px; }
+.cu-phone { color: #888; font-size: 12px; }
+.cu-spent { font-weight: 600; }
+.cu-date  { color: #888; font-size: 12px; white-space: nowrap; }
+
+.cu-orders-badge {
+  display: inline-block;
+  background: #fdf8f1;
+  border: 1px solid #ede7db;
+  color: #c9a96e;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 2px 10px;
+  border-radius: 20px;
+}
+
+/* Loading / error / empty */
+.cu-loading {
+  display: flex;
+  justify-content: center;
+  padding: 4rem;
+}
+
+.cu-spinner {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  border: 3px solid #e8e3db;
+  border-top-color: #c9a96e;
+  border-radius: 50%;
+  animation: cu-spin 0.7s linear infinite;
+}
+
+@keyframes cu-spin { to { transform: rotate(360deg); } }
+
+.cu-error {
+  background: #fee2e2;
+  border-left: 3px solid #e05454;
+  border-radius: 0 10px 10px 0;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #c0392b;
+}
+
+.cu-empty {
+  text-align: center;
+  padding: 4rem;
+  color: #888;
+  font-size: 14px;
+}

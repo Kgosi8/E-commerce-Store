@@ -1,0 +1,98 @@
+<div class="apl-page">
+
+  <div class="apl-header">
+    <div>
+      <h1 class="apl-title">Products</h1>
+      <p class="apl-subtitle">{{ products().length }} products in store</p>
+    </div>
+    <a routerLink="/admin/products/add" class="apl-btn-add">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Add product
+    </a>
+  </div>
+
+  @if(deleteError()) {
+    <div class="apl-error">{{ deleteError() }}</div>
+  }
+
+  @if(isLoading()) {
+    <div class="apl-loading"><span class="apl-spinner"></span></div>
+  }
+
+  @else if(error()) {
+    <div class="apl-error">{{ error() }}</div>
+  }
+
+  @else if(products().length === 0) {
+    <div class="apl-empty">
+      <p>No products yet.</p>
+      <a routerLink="/admin/products/add" class="apl-btn-add">Add your first product</a>
+    </div>
+  }
+
+  @else {
+    <div class="apl-grid">
+      @for(product of products(); track product._id) {
+        <div class="apl-card">
+
+          <!-- Image -->
+          <div class="apl-card-img-wrap">
+            <img [src]="product.images[0] || 'assets/placeholder.png'"
+                 [alt]="product.name"
+                 class="apl-card-img" />
+            <span class="apl-stock-badge"
+                  [class.apl-stock-badge--low]="product.stock <= 5">
+              Stock: {{ product.stock }}
+            </span>
+          </div>
+
+          <!-- Body -->
+          <div class="apl-card-body">
+            <p class="apl-card-name">{{ product.name }}</p>
+            <p class="apl-card-category">{{ product.category }}</p>
+
+            <!-- Tags -->
+            @if(product.tags?.length) {
+              <div class="apl-tags">
+                @for(tag of product.tags.slice(0, 3); track tag) {
+                  <span class="apl-tag">{{ tag }}</span>
+                }
+              </div>
+            }
+
+            <p class="apl-card-price">{{ formatCurrency(product.price) }}</p>
+          </div>
+
+          <!-- Actions -->
+          <div class="apl-card-actions">
+            <button class="apl-btn-delete"
+                    [disabled]="deletingId() === product._id"
+                    (click)="deleteProduct(product._id, product.name)"
+                    type="button">
+              @if(deletingId() === product._id) {
+                <span class="apl-spinner apl-spinner--sm"></span>
+              } @else {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
+                  <path d="M10 11v6M14 11v6"/>
+                  <path d="M9 6V4h6v2"/>
+                </svg>
+              }
+              Delete
+            </button>
+          </div>
+
+        </div>
+      }
+    </div>
+  }
+
+</div>
