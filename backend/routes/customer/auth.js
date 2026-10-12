@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../../model/User.js");
-const { verifyToken } = require("../../middleware/auth.js"); // adjust path if needed
+const { verifyToken,requireAdmin } = require("../../middleware/auth.js"); // adjust path if needed
 const Order = require("../../model/Order.js");
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -213,6 +213,34 @@ router.post("/logout", (req, res) => {
     status: "success",
     message: "Logout successful",
   });
+});
+
+// GET /api/admin/customers — sorted by order frequency
+router.get("/customers", verifyToken, requireAdmin, async (req, res) => {
+  try {
+    const Order = require("../../model/Order");
+
+    const customers = await Order.aggregate([
+      {
+        $group: {
+          _id: "$customer.email",
+          firstName: { $first: "$customer.firstName" },
+          lastName: { $first: "$customer.lastName" },
+          email: { $first: "$customer.email" },
+          phone: { $first: "$customer.phone" },
+          totalOrders: { $sum: 1 },
+          totalSpent: { $sum: "$total" },
+          lastOrderAt: { $max: "$createdAt" },
+        },
+      },
+      { $sort: { totalOrders: -1 } },
+    ]);
+
+    return res.json({ success: true, customers });
+  } catch (err) {
+    console.error("[customers]", err);
+    return res.status(500).json({ success: false, message: "Server error." });
+  }
 });
 
 module.exports = router;
