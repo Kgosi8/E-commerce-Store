@@ -28,7 +28,7 @@ export class Customers implements OnInit {
 
   ngOnInit(): void {
     this.http
-      .get<any>('http://localhost:5000/api/admin/customers', {
+      .get<any>('http://localhost:5000/api/orders/customers', {
         withCredentials: true,
       })
       .subscribe({
@@ -43,13 +43,13 @@ export class Customers implements OnInit {
       });
   }
 
-  formatCurrency(n: number): string {
-    return `R ${Number(n)
+  currency(n: number): string {
+    return `R ${Number(n ?? 0)
       .toFixed(2)
       .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
   }
 
-  formatDate(d: string): string {
+  date(d: string): string {
     return new Date(d).toLocaleDateString('en-ZA', {
       day: '2-digit',
       month: 'short',

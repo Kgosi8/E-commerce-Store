@@ -77,6 +77,6 @@ export class ProductService {
   }
 
   deleteProduct(id: string) {
-    return this.http.delete(`${this.baseUrl}/${id}`);
+    return this.http.delete(`${this.baseUrl}/${id}`,{withCredentials: true});
   }
 }

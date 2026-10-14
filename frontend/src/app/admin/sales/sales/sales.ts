@@ -28,7 +28,7 @@ export class Sales implements OnInit {
       });
   }
 
-  formatCurrency(n: number): string {
+  currency(n: number): string {
     return `R ${Number(n ?? 0)
       .toFixed(2)
       .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
@@ -36,13 +36,10 @@ export class Sales implements OnInit {
 
   entries(obj: any): { key: string; value: number }[] {
     if (!obj) return [];
-    return Object.entries(obj).map(([key, value]) => ({
-      key,
-      value: value as number,
-    }));
+    return Object.entries(obj).map(([key, value]) => ({ key, value: value as number }));
   }
 
-  statusLabel(s: string): string {
-    return s.replace(/_/g, ' ');
+  label(s: string): string {
+    return s?.replace(/_/g, ' ') ?? '';
   }
 }

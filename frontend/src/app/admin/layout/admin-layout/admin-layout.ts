@@ -1,53 +1,36 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal } from '@angular/core';
-import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterModule, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
 
 
 
-interface NavItem {
-  label: string;
-  path: string;
-  icon: string;
-}
 
 @Component({
   selector: 'app-admin-layout',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule,RouterOutlet, RouterModule,RouterLink,RouterLinkActive],
   templateUrl: './admin-layout.html',
   styleUrl: './admin-layout.css',
 })
 export class AdminLayout {
 
-  sidebarOpen = signal(true);
-  currentPath = signal('');
+ sidebarOpen = signal(true);
 
-  navItems: NavItem[] = [
-    { label: 'Overview', path: '/admin/overview', icon: 'overview' },
-    { label: 'Orders', path: '/admin/orders', icon: 'orders' },
-    { label: 'Products', path: '/admin/products', icon: 'products' },
-    { label: 'Add Product', path: '/admin/products/add', icon: 'add' },
-    { label: 'Customers', path: '/admin/customers', icon: 'customers' },
-    { label: 'Sales', path: '/admin/sales', icon: 'sales' },
+  navItems = [
+    { label: 'Overview',  path: 'overview',  icon: 'grid'     },
+    { label: 'Orders',    path: 'orders',    icon: 'shopping' },
+    { label: 'Products',  path: 'products',  icon: 'box'      },
+    { label: 'Customers', path: 'customers', icon: 'users'    },
+    { label: 'Sales',     path: 'sales',     icon: 'bar'      },
   ];
 
-
-  constructor(private router: Router) {
-    this.router.events
-      .pipe(filter(e => e instanceof NavigationEnd))
-      .subscribe((e: any) => this.currentPath.set(e.urlAfterRedirects));
-  }
-
-
-  isActive(path: string): boolean{
-    return this.currentPath().startsWith(path);
-  }
+  constructor(private router: Router) {}
 
   toggleSidebar(): void {
-    this.sidebarOpen.update(v=> !v);
+    this.sidebarOpen.update(v => !v);
   }
 
-  goToStore(): void{
+  goToStore(): void {
     this.router.navigate(['/']);
   }
 

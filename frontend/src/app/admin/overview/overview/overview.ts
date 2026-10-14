@@ -5,12 +5,11 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-overview',
-  imports: [CommonModule,RouterLink],
+  imports: [CommonModule, RouterLink],
   templateUrl: './overview.html',
   styleUrl: './overview.css',
 })
 export class Overview implements OnInit {
-
   stats = signal<any>(null);
   recentOrders = signal<any[]>([]);
   isLoading = signal(true);
@@ -23,35 +22,44 @@ export class Overview implements OnInit {
   }
 
   loadStats(): void {
-    this.http.get<any>('http://localhost:5000/api/orders/stats', { withCredentials: true }).subscribe({
-      next: (res) =>{
-        this.stats.set(res.stats);
-        this.isLoading.set(false);
-      },
-      error: ()=> this.isLoading.set(false),
-    });
+    this.http
+      .get<any>('http://localhost:5000/api/orders/stats', {
+        withCredentials: true,
+      })
+      .subscribe({
+        next: (res) => {
+          this.stats.set(res.stats);
+          this.isLoading.set(false);
+        },
+        error: () => this.isLoading.set(false),
+      });
   }
 
-  loadRecentOrders() : void{
-    this.http.get<any>('https://localhost:5000/api/oders?limit=5',{
-      withCredentials: true,
-    }).subscribe({
-      next: (res) => this.recentOrders.set(res.orders),
-    });
+  loadRecentOrders(): void {
+    this.http
+      .get<any>('http://localhost:5000/api/orders?limit=5', {
+        withCredentials: true,
+      })
+      .subscribe({
+        next: (res) => this.recentOrders.set(res.orders ?? []),
+      });
   }
 
-  formatCurrency(amount: number): string {
-    return `R ${Number(amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
+  currency(n: number): string {
+    return `R ${Number(n ?? 0)
+      .toFixed(2)
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
   }
 
-  statusLabel(s: string): string {
+  label(s: string): string {
     return s?.replace(/_/g, ' ') ?? '';
   }
 
-  formatDate(d: string): string {
+  date(d: string): string {
     return new Date(d).toLocaleDateString('en-ZA', {
-      day: '2-digit', month: 'short', year: 'numeric',
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
     });
   }
-
 }

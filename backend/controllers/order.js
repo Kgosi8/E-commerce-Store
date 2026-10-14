@@ -225,10 +225,92 @@ async function updateOrderStatus(req, res) {
   }
 }
 
+async function getCustomers(req, res) {
+  try {
+    const customers = await Order.aggregate([
+      {
+        $group: {
+          _id:         '$customer.email',
+          firstName:   { $first: '$customer.firstName' },
+          lastName:    { $first: '$customer.lastName' },
+          email:       { $first: '$customer.email' },
+          phone:       { $first: '$customer.phone' },
+          totalOrders: { $sum: 1 },
+          totalSpent:  { $sum: '$total' },
+          lastOrderAt: { $max: '$createdAt' },
+        },
+      },
+      { $sort: { totalOrders: -1 } },
+    ]);
+
+    return res.json({ success: true, customers });
+
+  } catch (err) {
+    console.error('[getCustomers]', err);
+    return res.status(500).json({ success: false, message: 'Server error.' });
+  }
+}
+
+// ── GET /api/orders/stats (admin) ────────────────────────────────
+async function getOrderStats(req, res) {
+  try {
+    const [stats] = await Order.aggregate([
+      {
+        $facet: {
+          byStatus: [
+            { $group: { _id: '$status', count: { $sum: 1 } } },
+          ],
+          byPaymentStatus: [
+            { $group: { _id: '$paymentStatus', count: { $sum: 1 } } },
+          ],
+          byPaymentMethod: [
+            { $group: { _id: '$paymentMethod', count: { $sum: 1 } } },
+          ],
+          totals: [
+            {
+              $group: {
+                _id:           null,
+                totalOrders:   { $sum: 1 },
+                totalRevenue:  { $sum: '$total' },
+                avgOrderValue: { $avg: '$total' },
+              },
+            },
+          ],
+        },
+      },
+    ]);
+
+    // Flatten arrays into key:value objects
+    const flatten = (arr) =>
+      arr.reduce((acc, { _id, count }) => {
+        acc[_id] = count;
+        return acc;
+      }, {});
+
+    return res.json({
+      success: true,
+      stats: {
+        byStatus:        flatten(stats.byStatus),
+        byPaymentStatus: flatten(stats.byPaymentStatus),
+        byPaymentMethod: flatten(stats.byPaymentMethod),
+        totalOrders:     stats.totals[0]?.totalOrders   ?? 0,
+        totalRevenue:    stats.totals[0]?.totalRevenue  ?? 0,
+        avgOrderValue:   stats.totals[0]?.avgOrderValue ?? 0,
+      },
+    });
+
+  } catch (err) {
+    console.error('[getOrderStats]', err);
+    return res.status(500).json({ success: false, message: 'Server error.' });
+  }
+}
+
 module.exports = {
   createOrder,
   getOrder,
   listOrders,
   updateOrderStatus,
   getAllOrders,
+  getCustomers,
+  getOrderStats
 };

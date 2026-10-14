@@ -1,55 +1,53 @@
-<div class="al-shell" [class.al-shell--collapsed]="!sidebarOpen()">
+<div class="shell" [class.shell--collapsed]="!sidebarOpen()">
 
-  <!-- ── Sidebar ── -->
-  <aside class="al-sidebar">
+  <!-- Sidebar -->
+  <aside class="sidebar">
 
-    <div class="al-sidebar-header">
-      <div class="al-logo">
-        <span class="al-logo-icon">M</span>
+    <div class="sidebar-top">
+      <div class="brand">
+        <div class="brand-icon">M</div>
         @if(sidebarOpen()) {
-          <span class="al-logo-text">Mpahlas</span>
+          <span class="brand-name">Mpahlas</span>
         }
       </div>
-      <button class="al-toggle" (click)="toggleSidebar()" type="button"
-              [attr.aria-label]="sidebarOpen() ? 'Collapse sidebar' : 'Expand sidebar'">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2"
-             stroke-linecap="round" stroke-linejoin="round">
-          @if(sidebarOpen()) {
-            <polyline points="15 18 9 12 15 6"/>
-          } @else {
-            <polyline points="9 18 15 12 9 6"/>
-          }
-        </svg>
+      <button class="toggle-btn" (click)="toggleSidebar()" type="button">
+        @if(sidebarOpen()) {
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        } @else {
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        }
       </button>
     </div>
 
-    <nav class="al-nav">
+    <nav class="nav">
       @for(item of navItems; track item.path) {
-        <a class="al-nav-item"
-           [class.al-nav-item--active]="isActive(item.path)"
-           [routerLink]="item.path">
+        <a class="nav-item"
+           [routerLink]="item.path"
+           routerLinkActive="nav-item--active">
 
-          <!-- Icons -->
-          @if(item.icon === 'overview') {
+          <!-- Overview -->
+          @if(item.icon === 'grid') {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
               <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
             </svg>
           }
-          @if(item.icon === 'orders') {
+          <!-- Orders -->
+          @if(item.icon === 'shopping') {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
               <line x1="3" y1="6" x2="21" y2="6"/>
               <path d="M16 10a4 4 0 01-8 0"/>
             </svg>
           }
-          @if(item.icon === 'products') {
+          <!-- Products -->
+          @if(item.icon === 'box') {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
             </svg>
           }
-          @if(item.icon === 'customers') {
+          <!-- Customers -->
+          @if(item.icon === 'users') {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
               <circle cx="9" cy="7" r="4"/>
@@ -57,7 +55,8 @@
               <path d="M16 3.13a4 4 0 010 7.75"/>
             </svg>
           }
-          @if(item.icon === 'sales') {
+          <!-- Sales -->
+          @if(item.icon === 'bar') {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="20" x2="12" y2="10"/>
               <line x1="18" y1="20" x2="18" y2="4"/>
@@ -66,17 +65,15 @@
           }
 
           @if(sidebarOpen()) {
-            <span class="al-nav-label">{{ item.label }}</span>
+            <span>{{ item.label }}</span>
           }
         </a>
       }
     </nav>
 
-    <div class="al-sidebar-footer">
-      <button class="al-store-btn" (click)="goToStore()" type="button">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2"
-             stroke-linecap="round" stroke-linejoin="round">
+    <div class="sidebar-bottom">
+      <button class="store-btn" (click)="goToStore()" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
           <polyline points="9 22 9 12 15 12 15 22"/>
         </svg>
@@ -86,8 +83,8 @@
 
   </aside>
 
-  <!-- ── Main content ── -->
-  <main class="al-main">
+  <!-- Main -->
+  <main class="main">
     <router-outlet />
   </main>
 
