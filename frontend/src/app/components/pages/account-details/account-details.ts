@@ -4,12 +4,14 @@ import { Router } from '@angular/router';
 import { User } from '../../../interfaces/user';
 import { Order } from '../../../interfaces/order';
 import { AccountService } from '../../../services/account/account-service';
+import { PopUpload } from '../pop-upload/pop-upload';
+
 
 type ActiveTab = 'overview' | 'orders' | 'address' | 'returns';
 
 @Component({
   selector: 'account-details',
-  imports: [CommonModule],
+  imports: [CommonModule,PopUpload],
   templateUrl: './account-details.html',
   styleUrl: './account-details.css',
 })
@@ -25,6 +27,8 @@ export class AccountDetails implements OnInit {
   saveSuccess = signal<boolean>(false);
   saveError = signal<string | null>(null);
   ordersError = signal<string | null>(null);
+
+  popOpenOrderId = signal<string | null>(null);
 
   // ---- Address form
 
@@ -93,6 +97,12 @@ export class AccountDetails implements OnInit {
     });
   }
 
+  // --- Toggle POP upload panel for a specific order
+
+  togglePOP(orderId: string): void{
+    this.popOpenOrderId.update(id => id=== orderId? null : orderId);
+  }
+
   // --- update address -----------
 
   saveAddress(): void {
@@ -107,7 +117,7 @@ export class AccountDetails implements OnInit {
         this.saveSuccess.set(true);
         setTimeout(() => this.saveSuccess.set(false), 3000);
       },
-      error: (err) => {
+      error: () => {
         this.isSaving.set(false);
         this.saveError.set('Failed to save address. Please try again later.');
       },

@@ -16,10 +16,10 @@ export class OrderService {
   private baseUrl = 'http://localhost:5000/api/orders';
 
   readonly bankDetails: BankDetails = {
-    bankName: 'First National Bank',
-    accountNumber: '62 4401 8820',
-    branchCode: '250 655',
-    accountType: 'Cheque / Current',
+    bankName: 'Capitec Bank',
+    accountNumber: '18 2086 3604',
+    branchCode: '470 010',
+    accountType: 'Savings / Current',
   };
 
   constructor(private http: HttpClient) {}

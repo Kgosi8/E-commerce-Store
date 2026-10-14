@@ -44,7 +44,7 @@ export class AccountService {
   }
 
   getOrders(): Observable<OrdersResponse> {
-    return this.http.get<OrdersResponse>(`${this.baseUrl}/orders`, {
+    return this.http.get<OrdersResponse>(`${this.baseUrl}/user/orders`, {
       withCredentials: true,
     });
   }
