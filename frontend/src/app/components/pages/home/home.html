@@ -24,17 +24,30 @@
   </div>
 </div>
 
-<div class="venue-cover">
-  <div class="no-image-venue"></div>
+<div class="venue-cover" [style.--cols]="images().length || 1">
+  @for (img of images(); track img.src) {
+    <img
+      [src]="img.src"
+      [alt]="img.alt"
+      [style.flex]="img.ratio + ' 1 0'"
+      [style.aspect-ratio]="img.ratio"
+      loading="lazy"
+    />
+  } @empty {
+    <div class="no-image-venue"></div>
+  }
 </div>
 
 <div class="venue-description">
   <h2 class="venue-cover-description">Ama 2K VIBES</h2>
-  <small
-    >A symphony of vibrant colors and dynamic beats that define the essence of modern
-    nightlife.</small
-  >
-  <button>See Details</button>
+  <small>
+    A symphony of vibrant colors and dynamic beats that define the essence of modern
+    active life.
+  </small>
+  <button type="button" class="details-btn">
+    <span style="color: black;">See Details</span>
+    <span class="arrow" style="color: black;" aria-hidden="true">→</span>
+  </button>
 </div>
 
 <div class="venue-description"></div>
