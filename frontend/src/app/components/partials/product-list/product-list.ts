@@ -54,4 +54,8 @@ export class ProductList implements OnInit {
     });
   }
 
+  productName(product: string) {
+    console.log(product);
+  }
+
 }

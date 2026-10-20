@@ -35,7 +35,9 @@
             <img
               [src]="product.images[0] || 'assets/placeholder.png'"
               [alt]="product.name"
-              class="pl-card-img" />
+              class="pl-card-img"
+              [routerLink]="['/add-to-cart', product._id]" style="cursor:pointer" (click)="productName(product.name)"
+               />
           </div>
           <div class="pl-card-body">
             <p class="pl-card-name">{{ product.name }}</p>

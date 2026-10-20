@@ -5,7 +5,6 @@ import { Register } from './components/pages/auth/register/register';
 import { AddToCart } from './components/pages/add-to-cart/add-to-cart';
 import { Cart } from './components/pages/cart/cart';
 import { Checkout } from './components/pages/checkout/checkout';
-import { AdminOrders } from './components/pages/admin-orders/admin-orders';
 import { AccountDetails } from './components/pages/account-details/account-details';
 
 export const routes: Routes = [
@@ -36,6 +35,31 @@ export const routes: Routes = [
   {
     path: 'search',
     loadComponent: () => import('./components/partials/search/search').then((m) => m.Search),
+  },
+  {
+    path: 't-shirts',
+    loadComponent: () =>
+      import('./components/partials/product-list/product-list').then((m) => m.ProductList),
+  },
+  {
+    path: 'pants',
+    loadComponent: () =>
+      import('./components/partials/product-list/product-list').then((m) => m.ProductList),
+  },
+  {
+    path: 'hoodies',
+    loadComponent: () =>
+      import('./components/partials/product-list/product-list').then((m) => m.ProductList),
+  },
+  {
+    path: 'beanies',
+    loadComponent: () =>
+      import('./components/partials/product-list/product-list').then((m) => m.ProductList),
+  },
+  {
+    path: 'caps',
+    loadComponent: () =>
+      import('./components/partials/product-list/product-list').then((m) => m.ProductList),
   },
   {
     path: 'login',
@@ -80,6 +104,4 @@ export const routes: Routes = [
     path: 'admin',
     loadChildren: () => import('./admin/routes/admin-routes').then((m) => m.ADMIN_ROUTES),
   },
-
-  
 ];
