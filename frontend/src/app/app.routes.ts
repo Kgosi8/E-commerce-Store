@@ -104,4 +104,8 @@ export const routes: Routes = [
     path: 'admin',
     loadChildren: () => import('./admin/routes/admin-routes').then((m) => m.ADMIN_ROUTES),
   },
+  {
+    path: 'products',
+    loadComponent: () => import('./components/pages/products-page/products-page').then((m)=> m.ProductsPage)
+  }
 ];

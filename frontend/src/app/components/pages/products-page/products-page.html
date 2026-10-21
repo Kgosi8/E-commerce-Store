@@ -1,0 +1,131 @@
+<div class="pp-page">
+
+  <!-- Page header -->
+  <div class="pp-hero">
+    <div class="pp-hero-content">
+      <p class="pp-hero-tag">Mpahlas Collection</p>
+      <h1 class="pp-hero-title">All Products</h1>
+      <p class="pp-hero-sub">Browse our full range — filter by style, category or search below.</p>
+    </div>
+  </div>
+
+  <div class="pp-body">
+
+    <!-- Toolbar -->
+    <div class="pp-toolbar">
+
+      <!-- Result count -->
+      <p class="pp-count">
+        @if(!isLoading()) {
+          {{ filteredProducts().length }}
+          product{{ filteredProducts().length !== 1 ? 's' : '' }}
+          @if(activeTag()) {
+            in <strong>{{ activeTag() }}</strong>
+          }
+          @if(searchQuery()) {
+            matching <strong>"{{ searchQuery() }}"</strong>
+          }
+        }
+      </p>
+
+      <!-- Search -->
+      <div class="pp-search-wrap">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input class="pp-search"
+               type="text"
+               placeholder="Search products…"
+               [value]="searchQuery()"
+               (input)="onSearch($any($event.target).value)" />
+        @if(searchQuery()) {
+          <button class="pp-search-clear" (click)="onSearch('')" type="button">✕</button>
+        }
+      </div>
+
+    </div>
+
+    <!-- Tag filters -->
+    <div class="pp-tag-strip">
+      @for(tag of tags; track tag.value) {
+        <button class="pp-tag"
+                [class.pp-tag--active]="activeTag() === tag.value"
+                (click)="setTag(tag.value)"
+                type="button">
+          {{ tag.label }}
+        </button>
+      }
+    </div>
+
+    <!-- Loading -->
+    @if(isLoading()) {
+      <div class="pp-loading">
+        <span class="pp-spinner"></span>
+        <p>Loading products…</p>
+      </div>
+    }
+
+    <!-- Error -->
+    @else if(error()) {
+      <div class="pp-error" role="alert">{{ error() }}</div>
+    }
+
+    <!-- Empty -->
+    @else if(filteredProducts().length === 0) {
+      <div class="pp-empty">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <p>No products found.</p>
+        <button class="pp-clear-btn" (click)="clearFilters()" type="button">
+          Clear filters
+        </button>
+      </div>
+    }
+
+    <!-- Product grid -->
+    @else {
+      <div class="pp-grid">
+        @for(product of filteredProducts(); track product._id) {
+          <div class="pp-card" [routerLink]="['/add-to-cart', product._id]">
+
+            <div class="pp-card-img-wrap">
+              <img [src]="product.images[0]"
+                   [alt]="product.name"
+                   class="pp-card-img"
+                   loading="lazy" />
+
+              @if(product.stock <= 5 && product.stock > 0) {
+                <span class="pp-badge pp-badge--low">Only {{ product.stock }} left</span>
+              }
+              @if(product.stock === 0) {
+                <span class="pp-badge pp-badge--out">Sold out</span>
+              }
+
+              @if(product.tags?.length) {
+                <span class="pp-tag-chip">{{ product.tags[0] }}</span>
+              }
+            </div>
+
+            <div class="pp-card-body">
+              <p class="pp-card-cat">{{ product.category }}</p>
+              <h3 class="pp-card-name">{{ product.name }}</h3>
+              <p class="pp-card-desc">{{ product.description }}</p>
+              <div class="pp-card-footer">
+                <span class="pp-card-price">R {{ product.price | number:'1.2-2' }}</span>
+                <button class="pp-card-btn" type="button">View</button>
+              </div>
+            </div>
+
+          </div>
+        }
+      </div>
+    }
+
+  </div>
+</div>
