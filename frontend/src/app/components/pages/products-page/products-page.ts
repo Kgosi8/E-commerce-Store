@@ -7,7 +7,7 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Product } from '../../../interfaces/product';
 import { ProductService } from '../../../services/products/product-service';
 
@@ -68,10 +68,17 @@ export class ProductsPage implements OnInit {
 
   constructor(
     private productService: ProductService,
+    private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
+
+    this.route.queryParams.subscribe(params =>{
+      if (params['tag']){
+        this.activeTag.set(params['tag']);
+      }
+    })
     this.loadProducts();
   }
 

@@ -17,12 +17,13 @@
         <h3>Shop our Stores</h3>
 
         <div class="store-grid">
-          <div class="store">Mpahlas Men</div>
-          <div class="store">Mpahlas Women</div>
-          <div class="store">Mpahlas Kids</div>
-          <div class="store">Winter Collection</div>
-          <div class="store">Accessories</div>
-          <div class="store">Footwear</div>
+          <div class="store" (click)="shopBy('Men')">Mpahlas Men</div>
+          <div class="store" (click)="shopBy('Women')">Mpahlas Women</div>
+          <div class="store" (click)="shopBy('Kids')">Mpahlas Kids</div>
+          <div class="store" (click)="shopBy('Hoodies')">Hoodies</div>
+          <div class="store" (click)="shopBy('T-shirts')">T-shirts</div>
+          <div class="store" (click)="shopBy('Pants')">Bottoms</div>
+          <div class="store" (click)="shopBy('New & Featured')">New & Featured</div>
         </div>
       </div>
     </div>

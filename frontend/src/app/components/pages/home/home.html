@@ -24,7 +24,7 @@
   </div>
 </div>
 
-<div class="venue-cover" [style.--cols]="images().length || 1">
+<!-- <div class="venue-cover" [style.--cols]="images().length || 1">
   @for (img of images(); track img.src) {
     <img
       [src]="img.src"
@@ -33,10 +33,52 @@
       [style.aspect-ratio]="img.ratio"
       loading="lazy"
     />
+    
   } @empty {
     <div class="no-image-venue"></div>
   }
+</div> -->
+
+<div class="gender-split">
+
+  <!-- Shop Her -->
+  <div class="gender-panel" (click)="shopBy('Women')">
+    <img
+      [src]="images()[0]?.src || 'assets/banners/ofentse.jpeg'"
+      alt="Shop Women"
+      class="gender-img"
+      loading="lazy" />
+    <div class="gender-label">
+      <span>Shop her</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="5" y1="12" x2="19" y2="12"/>
+        <polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Shop Him -->
+  <div class="gender-panel" (click)="shopBy('Men')">
+    <img
+      [src]="images()[1]?.src || 'assets/banners/danza.jpeg'"
+      alt="Shop Men"
+      class="gender-img"
+      loading="lazy" />
+    <div class="gender-label">
+      <span>Shop him</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="5" y1="12" x2="19" y2="12"/>
+        <polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </div>
+  </div>
+
 </div>
+
 
 <div class="venue-description">
   <h2 class="venue-cover-description">Ama 2K VIBES</h2>

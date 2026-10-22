@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, input, OnInit } from '@angular/core';
 import { CommonModule} from '@angular/common';
-import { NavigationEnd, Router, RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ProductService } from '../../../services/products/product-service';
 import { Product } from '../../../interfaces/product';
 
@@ -64,6 +64,10 @@ export class Home implements OnInit {
         this.isLoading = false;
       },
     });
+  }
+
+  shopBy(gender:string): void{
+    this.router.navigate(['/products'], {queryParams: {tag: gender}});
   }
 
   productName(product: string) {

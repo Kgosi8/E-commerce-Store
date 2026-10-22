@@ -73,4 +73,9 @@ export class Header implements OnInit {
     this.closeSearch();
     this.router.navigate(['/search'], { queryParams: {  q } });
   }
+
+  shopBy(tag:string): void{
+    this.router.navigate(['/products'], {queryParams: {tag: tag}});
+    this.toggleMenu();
+  }
 }
