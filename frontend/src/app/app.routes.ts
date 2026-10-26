@@ -106,6 +106,19 @@ export const routes: Routes = [
   },
   {
     path: 'products',
-    loadComponent: () => import('./components/pages/products-page/products-page').then((m)=> m.ProductsPage)
-  }
+    loadComponent: () =>
+      import('./components/pages/products-page/products-page').then((m) => m.ProductsPage),
+  },
+  {
+    path: 'forgot-password',
+    loadComponent: () =>
+      import('./components/pages/auth/forgot-password/forgot-password').then(
+        (m) => m.ForgotPassword,
+      ),
+  },
+  {
+    path: 'reset-password',
+    loadComponent: () =>
+      import('./components/pages/auth/reset-password/reset-password').then((m) => m.ResetPassword),
+  },
 ];

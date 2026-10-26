@@ -6,6 +6,7 @@ const User = require("../../model/User.js");
 const { verifyToken,requireAdmin } = require("../../middleware/auth.js"); // adjust path if needed
 const Order = require("../../model/Order.js");
 const JWT_SECRET = process.env.JWT_SECRET;
+const crypto = require('crypto');
 
 // POST /api/register
 router.post("/register", async (req, res) => {
@@ -240,6 +241,128 @@ router.get("/customers", verifyToken, requireAdmin, async (req, res) => {
   } catch (err) {
     console.error("[customers]", err);
     return res.status(500).json({ success: false, message: "Server error." });
+  }
+});
+
+
+
+// POST /api/forgot-password
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ status: 'error', message: 'Email is required.' });
+    }
+
+    const user = await User.findOne({ email });
+
+    // Always return success — don't reveal if email exists
+    if (!user) {
+      return res.json({
+        status:  'success',
+        message: 'If that email is registered you will receive a reset link shortly.',
+      });
+    }
+
+    // Generate token
+    const token   = crypto.randomBytes(32).toString('hex');
+    const expires = Date.now() + 60 * 60 * 1000; // 1 hour
+
+    user.resetPasswordToken   = token;
+    user.resetPasswordExpires = expires;
+    await user.save();
+
+    // Send email
+    const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${token}&email=${encodeURIComponent(email)}`;
+
+    const transporter = require('../../config/mailer.js');
+    await transporter.sendMail({
+      from:    process.env.EMAIL_FROM,
+      to:      email,
+      subject: `Reset your password — ${process.env.STORE_NAME}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head><meta charset="UTF-8"/></head>
+        <body style="font-family:'Helvetica Neue',Arial,sans-serif; background:#f0ede6; margin:0; padding:32px 16px;">
+          <div style="max-width:520px; margin:0 auto; background:#fff; border-radius:12px; overflow:hidden;">
+            <div style="background:#fdf8f1; padding:28px 32px; border-bottom:1px solid #ede7db;">
+              <p style="font-size:11px; font-weight:600; color:#c9a96e; letter-spacing:.07em; text-transform:uppercase; margin:0 0 6px">Password reset</p>
+              <h1 style="font-family:Georgia,serif; font-size:22px; font-weight:400; color:#1a1a1a; margin:0">Reset your password</h1>
+            </div>
+            <div style="padding:28px 32px;">
+              <p style="font-size:14px; color:#555; line-height:1.6; margin:0 0 20px">
+                We received a request to reset your password. Click the button below to choose a new one.
+                This link expires in <strong>1 hour</strong>.
+              </p>
+              <a href="${resetUrl}"
+                 style="display:inline-block; background:#1a1a1a; color:#fff; text-decoration:none;
+                        padding:13px 28px; border-radius:8px; font-size:14px; font-weight:500;">
+                Reset password
+              </a>
+              <p style="font-size:12px; color:#aaa; margin:20px 0 0; line-height:1.5">
+                If you didn't request this, you can safely ignore this email.
+                Your password will not change.
+              </p>
+            </div>
+            <div style="padding:16px 32px; font-size:12px; color:#aaa; text-align:center; border-top:1px solid #f0ece5;">
+              © ${new Date().getFullYear()} ${process.env.STORE_NAME}
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+    });
+
+    return res.json({
+      status:  'success',
+      message: 'If that email is registered you will receive a reset link shortly.',
+    });
+
+  } catch (err) {
+    console.error('[forgot-password]', err);
+    res.status(500).json({ status: 'error', message: 'Server error.' });
+  }
+});
+
+// POST /api/reset-password
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { email, token, password } = req.body;
+
+    if (!email || !token || !password) {
+      return res.status(400).json({ status: 'error', message: 'All fields are required.' });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ status: 'error', message: 'Password must be at least 6 characters.' });
+    }
+
+    const user = await User.findOne({
+      email,
+      resetPasswordToken:   token,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        status:  'error',
+        message: 'Reset link is invalid or has expired.',
+      });
+    }
+
+    const bcrypt = require('bcrypt');
+    user.password             = await bcrypt.hash(password, 10);
+    user.resetPasswordToken   = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    return res.json({ status: 'success', message: 'Password updated successfully.' });
+
+  } catch (err) {
+    console.error('[reset-password]', err);
+    res.status(500).json({ status: 'error', message: 'Server error.' });
   }
 });
 

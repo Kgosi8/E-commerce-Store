@@ -29,6 +29,8 @@ const userDetailsSchema = new mongoose.Schema(
       trim: true,
       minLength: 10,
     },
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Number },
     role: {
       type: String,
       enum: ["customer", "admin"],
