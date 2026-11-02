@@ -1,5 +1,5 @@
 <div class="model-cover">
-  <img class="model-image" src="assets/models/model-8.jpg" alt="Model Image" />
+  <img class="model-image" [src]="heroImage()" alt="Mpahlas Summer Collection" />
   <h2 class="cover-description">Mpahlas Summer Collection</h2>
   <small
     >find out the best Summer collection. Offering our best quality product in a Mpahlas summer
@@ -24,27 +24,14 @@
   </div>
 </div>
 
-<!-- <div class="venue-cover" [style.--cols]="images().length || 1">
-  @for (img of images(); track img.src) {
-    <img
-      [src]="img.src"
-      [alt]="img.alt"
-      [style.flex]="img.ratio + ' 1 0'"
-      [style.aspect-ratio]="img.ratio"
-      loading="lazy"
-    />
-    
-  } @empty {
-    <div class="no-image-venue"></div>
-  }
-</div> -->
+
 
 <div class="gender-split">
 
   <!-- Shop Her -->
   <div class="gender-panel" (click)="shopBy('Women')">
     <img
-      [src]="images()[0]?.src || 'assets/banners/ofentse.jpeg'"
+      [src]="ofentseImage()"
       alt="Shop Women"
       class="gender-img"
       loading="lazy" />
@@ -62,7 +49,7 @@
   <!-- Shop Him -->
   <div class="gender-panel" (click)="shopBy('Men')">
     <img
-      [src]="images()[1]?.src || 'assets/banners/danza.jpeg'"
+      [src]="danzaImage()"
       alt="Shop Men"
       class="gender-img"
       loading="lazy" />
