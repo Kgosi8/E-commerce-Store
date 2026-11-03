@@ -14,7 +14,7 @@ export class AdminDashboard {
  availableTags = [
     'Men', 'Women', 'Kids', 'New & Featured',
     'Caps', 'T-Shirts', 'Jackets',
-    'Footwear', 'Accessories', 'Winter Collection',
+    'Hoodies', 'Pants', 'Beanies', 'Slutchi',
   ];
 
   product = {

@@ -26,9 +26,7 @@ const ALL_TAGS: TagFilter[] = [
   { label: 'Hoodies', value: 'Hoodies' },
   { label: 'Caps', value: 'Caps' },
   { label: 'Beanies', value: 'Beanies' },
-  { label: 'Footwear', value: 'Footwear' },
-  { label: 'Accessories', value: 'Accessories' },
-  { label: 'New & Featured', value: 'New & Featured' },
+  { label: 'Slutchi', value: 'Slutchi' },
 ];
 
 @Component({

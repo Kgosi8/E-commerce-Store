@@ -1,89 +1,63 @@
 import { ChangeDetectorRef, Component, inject, input, OnInit, signal } from '@angular/core';
-import { CommonModule} from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { ProductService } from '../../../services/products/product-service';
 import { Product } from '../../../interfaces/product';
 import { CloudinaryService } from '../../../services/cloudinary/cloudinary-service';
-import { CloudinaryPipe } from '../../../core/pipe/cloudinary-pipe-pipe';
+import { HOME_SECTIONS, Showcase } from '../../../interfaces/home-sections';
 
-export interface VenueImage{
+export interface VenueImage {
   src: string;
   alt: string;
   ratio: number;
 }
 
-
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, RouterLink,CloudinaryPipe],
+  imports: [CommonModule, RouterLink,],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
 export class Home implements OnInit {
-  products: Product[] = [];
-  isLoading = true;
-  error: string | null = null;
+  private productService = inject(ProductService);
+  private router = inject(Router);
+  private cloudinary = inject(CloudinaryService);
 
-  private readonly cloudinary = inject(CloudinaryService)
-
-  
+  // ── Hero + Shop Her/Him images
   readonly heroImage = signal(this.cloudinary.hero('models/model-8'));
-  readonly logoImage = signal(this.cloudinary.logo('logos/logo_white_bg'));
-  readonly ofentseImage=signal(this.cloudinary.hero('banners/ofentse'));
+  readonly ofentseImage = signal(this.cloudinary.hero('banners/ofentse'));
   readonly danzaImage = signal(this.cloudinary.hero('banners/daniel'));
 
-  constructor(
-    private productService: ProductService,
-    private router: Router,
-    private cdr: ChangeDetectorRef,
-  ) {
-    
-  }
+  // ── Sections come from the config file
+  readonly sections: Showcase[] = HOME_SECTIONS;
+
+  // undefined = still loading, [] = loaded but empty
+  readonly rows = signal<Record<string, Product[]>>({});
+
+  readonly skeletons = [1, 2, 3, 4, 5];
 
   ngOnInit(): void {
-    this.loadProducts();
+    for (const s of this.sections) {
+      this.productService.getByTag(s.tag, { limit: 12 }).subscribe({
+        next: (res) => this.rows.update((r) => ({ ...r, [s.key]: res.products ?? [] })),
+        error: () => this.rows.update((r) => ({ ...r, [s.key]: [] })),
+      });
+    }
   }
 
-  loadProducts(): void {
-    this.productService.getProducts().subscribe({
-      next: (res) => {
-        this.products = res.products;
-        this.isLoading = false;
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.error = 'Failed to load products. Please try again later.';
-        this.isLoading = false;
-        this.cdr.detectChanges();
-      },
-    });
+  bannerUrl(publicId: string): string {
+    return this.cloudinary.hero(publicId);
   }
 
-  loadByTag(tag: string): void {
-    this.isLoading = true;
-    this.productService.getByTag(tag).subscribe({
-      next: (res) => {
-        this.products = res.products;
-        this.isLoading = false;
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.error = `Failed to load products for "${tag}".`;
-        this.isLoading = false;
-      },
-    });
+  scrollRow(track: HTMLElement, direction: 1 | -1): void {
+    track.scrollBy({ left: direction * track.clientWidth * 0.8, behavior: 'smooth' });
   }
 
-  // readonly images = signal([
-  //   { src: this.cloudinary.hero('models/ofentse'), alt: 'Shop Her'  },
-  //   { src: this.cloudinary.hero('models/danza'),   alt: 'Shop Him'  },
-  // ]);
-
-  shopBy(gender:string): void{
-    this.router.navigate(['/products'], {queryParams: {tag: gender}});
+  openTag(tag: string): void {
+    this.router.navigate(['/products'], { queryParams: { tag } });
   }
 
-  productName(product: string) {
-    console.log(product);
+  shopBy(gender: string): void {
+    this.openTag(gender);
   }
 }

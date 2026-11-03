@@ -14,117 +14,174 @@
     <small>Our latest collection is now available. Discover the newest styles and designs.</small>
   </div>
 
-  <div class="product-content">
-    <div class="card" *ngFor="let product of products" >
-      <img [src]="product.images[0]" [alt]="product.name" [routerLink]="['/add-to-cart', product._id]" style="cursor:pointer" (click)="productName(product.name)" />
-      <h3>{{ product.name }}</h3>
-      <p>{{ product.description }}</p>
-      <span class="price">R {{ product.price }}</span>
-    </div>
-  </div>
-</div>
+  <!-- ── Showcase sections ── -->
+  <div class="showcase">
+    @for (s of sections; track s.key) {
+      @let items = rows()[s.key];
 
+      <!-- Model banner (only if the section has one) -->
+      @if (s.bannerId) {
+        <section class="banner" (click)="openTag(s.tag)">
+          <img [src]="bannerUrl(s.bannerId)" [alt]="s.bannerAlt || s.rowTitle" loading="lazy" />
+          <div class="banner-text">
+            <p class="banner-eyebrow">{{ s.bannerEyebrow }}</p>
+            <h2 class="banner-title">{{ s.bannerTitle }}</h2>
+            <span class="banner-cta">Shop {{ s.bannerTitle }} →</span>
+          </div>
+        </section>
+      }
 
+      <!-- Horizontal scroll row (hidden if loaded and empty) -->
+      @if (!items || items.length > 0) {
+        <section class="hs">
+          <div class="hs-head">
+            <h3 class="hs-title">{{ s.rowTitle }}</h3>
 
-<div class="gender-split">
+            <div class="hs-controls">
+              <a class="hs-viewall" routerLink="/products" [queryParams]="{ tag: s.tag }"
+                >View all</a
+              >
+              <button
+                class="hs-arrow"
+                type="button"
+                aria-label="Scroll left"
+                (click)="scrollRow(track, -1)"
+              >
+                ‹
+              </button>
+              <button
+                class="hs-arrow"
+                type="button"
+                aria-label="Scroll right"
+                (click)="scrollRow(track, 1)"
+              >
+                ›
+              </button>
+            </div>
+          </div>
 
-  <!-- Shop Her -->
-  <div class="gender-panel" (click)="shopBy('Women')">
-    <img
-      [src]="ofentseImage()"
-      alt="Shop Women"
-      class="gender-img"
-      loading="lazy" />
-    <div class="gender-label">
-      <span>Shop her</span>
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-           stroke="currentColor" stroke-width="2"
-           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <line x1="5" y1="12" x2="19" y2="12"/>
-        <polyline points="12 5 19 12 12 19"/>
-      </svg>
-    </div>
-  </div>
-
-  <!-- Shop Him -->
-  <div class="gender-panel" (click)="shopBy('Men')">
-    <img
-      [src]="danzaImage()"
-      alt="Shop Men"
-      class="gender-img"
-      loading="lazy" />
-    <div class="gender-label">
-      <span>Shop him</span>
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-           stroke="currentColor" stroke-width="2"
-           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <line x1="5" y1="12" x2="19" y2="12"/>
-        <polyline points="12 5 19 12 12 19"/>
-      </svg>
-    </div>
-  </div>
-
-</div>
-
-
-<div class="venue-description">
-  <h2 class="venue-cover-description">Ama 2K VIBES</h2>
-  <small>
-    A symphony of vibrant colors and dynamic beats that define the essence of modern
-    active life.
-  </small>
-  <button type="button" class="details-btn">
-    <span style="color: black;">See Details</span>
-    <span class="arrow" style="color: black;" aria-hidden="true">→</span>
-  </button>
-</div>
-
-<div class="venue-description"></div>
-
-<div class="bottom-nav">
-  <div class="email-update">
-    <h1>Mpahlas</h1>
-    <h2>Subscribe to our Newsletter</h2>
-    <small>Get the latest updates on new products and upcoming sales.</small>
-    <input type="email" placeholder="Enter your email" />
-    <button>Subscribe</button>
-  </div>
-
-  <div class="mpahlas">
-    <div class="products">
-      <h3>Products</h3>
-      <span><a routerLink="/t-shirts">T-shirt</a></span>
-      <span><a routerLink="/pants">Pants</a></span>
-      <span><a routerLink="/hoodies">Hoodies</a></span>
-      <span><a routerLink="/beanies">Beanies</a></span>
-      <span><a routerLink="/caps">Caps</a></span>
-    </div>
-
-    <div class="categories">
-      <h3>Categories</h3>
-      <span><a routerLink="/men">Men</a></span>
-      <span><a routerLink="/women">Women</a></span>
-      <span><a routerLink="/kids">Kids</a></span>
-      <span><a routerLink="/new">New Arrivals</a></span>
-    </div>
-
-    <div class="contacts">
-      <h3>Our social media</h3>
-      <span><a href="https://www.facebook.com/manuel.sipho ">Facebook</a></span>
-      <span><a href="https://www.instagram.com/mpahlasburg_">Instagram</a></span>
-      <span><a href="https://wa.me/27796912980">WhatsApp</a></span>
-    </div>
-  </div>
-</div>
-
-<div class="bottom-banner">
-  <div class="est">
-    <small>© 2024 Mpahlas. All rights reserved.</small>
+          <div class="hs-track" #track>
+            @if (!items) {
+              @for (n of skeletons; track n) {
+                <div class="hs-card hs-card--skeleton">
+                  <div class="hs-img-wrap"></div>
+                  <div class="hs-line"></div>
+                  <div class="hs-line hs-line--short"></div>
+                </div>
+              }
+            } @else {
+              @for (product of items; track product._id) {
+                <a class="hs-card" [routerLink]="['/add-to-cart', product._id]">
+                  <div class="hs-img-wrap">
+                    <img [src]="product.images[0]" [alt]="product.name" loading="lazy" />
+                    @if (product.stock === 0) {
+                      <span class="hs-badge">Sold out</span>
+                    }
+                  </div>
+                  <p class="hs-name">{{ product.name }}</p>
+                  <p class="hs-price">R {{ product.price | number: '1.2-2' }}</p>
+                </a>
+              }
+            }
+          </div>
+        </section>
+      }
+    }
   </div>
 
-  <div class="policy">
-    <a routerLink="/terms-of-service">Terms & Conditions</a>
-    <a routerLink="/privacy-policy">Privacy Policy</a>
-    <a routerLink="/cookie-policy">Cookie Policy</a>
+  <div class="gender-split">
+    <!-- Shop Her -->
+    <div class="gender-panel" (click)="shopBy('Women')">
+      <img [src]="ofentseImage()" alt="Shop Women" class="gender-img" loading="lazy" />
+      <div class="gender-label">
+        <span>Shop her</span>
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <line x1="5" y1="12" x2="19" y2="12" />
+          <polyline points="12 5 19 12 12 19" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- Shop Him -->
+    <div class="gender-panel" (click)="shopBy('Men')">
+      <img [src]="danzaImage()" alt="Shop Men" class="gender-img" loading="lazy" />
+      <div class="gender-label">
+        <span>Shop him</span>
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <line x1="5" y1="12" x2="19" y2="12" />
+          <polyline points="12 5 19 12 12 19" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="venue-description"></div>
+
+  <div class="bottom-nav">
+    <div class="email-update">
+      <h1>Mpahlas</h1>
+      <h2>Subscribe to our Newsletter</h2>
+      <small>Get the latest updates on new products and upcoming sales.</small>
+      <input type="email" placeholder="Enter your email" />
+      <button>Subscribe</button>
+    </div>
+
+    <div class="mpahlas">
+      <div class="products">
+        <h3>Products</h3>
+        <span><a routerLink="/t-shirts">T-shirt</a></span>
+        <span><a routerLink="/pants">Pants</a></span>
+        <span><a routerLink="/hoodies">Hoodies</a></span>
+        <span><a routerLink="/beanies">Beanies</a></span>
+        <span><a routerLink="/caps">Caps</a></span>
+      </div>
+
+      <div class="categories">
+        <h3>Categories</h3>
+        <span><a routerLink="/men">Men</a></span>
+        <span><a routerLink="/women">Women</a></span>
+        <span><a routerLink="/kids">Kids</a></span>
+        <span><a routerLink="/new">New Arrivals</a></span>
+      </div>
+
+      <div class="contacts">
+        <h3>Our social media</h3>
+        <span><a href="https://www.facebook.com/manuel.sipho ">Facebook</a></span>
+        <span><a href="https://www.instagram.com/mpahlasburg_">Instagram</a></span>
+        <span><a href="https://wa.me/27796912980">WhatsApp</a></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-banner">
+    <div class="est">
+      <small>© 2024 Mpahlas. All rights reserved.</small>
+    </div>
+
+    <div class="policy">
+      <a routerLink="/terms-of-service">Terms & Conditions</a>
+      <a routerLink="/privacy-policy">Privacy Policy</a>
+      <a routerLink="/cookie-policy">Cookie Policy</a>
+    </div>
   </div>
 </div>
