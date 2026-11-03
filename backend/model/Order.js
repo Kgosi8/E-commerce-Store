@@ -50,6 +50,8 @@ const OrderSchema = new mongoose.Schema({
   popImageUrl: { type: String, default: null }, // URL of the uploaded proof of payment image
   popPublicId: { type: String, default: null }, // Cloudinary public ID for the uploaded proof of payment image
   popUploadedAt: { type: Date, default: null }, // Date when the proof of payment was uploaded
+  reminderCount:{ type: Number, default: 0 }, // Number of payment reminders sent
+  lastReminderSentAt: { type: Date, default: null }, // Date when the last payment reminder was sent
 }, { timestamps: true }); // adds createdAt + updatedAt automatically
 
 module.exports = mongoose.model('Order', OrderSchema);

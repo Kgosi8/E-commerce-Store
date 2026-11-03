@@ -32,6 +32,12 @@ export class AdminOrders implements OnInit {
   totalPages = signal<number>(1);
   isLoading = signal<boolean>(true);
   listError = signal<string | null>(null);
+  // ── Reminder state
+  isReminding = signal<boolean>(false);
+  reminderSuccess = signal<string | null>(null);
+  reminderError = signal<string | null>(null);
+
+  readonly REMINDER_COOLDOWN_HOURS = 24;
 
   // ── Filters
   filterStatus = signal<FilterStatus>('');
@@ -123,6 +129,8 @@ export class AdminOrders implements OnInit {
     this.drawerOpen.set(true);
     this.updateError.set(null);
     this.updateSuccess.set(false);
+    this.reminderSuccess.set(null);
+    this.reminderError.set(null);
   }
 
   closeDrawer(): void {
@@ -198,4 +206,49 @@ export class AdminOrders implements OnInit {
       minute: '2-digit',
     });
   }
+
+  // Show the button only for EFT orders still awaiting payment, with no POP uploaded
+canRemind(order: Order): boolean {
+  return (
+    order.paymentMethod === 'eft' &&
+    order.paymentStatus === 'awaiting_payment' &&
+    order.status !== 'cancelled' &&
+    !order.popImageUrl
+  );
+}
+
+// True if a reminder went out in the last 24 hours (the server enforces this too)
+remindedRecently(order: Order): boolean {
+  if (!order.lastReminderAt) return false;
+  const hours = (Date.now() - new Date(order.lastReminderAt).getTime()) / 36e5;
+  return hours < this.REMINDER_COOLDOWN_HOURS;
+}
+
+sendReminder(orderId: string): void {
+  if (this.isReminding()) return;
+
+  this.isReminding.set(true);
+  this.reminderSuccess.set(null);
+  this.reminderError.set(null);
+
+  this.adminOrderService.sendReminder(orderId).subscribe({
+    next: (res) => {
+      this.orders.update((list) =>
+        list.map((o) =>
+          o.orderId === orderId
+            ? { ...o, reminderCount: res.order.reminderCount, lastReminderAt: res.order.lastReminderAt }
+            : o,
+        ),
+      );
+      this.selectedOrder.set(res.order);
+      this.isReminding.set(false);
+      this.reminderSuccess.set(res.message ?? 'Reminder sent.');
+      setTimeout(() => this.reminderSuccess.set(null), 4000);
+    },
+    error: (err) => {
+      this.isReminding.set(false);
+      this.reminderError.set(err?.error?.message ?? 'Failed to send reminder. Please try again.');
+    },
+  });
+}
 }

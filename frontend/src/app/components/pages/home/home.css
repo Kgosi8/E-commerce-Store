@@ -712,32 +712,41 @@ input[type="email"]:focus {
 /* ── Model banners ────────────────────────────────────────────── */
 .banner {
   position: relative;
+  display: block;                 /* makes sure it's a full-width block */
+  width: 100%;
+  aspect-ratio: 16 / 7;           /* same size as before, now set on the container */
+  margin: clamp(32px, 5vw, 64px) auto clamp(16px, 3vw, 28px);
   overflow: hidden;
   border-radius: var(--radius);
+  background: var(--ink);
   cursor: pointer;
-  margin: clamp(32px, 5vw, 64px) 0 clamp(16px, 3vw, 28px);
-  background: var(--ink);              /* fills any empty space around the photo */
 }
-
 
 .banner img {
-  display: block;
+  position: absolute;
+  inset: 0;
   width: 100%;
-  aspect-ratio: 16 / 7;                /* container size is unchanged */
-  object-fit: contain;                 /* was "cover": shows the whole photo, no cropping */
-  object-position: center;
-                         /* optional: adjust if your photo has extra space on one side */
+  height: 100%;
+  object-fit: contain;
+  object-position: 90% center;   /* 50% = centered, 100% = flush right */
 }
-
-.banner:hover img { transform: scale(1.03); }
 
 .banner::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.55) 0%, transparent 60%);
+  /* same colors as before: rgba(0,0,0,0.55) fading to transparent */
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.55) 25%,     /* stays dark across the left bar */
+    transparent 75%              /* fades out later than the old 60% */
+  );
   pointer-events: none;
 }
+
+.banner:hover img { transform: scale(1.03); }
+
 
 .banner-text {
   position: absolute;

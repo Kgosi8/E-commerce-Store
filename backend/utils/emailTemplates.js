@@ -3,8 +3,8 @@
  * Returns { subject, html } for each email type.
  */
 
-const STORE_NAME = process.env.STORE_NAME || 'Our Store';
-const STORE_URL  = process.env.STORE_URL  || 'http://localhost:4200';
+const STORE_NAME = process.env.STORE_NAME || "Our Store";
+const STORE_URL = process.env.STORE_URL || "http://localhost:4200";
 
 // ── Shared styles ─────────────────────────────────────────────────
 const baseStyles = `
@@ -34,17 +34,23 @@ const baseStyles = `
 
 // ── Helpers ───────────────────────────────────────────────────────
 function formatCurrency(amount) {
-  return `R ${Number(amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
+  return `R ${Number(amount)
+    .toFixed(2)
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
 }
 
 function formatDate(date) {
-  return new Date(date).toLocaleDateString('en-ZA', {
-    day: '2-digit', month: 'long', year: 'numeric',
+  return new Date(date).toLocaleDateString("en-ZA", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
   });
 }
 
 function itemRows(items) {
-  return items.map(item => `
+  return items
+    .map(
+      (item) => `
     <div class="item-row">
       <div>
         <div class="item-name">${item.name}</div>
@@ -52,14 +58,17 @@ function itemRows(items) {
       </div>
       <div>${formatCurrency(item.price * item.quantity)}</div>
     </div>
-  `).join('');
+  `,
+    )
+    .join("");
 }
 
 // ── Order confirmation email ──────────────────────────────────────
 function orderConfirmationEmail(order) {
-  const isEFT = order.paymentMethod === 'eft';
+  const isEFT = order.paymentMethod === "eft";
 
-  const paymentSection = isEFT ? `
+  const paymentSection = isEFT
+    ? `
     <p class="section-label" style="margin-top:22px">Complete your payment</p>
 
     <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
@@ -67,13 +76,13 @@ function orderConfirmationEmail(order) {
         <td style="padding:0 5px 10px 0; width:50%">
           <div class="info-box">
             <div class="info-label">Bank</div>
-            <div class="info-value">${process.env.BANK_NAME || 'First National Bank'}</div>
+            <div class="info-value">${process.env.BANK_NAME || "First National Bank"}</div>
           </div>
         </td>
         <td style="padding:0 0 10px 5px; width:50%">
           <div class="info-box">
             <div class="info-label">Account type</div>
-            <div class="info-value">${process.env.BANK_ACCOUNT_TYPE || 'Cheque / Current'}</div>
+            <div class="info-value">${process.env.BANK_ACCOUNT_TYPE || "Cheque / Current"}</div>
           </div>
         </td>
       </tr>
@@ -81,13 +90,13 @@ function orderConfirmationEmail(order) {
         <td style="padding:0 5px 10px 0">
           <div class="info-box">
             <div class="info-label">Account number</div>
-            <div class="info-value info-value-mono">${process.env.BANK_ACCOUNT_NUMBER || ''}</div>
+            <div class="info-value info-value-mono">${process.env.BANK_ACCOUNT_NUMBER || ""}</div>
           </div>
         </td>
         <td style="padding:0 0 10px 5px">
           <div class="info-box">
             <div class="info-label">Branch code</div>
-            <div class="info-value info-value-mono">${process.env.BANK_BRANCH_CODE || ''}</div>
+            <div class="info-value info-value-mono">${process.env.BANK_BRANCH_CODE || ""}</div>
           </div>
         </td>
       </tr>
@@ -102,7 +111,8 @@ function orderConfirmationEmail(order) {
       Please make payment within <strong>48 hours</strong> to avoid cancellation.
       Use the reference above exactly as shown — this is how we match your payment to your order.
     </div>
-  ` : `
+  `
+    : `
     <div class="info-box" style="margin-top:16px">
       <div class="info-label">Payment on delivery</div>
       <div class="info-value">
@@ -177,7 +187,7 @@ function orderConfirmationEmail(order) {
                 ${order.customer.address}<br/>
                 ${order.customer.city}, ${order.customer.province}, ${order.customer.postalCode}<br/>
                 ${order.customer.phone}
-                ${order.customer.note ? `<br/><span style="color:#888; font-style:italic">Note: ${order.customer.note}</span>` : ''}
+                ${order.customer.note ? `<br/><span style="color:#888; font-style:italic">Note: ${order.customer.note}</span>` : ""}
               </div>
             </div>
 
@@ -280,4 +290,108 @@ function popNotificationEmail(order) {
   };
 }
 
-module.exports = { orderConfirmationEmail, popNotificationEmail };
+function paymentReminderEmail(order) {
+  const html = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8"/>
+      <meta name="viewport" content="width=device-width,initial-scale=1"/>
+      <style>${baseStyles}</style>
+    </head>
+    <body>
+      <div class="wrapper">
+        <div class="card">
+
+          <div class="header">
+            <div class="header-num">Payment reminder</div>
+            <h1 class="header-title">Your order is waiting for payment</h1>
+          </div>
+
+          <div class="body">
+            <p style="font-size:14px; color:#555; margin:0 0 20px; line-height:1.6">
+              Hi ${order.customer.firstName}, we haven't received payment for your order yet.
+              To keep your order reserved, please complete your EFT payment as soon as you can.
+              Unpaid orders may be cancelled so the stock can be released to other customers.
+            </p>
+
+            <div class="info-box">
+              <div class="info-label">Order ID</div>
+              <div class="info-value-mono">${order.orderId}</div>
+              <div style="font-size:12px; color:#888; margin-top:4px">
+                Placed on ${formatDate(order.createdAt)}
+              </div>
+            </div>
+
+            <div class="info-box">
+              <div class="info-label">Amount to pay</div>
+              <div class="info-value">${formatCurrency(order.total)}</div>
+            </div>
+
+            <p class="section-label" style="margin-top:22px">Bank details</p>
+            <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+              <tr>
+                <td style="padding:0 5px 10px 0; width:50%">
+                  <div class="info-box">
+                    <div class="info-label">Bank</div>
+                    <div class="info-value">${process.env.BANK_NAME || ""}</div>
+                  </div>
+                </td>
+                <td style="padding:0 0 10px 5px; width:50%">
+                  <div class="info-box">
+                    <div class="info-label">Account type</div>
+                    <div class="info-value">${process.env.BANK_ACCOUNT_TYPE || ""}</div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:0 5px 10px 0">
+                  <div class="info-box">
+                    <div class="info-label">Account number</div>
+                    <div class="info-value info-value-mono">${process.env.BANK_ACCOUNT_NUMBER || ""}</div>
+                  </div>
+                </td>
+                <td style="padding:0 0 10px 5px">
+                  <div class="info-box">
+                    <div class="info-label">Branch code</div>
+                    <div class="info-value info-value-mono">${process.env.BANK_BRANCH_CODE || ""}</div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+
+            <div class="info-box" style="border-left:3px solid #c9a96e; border-radius:0 8px 8px 0">
+              <div class="info-label">Your EFT reference — use exactly as shown</div>
+              <div class="info-value-mono" style="font-size:20px; margin-top:4px">${order.eftReference}</div>
+            </div>
+
+            <div class="notice">
+              <strong>Already paid?</strong> Log in to your account, open <strong>Orders</strong> and
+              upload your proof of payment so we can confirm it quickly.
+            </div>
+
+            <a href="${STORE_URL}/login" class="btn">Log in to upload proof of payment</a>
+          </div>
+
+          <div class="footer">
+            Questions? Reply to this email.<br/>
+            © ${new Date().getFullYear()} ${STORE_NAME}. All rights reserved.
+          </div>
+
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return {
+    subject: `Payment reminder — order ${order.orderId} | ${STORE_NAME}`,
+    html,
+  };
+}
+
+module.exports = {
+  orderConfirmationEmail,
+  popNotificationEmail,
+  paymentReminderEmail,
+};

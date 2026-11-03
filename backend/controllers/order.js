@@ -2,8 +2,10 @@ const Order = require("../model/Order");
 const { generateId } = require("../utils/generateId");
 const { validateOrder } = require("../utils/validateOrder");
 const { sendOrderConfirmation } = require("../services/email");
+const { sendPaymentReminder } = require('../services/email');
 
 const DELIVERY_FEE = 80; // fixed delivery fee
+const REMINDER_COOLDOWN_HOURS = 24;
 
 // ------- POST  /api/orders -----------------------
 
@@ -305,6 +307,68 @@ async function getOrderStats(req, res) {
   }
 }
 
+// ── POST /api/orders/:orderId/remind (admin) ─────────────────────
+async function sendReminder(req, res) {
+  try {
+    const order = await Order.findOne({ orderId: req.params.orderId });
+
+    if (!order) {
+      return res.status(404).json({ success: false, message: 'Order not found.' });
+    }
+
+    if (order.paymentMethod !== 'eft' || order.paymentStatus !== 'awaiting_payment') {
+      return res.status(400).json({
+        success: false,
+        message: 'Reminders only apply to EFT orders awaiting payment.',
+      });
+    }
+
+    if (order.status === 'cancelled') {
+      return res.status(400).json({ success: false, message: 'This order is cancelled.' });
+    }
+
+    if (order.popImageUrl) {
+      return res.status(400).json({
+        success: false,
+        message: 'The customer has already uploaded proof of payment.',
+      });
+    }
+
+    // Cooldown: one reminder per 24 hours
+    if (order.lastReminderAt) {
+      const hoursSince = (Date.now() - order.lastReminderAt.getTime()) / 36e5;
+      if (hoursSince < REMINDER_COOLDOWN_HOURS) {
+        return res.status(429).json({
+          success: false,
+          message: `A reminder was already sent ${Math.floor(hoursSince)}h ago. Try again later.`,
+        });
+      }
+    }
+
+    const sent = await sendPaymentReminder(order);
+    if (!sent) {
+      return res.status(502).json({
+        success: false,
+        message: 'Could not send the email. Check the mail server and try again.',
+      });
+    }
+
+    order.reminderCount  = (order.reminderCount || 0) + 1;
+    order.lastReminderAt = new Date();
+    await order.save();
+
+    return res.json({
+      success: true,
+      order,
+      message: `Reminder sent to ${order.customer.email}.`,
+    });
+
+  } catch (err) {
+    console.error('[sendReminder]', err);
+    return res.status(500).json({ success: false, message: 'Server error.' });
+  }
+}
+
 module.exports = {
   createOrder,
   getOrder,
@@ -312,5 +376,6 @@ module.exports = {
   updateOrderStatus,
   getAllOrders,
   getCustomers,
-  getOrderStats
+  getOrderStats,
+  sendReminder,
 };

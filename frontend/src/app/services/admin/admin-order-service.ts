@@ -32,9 +32,9 @@ export class AdminOrderService {
     if (filters.limit) params['limit'] = String(filters.limit);
 
     return this.http.get<ListOrdersResponse>(this.baseUrl, {
-       params,
-       withCredentials: true, // Include credentials for authentication
-      });
+      params,
+      withCredentials: true, // Include credentials for authentication
+    });
   }
 
   getOrder(orderId: string): Observable<{ success: boolean; order: Order }> {
@@ -52,7 +52,15 @@ export class AdminOrderService {
       payload,
       {
         withCredentials: true,
-      }
+      },
+    );
+  }
+
+  sendReminder(orderId: string): Observable<{ success: boolean; order: Order; message?: string }> {
+    return this.http.post<{ success: boolean; order: Order; message?: string }>(
+      `${this.baseUrl}/${orderId}/remind`,
+      {},
+      { withCredentials: true },
     );
   }
 }

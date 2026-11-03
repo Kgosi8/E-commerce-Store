@@ -10,7 +10,8 @@ const {
   listOrders,
   updateOrderStatus,
   getOrderStats,
-  getCustomers
+  getCustomers,
+  sendReminder,
 } = require("../../controllers/order");
 
 // ── Specific static routes first ─────────────────────────────────
@@ -39,6 +40,9 @@ router.patch("/:orderId/status", verifyToken, requireAdmin, updateOrderStatus);
 
 // Public: get single order — keep this LAST among /:orderId routes
 router.get("/:orderId", getOrder);
+
+// with the other /:orderId routes
+router.post('/:orderId/remind', verifyToken, requireAdmin, sendReminder);
 
 
 

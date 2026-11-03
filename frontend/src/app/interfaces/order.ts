@@ -8,63 +8,62 @@ export type OrderStatus =
   | 'delivered'
   | 'cancelled';
 
-export type PaymentStatus =
-  | 'awaiting_payment'
-  | 'paid'
-  | 'failed';
+export type PaymentStatus = 'awaiting_payment' | 'paid' | 'failed';
 
 export interface OrderCustomer {
-  firstName:  string;
-  lastName:   string;
-  email:      string;
-  phone:      string;
-  address:    string;
-  city:       string;
-  province:   string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  province: string;
   postalCode: string;
-  note?:      string;
+  note?: string;
 }
 
 export interface OrderItem {
   productId: string;
-  name:      string;
-  price:     number;
-  quantity:  number;
-  image?:    string;
+  name: string;
+  price: number;
+  quantity: number;
+  image?: string;
 }
 
 export interface Order {
-  _id:           string;
-  orderId:       string;
+  _id: string;
+  orderId: string;
   eftReference?: string;
-  customer:      OrderCustomer;
-  items:         OrderItem[];
+  customer: OrderCustomer;
+  items: OrderItem[];
   paymentMethod: PaymentMethod;
-  subtotal:      number;
-  deliveryFee:   number;
-  total:         number;
-  status:        OrderStatus;
+  subtotal: number;
+  deliveryFee: number;
+  total: number;
+  status: OrderStatus;
   paymentStatus: PaymentStatus;
-  popImageUrl?:  string | null; // URL of the uploaded proof of payment image
-  popUploadedAt?:  string | null; // Date when the proof of payment was uploaded  
-  createdAt:     string;
+  popImageUrl?: string | null; // URL of the uploaded proof of payment image
+  reminderCount?: number;
+  lastReminderAt?: string | null;
+  popUploadedAt?: string | null; // Date when the proof of payment was uploaded
+  createdAt: string;
 }
 
 export interface CreateOrderPayload {
-  customer:      OrderCustomer;
-  items:         OrderItem[];
+  customer: OrderCustomer;
+  items: OrderItem[];
   paymentMethod: PaymentMethod;
 }
 
 export interface CreateOrderResponse {
   success: boolean;
-  order:   Order;
+  order: Order;
   message?: string;
 }
 
 export interface BankDetails {
-  bankName:      string;
+  bankName: string;
   accountNumber: string;
-  branchCode:    string;
-  accountType:   string;
+  branchCode: string;
+  accountType: string;
 }

@@ -1,5 +1,4 @@
 <div class="ao-page">
-
   <!-- ── Header ── -->
   <div class="ao-header">
     <div>
@@ -7,10 +6,19 @@
       <p class="ao-subheading">{{ totalOrders() }} total orders</p>
     </div>
     <button class="ao-btn-refresh" (click)="loadOrders()" type="button">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <polyline points="23 4 23 10 17 10"/>
-        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+      <svg
+        width="15"
+        height="15"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <polyline points="23 4 23 10 17 10" />
+        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
       </svg>
       Refresh
     </button>
@@ -37,14 +45,21 @@
     <div class="ao-filter-group">
       <span class="ao-filter-label">Order status</span>
       <div class="ao-filter-tabs">
-        <button class="ao-filter-tab"
-                [class.ao-filter-tab--active]="filterStatus() === ''"
-                (click)="setStatusFilter('')" type="button">All</button>
-        @for(s of orderStatuses; track s) {
-          <button class="ao-filter-tab"
-                  [class.ao-filter-tab--active]="filterStatus() === s"
-                  (click)="setStatusFilter(s)"
-                  type="button">
+        <button
+          class="ao-filter-tab"
+          [class.ao-filter-tab--active]="filterStatus() === ''"
+          (click)="setStatusFilter('')"
+          type="button"
+        >
+          All
+        </button>
+        @for (s of orderStatuses; track s) {
+          <button
+            class="ao-filter-tab"
+            [class.ao-filter-tab--active]="filterStatus() === s"
+            (click)="setStatusFilter(s)"
+            type="button"
+          >
             {{ statusLabel(s) }}
           </button>
         }
@@ -54,21 +69,36 @@
     <div class="ao-filter-group">
       <span class="ao-filter-label">Payment method</span>
       <div class="ao-filter-tabs">
-        <button class="ao-filter-tab"
-                [class.ao-filter-tab--active]="filterPaymentMethod() === ''"
-                (click)="setPaymentMethodFilter('')" type="button">All</button>
-        <button class="ao-filter-tab"
-                [class.ao-filter-tab--active]="filterPaymentMethod() === 'eft'"
-                (click)="setPaymentMethodFilter('eft')" type="button">EFT</button>
-        <button class="ao-filter-tab"
-                [class.ao-filter-tab--active]="filterPaymentMethod() === 'cod'"
-                (click)="setPaymentMethodFilter('cod')" type="button">Cash on delivery</button>
+        <button
+          class="ao-filter-tab"
+          [class.ao-filter-tab--active]="filterPaymentMethod() === ''"
+          (click)="setPaymentMethodFilter('')"
+          type="button"
+        >
+          All
+        </button>
+        <button
+          class="ao-filter-tab"
+          [class.ao-filter-tab--active]="filterPaymentMethod() === 'eft'"
+          (click)="setPaymentMethodFilter('eft')"
+          type="button"
+        >
+          EFT
+        </button>
+        <button
+          class="ao-filter-tab"
+          [class.ao-filter-tab--active]="filterPaymentMethod() === 'cod'"
+          (click)="setPaymentMethodFilter('cod')"
+          type="button"
+        >
+          Cash on delivery
+        </button>
       </div>
     </div>
   </div>
 
   <!-- ── Loading ── -->
-  @if(isLoading()) {
+  @if (isLoading()) {
     <div class="ao-loading">
       <span class="ao-spinner"></span>
       <p>Loading orders…</p>
@@ -76,18 +106,27 @@
   }
 
   <!-- ── Error ── -->
-  @else if(listError()) {
+  @else if (listError()) {
     <div class="ao-error-banner" role="alert">{{ listError() }}</div>
   }
 
   <!-- ── Empty ── -->
-  @else if(orders().length === 0) {
+  @else if (orders().length === 0) {
     <div class="ao-empty">
-      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-           stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-        <line x1="3" y1="6" x2="21" y2="6"/>
-        <path d="M16 10a4 4 0 01-8 0"/>
+      <svg
+        width="40"
+        height="40"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <path d="M16 10a4 4 0 01-8 0" />
       </svg>
       <p>No orders found</p>
     </div>
@@ -110,7 +149,7 @@
           </tr>
         </thead>
         <tbody>
-          @for(order of orders(); track order.orderId) {
+          @for (order of orders(); track order.orderId) {
             <tr class="ao-row" (click)="openOrder(order)">
               <td class="ao-cell ao-cell--id">{{ order.orderId }}</td>
               <td class="ao-cell">
@@ -138,12 +177,20 @@
                   {{ statusLabel(order.paymentStatus) }}
                 </span>
               </td>
-              <td class="ao-cell ao-cell--total">R {{ order.total | number:'1.2-2' }}</td>
+              <td class="ao-cell ao-cell--total">R {{ order.total | number: '1.2-2' }}</td>
               <td class="ao-cell ao-cell--action">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                     aria-hidden="true">
-                  <polyline points="9 18 15 12 9 6"/>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <polyline points="9 18 15 12 9 6" />
                 </svg>
               </td>
             </tr>
@@ -153,29 +200,34 @@
     </div>
 
     <!-- ── Pagination ── -->
-    @if(totalPages() > 1) {
+    @if (totalPages() > 1) {
       <div class="ao-pagination">
-        <button class="ao-page-btn"
-                [disabled]="currentPage() === 1"
-                (click)="goToPage(currentPage() - 1)"
-                type="button">← Prev</button>
+        <button
+          class="ao-page-btn"
+          [disabled]="currentPage() === 1"
+          (click)="goToPage(currentPage() - 1)"
+          type="button"
+        >
+          ← Prev
+        </button>
 
-        <span class="ao-page-info">
-          Page {{ currentPage() }} of {{ totalPages() }}
-        </span>
+        <span class="ao-page-info"> Page {{ currentPage() }} of {{ totalPages() }} </span>
 
-        <button class="ao-page-btn"
-                [disabled]="currentPage() === totalPages()"
-                (click)="goToPage(currentPage() + 1)"
-                type="button">Next →</button>
+        <button
+          class="ao-page-btn"
+          [disabled]="currentPage() === totalPages()"
+          (click)="goToPage(currentPage() + 1)"
+          type="button"
+        >
+          Next →
+        </button>
       </div>
     }
   }
-
 </div>
 
 <!-- ── Order detail drawer ── -->
-@if(drawerOpen() && selectedOrder()) {
+@if (drawerOpen() && selectedOrder()) {
   <div class="ao-overlay" (click)="closeDrawer()"></div>
 
   <aside class="ao-drawer">
@@ -183,20 +235,29 @@
       <div>
         <p class="ao-drawer-id">{{ selectedOrder()!.orderId }}</p>
         <p class="ao-drawer-date">
-          {{ formatDate(selectedOrder()!.createdAt) }} at {{ formatTime(selectedOrder()!.createdAt) }}
+          {{ formatDate(selectedOrder()!.createdAt) }} at
+          {{ formatTime(selectedOrder()!.createdAt) }}
         </p>
       </div>
       <button class="ao-drawer-close" (click)="closeDrawer()" type="button" aria-label="Close">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
         </svg>
       </button>
     </div>
 
     <div class="ao-drawer-body">
-
       <!-- Customer -->
       <div class="ao-drawer-section">
         <p class="ao-drawer-section-title">Customer</p>
@@ -206,12 +267,11 @@
         <p class="ao-drawer-line">{{ selectedOrder()!.customer.email }}</p>
         <p class="ao-drawer-line">{{ selectedOrder()!.customer.phone }}</p>
         <p class="ao-drawer-line">
-          {{ selectedOrder()!.customer.address }},
-          {{ selectedOrder()!.customer.city }},
+          {{ selectedOrder()!.customer.address }}, {{ selectedOrder()!.customer.city }},
           {{ selectedOrder()!.customer.province }},
           {{ selectedOrder()!.customer.postalCode }}
         </p>
-        @if(selectedOrder()!.customer.note) {
+        @if (selectedOrder()!.customer.note) {
           <p class="ao-drawer-line ao-drawer-line--note">
             Note: {{ selectedOrder()!.customer.note }}
           </p>
@@ -221,10 +281,10 @@
       <!-- Items -->
       <div class="ao-drawer-section">
         <p class="ao-drawer-section-title">Items</p>
-        @for(item of selectedOrder()!.items; track item.productId) {
+        @for (item of selectedOrder()!.items; track item.productId) {
           <div class="ao-drawer-item">
             <div class="ao-drawer-item-info">
-              @if(item.image) {
+              @if (item.image) {
                 <img [src]="item.image" [alt]="item.name" class="ao-drawer-item-img" />
               }
               <div>
@@ -233,22 +293,22 @@
               </div>
             </div>
             <span class="ao-drawer-item-price">
-              R {{ (item.price * item.quantity) | number:'1.2-2' }}
+              R {{ item.price * item.quantity | number: '1.2-2' }}
             </span>
           </div>
         }
         <div class="ao-drawer-totals">
           <div class="ao-drawer-total-row">
             <span>Subtotal</span>
-            <span>R {{ selectedOrder()!.subtotal | number:'1.2-2' }}</span>
+            <span>R {{ selectedOrder()!.subtotal | number: '1.2-2' }}</span>
           </div>
           <div class="ao-drawer-total-row">
             <span>Delivery</span>
-            <span>R {{ selectedOrder()!.deliveryFee | number:'1.2-2' }}</span>
+            <span>R {{ selectedOrder()!.deliveryFee | number: '1.2-2' }}</span>
           </div>
           <div class="ao-drawer-total-row ao-drawer-total-row--total">
             <span>Total</span>
-            <span>R {{ selectedOrder()!.total | number:'1.2-2' }}</span>
+            <span>R {{ selectedOrder()!.total | number: '1.2-2' }}</span>
           </div>
         </div>
       </div>
@@ -262,7 +322,7 @@
             {{ selectedOrder()!.paymentMethod === 'eft' ? 'EFT' : 'Cash on delivery' }}
           </span>
         </div>
-        @if(selectedOrder()!.eftReference) {
+        @if (selectedOrder()!.eftReference) {
           <div class="ao-drawer-kv">
             <span class="ao-drawer-kv-key">EFT reference</span>
             <span class="ao-drawer-kv-mono">{{ selectedOrder()!.eftReference }}</span>
@@ -271,12 +331,11 @@
       </div>
 
       <!-- ── ADD THIS BLOCK ── -->
-      @if(selectedOrder()!.paymentMethod === 'eft') {
+      @if (selectedOrder()!.paymentMethod === 'eft') {
         <div class="ao-drawer-section">
           <p class="ao-drawer-section-title">Proof of Payment</p>
 
-          @if(selectedOrder()!.popImageUrl) {
-
+          @if (selectedOrder()!.popImageUrl) {
             <div class="ao-drawer-kv">
               <span class="ao-drawer-kv-key">Uploaded</span>
               <span class="ao-drawer-line">
@@ -289,43 +348,91 @@
             <img
               [src]="selectedOrder()!.popImageUrl!"
               alt="Proof of payment"
-              class="ao-pop-preview" />
+              class="ao-pop-preview"
+            />
 
             <!-- Open full size in new tab -->
-            <a [href]="selectedOrder()!.popImageUrl!"
-               target="_blank"
-               class="ao-pop-view-btn">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="2"
-                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
-                <polyline points="15 3 21 3 21 9"/>
-                <line x1="10" y1="14" x2="21" y2="3"/>
+            <a [href]="selectedOrder()!.popImageUrl!" target="_blank" class="ao-pop-view-btn">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
               </svg>
               Open full size
             </a>
-
           } @else {
-            <p class="ao-drawer-line ao-drawer-line--note">
-              No proof of payment uploaded yet.
-            </p>
+            <p class="ao-drawer-line ao-drawer-line--note">No proof of payment uploaded yet.</p>
           }
-
         </div>
       }
       <!-- ── END ADD ── -->
+
+      <!-- Payment reminder -->
+      @if (canRemind(selectedOrder()!)) {
+        <div class="ao-drawer-section">
+          <p class="ao-drawer-section-title">Payment reminder</p>
+
+          @if (selectedOrder()!.lastReminderAt) {
+            <p class="ao-drawer-line ao-drawer-line--note">
+              Last reminder: {{ formatDate(selectedOrder()!.lastReminderAt!) }} at
+              {{ formatTime(selectedOrder()!.lastReminderAt!) }} ·
+              {{ selectedOrder()!.reminderCount }} sent
+            </p>
+          } @else {
+            <p class="ao-drawer-line ao-drawer-line--note">No reminder sent yet.</p>
+          }
+
+          <button
+            class="ao-remind-btn"
+            [disabled]="isReminding() || remindedRecently(selectedOrder()!)"
+            (click)="sendReminder(selectedOrder()!.orderId)"
+            type="button"
+          >
+            @if (isReminding()) {
+              <span class="ao-spinner ao-spinner--sm"></span> Sending…
+            } @else if (remindedRecently(selectedOrder()!)) {
+              ✓ Reminder sent today
+            } @else {
+              ✉ Send payment reminder
+            }
+          </button>
+
+          @if (reminderSuccess()) {
+            <div class="ao-remind-feedback ao-remind-feedback--success">
+              {{ reminderSuccess() }}
+            </div>
+          }
+          @if (reminderError()) {
+            <div class="ao-remind-feedback ao-remind-feedback--error" role="alert">
+              {{ reminderError() }}
+            </div>
+          }
+        </div>
+      }
 
       <!-- Update order status -->
       <div class="ao-drawer-section">
         <p class="ao-drawer-section-title">Update order status</p>
         <div class="ao-status-select-grid">
-          @for(s of orderStatuses; track s) {
-            <button class="ao-status-select-btn"
-                    [class.ao-status-select-btn--active]="selectedOrder()!.status === s"
-                    [class.ao-status-select-btn--disabled]="isUpdating()"
-                    [disabled]="isUpdating()"
-                    (click)="updateOrderStatus(selectedOrder()!.orderId, s)"
-                    type="button">
+          @for (s of orderStatuses; track s) {
+            <button
+              class="ao-status-select-btn"
+              [class.ao-status-select-btn--active]="selectedOrder()!.status === s"
+              [class.ao-status-select-btn--disabled]="isUpdating()"
+              [disabled]="isUpdating()"
+              (click)="updateOrderStatus(selectedOrder()!.orderId, s)"
+              type="button"
+            >
               {{ statusLabel(s) }}
             </button>
           }
@@ -336,13 +443,15 @@
       <div class="ao-drawer-section">
         <p class="ao-drawer-section-title">Update payment status</p>
         <div class="ao-status-select-grid">
-          @for(ps of paymentStatuses; track ps) {
-            <button class="ao-status-select-btn"
-                    [class.ao-status-select-btn--active]="selectedOrder()!.paymentStatus === ps"
-                    [class.ao-status-select-btn--disabled]="isUpdating()"
-                    [disabled]="isUpdating()"
-                    (click)="updatePaymentStatus(selectedOrder()!.orderId, ps)"
-                    type="button">
+          @for (ps of paymentStatuses; track ps) {
+            <button
+              class="ao-status-select-btn"
+              [class.ao-status-select-btn--active]="selectedOrder()!.paymentStatus === ps"
+              [class.ao-status-select-btn--disabled]="isUpdating()"
+              [disabled]="isUpdating()"
+              (click)="updatePaymentStatus(selectedOrder()!.orderId, ps)"
+              type="button"
+            >
               {{ statusLabel(ps) }}
             </button>
           }
@@ -350,22 +459,19 @@
       </div>
 
       <!-- Feedback -->
-      @if(isUpdating()) {
+      @if (isUpdating()) {
         <div class="ao-drawer-feedback ao-drawer-feedback--loading">
           <span class="ao-spinner ao-spinner--sm"></span> Updating…
         </div>
       }
-      @if(updateSuccess()) {
-        <div class="ao-drawer-feedback ao-drawer-feedback--success">
-          ✓ Status updated
-        </div>
+      @if (updateSuccess()) {
+        <div class="ao-drawer-feedback ao-drawer-feedback--success">✓ Status updated</div>
       }
-      @if(updateError()) {
+      @if (updateError()) {
         <div class="ao-drawer-feedback ao-drawer-feedback--error" role="alert">
           {{ updateError() }}
         </div>
       }
-
     </div>
   </aside>
 }
