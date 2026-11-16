@@ -3,10 +3,11 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../../model/User.js");
-const { verifyToken,requireAdmin } = require("../../middleware/auth.js"); // adjust path if needed
+const { verifyToken, requireAdmin } = require("../../middleware/auth.js"); // adjust path if needed
 const Order = require("../../model/Order.js");
 const JWT_SECRET = process.env.JWT_SECRET;
-const crypto = require('crypto');
+const crypto = require("crypto");
+const isProd = process.env.NODE_ENV === "production";
 
 // POST /api/register
 router.post("/register", async (req, res) => {
@@ -83,7 +84,7 @@ router.post("/login", async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false, // set to true in production with HTTPS
+      secure: isProd, // set to true in production with HTTPS
       sameSite: "lax",
       maxAge: 24 * 60 * 60 * 1000, // ✅ match token expiry (1 day)
     });
@@ -209,7 +210,7 @@ router.get("/user/orders", verifyToken, async (req, res) => {
 
 // POST /api/logout
 router.post("/logout", (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("token", { httpOnly: true, secure: isProd, sameSite: "lax" });
   return res.status(200).json({
     status: "success",
     message: "Logout successful",
@@ -244,15 +245,15 @@ router.get("/customers", verifyToken, requireAdmin, async (req, res) => {
   }
 });
 
-
-
 // POST /api/forgot-password
-router.post('/forgot-password', async (req, res) => {
+router.post("/forgot-password", async (req, res) => {
   try {
     const { email } = req.body;
 
     if (!email) {
-      return res.status(400).json({ status: 'error', message: 'Email is required.' });
+      return res
+        .status(400)
+        .json({ status: "error", message: "Email is required." });
     }
 
     const user = await User.findOne({ email });
@@ -260,26 +261,27 @@ router.post('/forgot-password', async (req, res) => {
     // Always return success — don't reveal if email exists
     if (!user) {
       return res.json({
-        status:  'success',
-        message: 'If that email is registered you will receive a reset link shortly.',
+        status: "success",
+        message:
+          "If that email is registered you will receive a reset link shortly.",
       });
     }
 
     // Generate token
-    const token   = crypto.randomBytes(32).toString('hex');
+    const token = crypto.randomBytes(32).toString("hex");
     const expires = Date.now() + 60 * 60 * 1000; // 1 hour
 
-    user.resetPasswordToken   = token;
+    user.resetPasswordToken = token;
     user.resetPasswordExpires = expires;
     await user.save();
 
     // Send email
     const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${token}&email=${encodeURIComponent(email)}`;
 
-    const transporter = require('../../config/mailer.js');
+    const transporter = require("../../config/mailer.js");
     await transporter.sendMail({
-      from:    process.env.EMAIL_FROM,
-      to:      email,
+      from: process.env.EMAIL_FROM,
+      to: email,
       subject: `Reset your password — ${process.env.STORE_NAME}`,
       html: `
         <!DOCTYPE html>
@@ -316,53 +318,62 @@ router.post('/forgot-password', async (req, res) => {
     });
 
     return res.json({
-      status:  'success',
-      message: 'If that email is registered you will receive a reset link shortly.',
+      status: "success",
+      message:
+        "If that email is registered you will receive a reset link shortly.",
     });
-
   } catch (err) {
-    console.error('[forgot-password]', err);
-    res.status(500).json({ status: 'error', message: 'Server error.' });
+    console.error("[forgot-password]", err);
+    res.status(500).json({ status: "error", message: "Server error." });
   }
 });
 
 // POST /api/reset-password
-router.post('/reset-password', async (req, res) => {
+router.post("/reset-password", async (req, res) => {
   try {
     const { email, token, password } = req.body;
 
     if (!email || !token || !password) {
-      return res.status(400).json({ status: 'error', message: 'All fields are required.' });
+      return res
+        .status(400)
+        .json({ status: "error", message: "All fields are required." });
     }
 
     if (password.length < 6) {
-      return res.status(400).json({ status: 'error', message: 'Password must be at least 6 characters.' });
+      return res
+        .status(400)
+        .json({
+          status: "error",
+          message: "Password must be at least 6 characters.",
+        });
     }
 
     const user = await User.findOne({
       email,
-      resetPasswordToken:   token,
+      resetPasswordToken: token,
       resetPasswordExpires: { $gt: Date.now() },
     });
 
     if (!user) {
       return res.status(400).json({
-        status:  'error',
-        message: 'Reset link is invalid or has expired.',
+        status: "error",
+        message: "Reset link is invalid or has expired.",
       });
     }
 
-    const bcrypt = require('bcrypt');
-    user.password             = await bcrypt.hash(password, 10);
-    user.resetPasswordToken   = undefined;
+    const bcrypt = require("bcrypt");
+    user.password = await bcrypt.hash(password, 10);
+    user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
     await user.save();
 
-    return res.json({ status: 'success', message: 'Password updated successfully.' });
-
+    return res.json({
+      status: "success",
+      message: "Password updated successfully.",
+    });
   } catch (err) {
-    console.error('[reset-password]', err);
-    res.status(500).json({ status: 'error', message: 'Server error.' });
+    console.error("[reset-password]", err);
+    res.status(500).json({ status: "error", message: "Server error." });
   }
 });
 
