@@ -496,20 +496,20 @@
               </div>
 
               <!-- Totals -->
-              <div class="review-totals">
-                <div class="review-total-row">
-                  <span>Subtotal</span>
-                  <span>R {{ subtotal() | number: '1.2-2' }}</span>
-                </div>
-                <div class="review-total-row">
-                  <span>Delivery</span>
+              <div class="review-total-row">
+                <span>Delivery</span>
+                @if (deliveryFee() === 0) {
+                  <span class="review-free">Free</span>
+                } @else {
                   <span>R {{ deliveryFee() | number: '1.2-2' }}</span>
-                </div>
-                <div class="review-total-row review-total-row--total">
-                  <span>Total</span>
-                  <span>R {{ total() | number: '1.2-2' }}</span>
-                </div>
+                }
               </div>
+              @if (checkout.amountToFreeDelivery() > 0) {
+                <p class="review-free-hint">
+                  Add R {{ checkout.amountToFreeDelivery() | number: '1.2-2' }} more for free
+                  delivery
+                </p>
+              }
 
               @if (submitError) {
                 <div class="submit-error" role="alert">{{ submitError }}</div>

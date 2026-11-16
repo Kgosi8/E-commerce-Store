@@ -7,6 +7,7 @@ import { CheckoutForm, CheckoutValidationErrors } from '../../interfaces/checkou
 import { PaymentMethod }  from '../../interfaces/order';
 
 const DELIVERY_FEE = 80;
+const FREE_DELIVERY_THRESHOLD = 5000;
 
 const EMPTY_FORM: CheckoutForm = {
   firstName:  '',
@@ -44,9 +45,9 @@ export class CheckoutService implements OnDestroy {
   readonly subtotal    = computed(() =>
     this.cartItems().reduce((sum, i) => sum + i.price * i.quantity, 0)
   );
-  readonly deliveryFee = signal<number>(DELIVERY_FEE);
+  readonly deliveryFee = computed(() => this.subtotal() >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE);
   readonly total       = computed(() => this.subtotal() + this.deliveryFee());
-
+  readonly amountToFreeDelivery = computed(() => Math.max(0, FREE_DELIVERY_THRESHOLD - this.subtotal()));
   private readonly destroy$ = new Subject<void>();
 
   constructor(private cartService: CartService) {

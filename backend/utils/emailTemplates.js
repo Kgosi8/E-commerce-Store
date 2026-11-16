@@ -169,7 +169,7 @@ function orderConfirmationEmail(order) {
               </div>
               <div class="total-row">
                 <span>Delivery</span>
-                <span>${formatCurrency(order.deliveryFee)}</span>
+                <span>${order.deliveryFee === 0 ? 'Free' : formatCurrency(order.deliveryFee)}</span>
               </div>
               <div class="total-row-final">
                 <span>Total</span>

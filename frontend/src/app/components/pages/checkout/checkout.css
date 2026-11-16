@@ -6,23 +6,23 @@
    ════════════════════════════════════════ */
 
 :host {
-  --bg:            #f7f5f2;
-  --surface:       #ffffff;
-  --ink:           #1a1814;
-  --muted:         #7a7570;
-  --border:        #e8e4de;
-  --accent:        #c8a96e;
-  --accent-dark:   #a8893e;
-  --accent-light:  #f5ede0;
-  --danger:        #e05a5a;
-  --danger-bg:     #fff5f5;
-  --success:       #2e7d32;
-  --success-bg:    #edf7ed;
-  --locked:        #f9f8f6;
-  --radius-sm:     8px;
-  --radius:        16px;
-  --shadow:        0 8px 40px rgba(0,0,0,0.07);
-  --transition:    0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --bg: #f7f5f2;
+  --surface: #ffffff;
+  --ink: #1a1814;
+  --muted: #7a7570;
+  --border: #e8e4de;
+  --accent: #c8a96e;
+  --accent-dark: #a8893e;
+  --accent-light: #f5ede0;
+  --danger: #e05a5a;
+  --danger-bg: #fff5f5;
+  --success: #2e7d32;
+  --success-bg: #edf7ed;
+  --locked: #f9f8f6;
+  --radius-sm: 8px;
+  --radius: 16px;
+  --shadow: 0 8px 40px rgba(0, 0, 0, 0.07);
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   display: block;
   background: var(--bg);
@@ -33,7 +33,11 @@
   box-sizing: border-box;
 }
 
-*, *::before, *::after { box-sizing: inherit; }
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
 
 /* ── Page wrapper ── */
 .checkout-page {
@@ -65,7 +69,9 @@
   transition: color var(--transition);
 }
 
-.btn-back:hover { color: var(--ink); }
+.btn-back:hover {
+  color: var(--ink);
+}
 
 .checkout-steps {
   display: flex;
@@ -81,7 +87,9 @@
   transition: color var(--transition);
 }
 
-.step--active { color: var(--ink); }
+.step--active {
+  color: var(--ink);
+}
 
 .step-sep {
   color: var(--border);
@@ -185,7 +193,9 @@
   flex-wrap: wrap;
 }
 
-.dot { color: var(--border); }
+.dot {
+  color: var(--border);
+}
 
 /* Locked overlay */
 .locked-overlay {
@@ -248,7 +258,9 @@
   -webkit-appearance: none;
 }
 
-.field-input::placeholder { color: #c0bbb5; }
+.field-input::placeholder {
+  color: #c0bbb5;
+}
 
 .field-input:focus {
   border-color: var(--accent);
@@ -361,7 +373,9 @@
   border-radius: 4px;
   background: var(--border);
   color: var(--muted);
-  transition: background var(--transition), color var(--transition);
+  transition:
+    background var(--transition),
+    color var(--transition);
 }
 
 .card-icon--active {
@@ -395,9 +409,13 @@
   border-bottom: 1px solid var(--border);
 }
 
-.bank-detail:last-of-type { border-bottom: none; }
+.bank-detail:last-of-type {
+  border-bottom: none;
+}
 
-.bank-detail span { color: var(--muted); }
+.bank-detail span {
+  color: var(--muted);
+}
 
 .eft-note {
   font-size: 12px;
@@ -563,7 +581,9 @@
   flex-shrink: 0;
   margin-top: 2px;
   background: var(--bg);
-  transition: border-color var(--transition), background var(--transition);
+  transition:
+    border-color var(--transition),
+    background var(--transition);
   position: relative;
 }
 
@@ -575,8 +595,10 @@
 .checkbox-input:checked + .checkbox-box::after {
   content: '';
   position: absolute;
-  left: 4px; top: 1px;
-  width: 6px; height: 10px;
+  left: 4px;
+  top: 1px;
+  width: 6px;
+  height: 10px;
   border: 2px solid #fff;
   border-top: none;
   border-left: none;
@@ -616,7 +638,10 @@
   box-shadow: 0 8px 24px rgba(168, 137, 62, 0.3);
 }
 
-.btn-next:active { transform: translateY(0); box-shadow: none; }
+.btn-next:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
 
 .btn-place-order {
   width: 100%;
@@ -647,7 +672,9 @@
   box-shadow: 0 10px 28px rgba(168, 137, 62, 0.35);
 }
 
-.btn-place-order:active { transform: translateY(0); }
+.btn-place-order:active {
+  transform: translateY(0);
+}
 
 .btn-place-order:disabled {
   opacity: 0.65;
@@ -664,7 +691,9 @@
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: background var(--transition), transform var(--transition);
+  transition:
+    background var(--transition),
+    transform var(--transition);
 }
 
 .btn-primary:hover {
@@ -767,9 +796,14 @@
   color: var(--muted);
 }
 
-.summary-line--delivery { color: var(--ink); }
+.summary-line--delivery {
+  color: var(--ink);
+}
 
-.delivery-free { color: var(--success); font-weight: 500; }
+.delivery-free {
+  color: var(--success);
+  font-weight: 500;
+}
 
 .summary-line--total {
   font-size: 16px;
@@ -880,7 +914,7 @@
   display: inline-block;
   width: 14px;
   height: 14px;
-  border: 2px solid rgba(255,255,255,0.35);
+  border: 2px solid rgba(255, 255, 255, 0.35);
   border-top-color: #fff;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
@@ -890,12 +924,20 @@
    ANIMATIONS
    ════════════════════════════════════════ */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ════════════════════════════════════════
@@ -904,7 +946,9 @@
 
 /* Large desktops */
 @media (min-width: 1200px) {
-  .checkout-layout { grid-template-columns: 1fr 380px; }
+  .checkout-layout {
+    grid-template-columns: 1fr 380px;
+  }
 }
 
 /* Tablets — collapse summary below forms */
@@ -961,7 +1005,9 @@
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     transition: none !important;
     animation: none !important;
   }
@@ -997,7 +1043,10 @@
   font-size: 14px;
   color: #666;
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s,
+    color 0.15s;
 }
 
 .payment-tab:hover {
@@ -1010,8 +1059,7 @@
   color: var(--dark);
 }
 
- ── EFT panel ─────────────────────────────────────────────────────
-.eft-panel {
+── EFT panel ───────────────────────────────────────────────────── .eft-panel {
   margin-bottom: 8px;
 }
 
@@ -1064,8 +1112,7 @@
   line-height: 1.6;
 }
 
- ── COD panel ─────────────────────────────────────────────────────
-.cod-panel {
+── COD panel ───────────────────────────────────────────────────── .cod-panel {
   background: var(--gold-light);
   border: 1px solid var(--gold-border);
   border-radius: 10px;
@@ -1095,14 +1142,14 @@
 }
 
 :root {
-  --gold:        #c9a96e;
-  --gold-light:  #fdf8f1;
+  --gold: #c9a96e;
+  --gold-light: #fdf8f1;
   --gold-border: #ede7db;
-  --cream:       #f0ede6;
-  --dark:        #1a1a1a;
-  --muted:       #888;
+  --cream: #f0ede6;
+  --dark: #1a1a1a;
+  --muted: #888;
   --radius-card: 14px;
-  --radius-box:  10px;
+  --radius-box: 10px;
 }
 
 /* ── Review blocks ─────────────────────────────────────────────────── */
@@ -1140,7 +1187,9 @@
   cursor: pointer;
   padding: 0;
 
-  &:hover { text-decoration: underline; }
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .review-block__body {
@@ -1154,7 +1203,10 @@
   margin-bottom: 3px;
   line-height: 1.5;
 
-  &--muted { color: var(--muted); font-size: 13px; }
+  &--muted {
+    color: var(--muted);
+    font-size: 13px;
+  }
 }
 
 .review-payment-row {
@@ -1168,7 +1220,7 @@
   margin-bottom: 4px;
 }
 
- /* ── Review items ────────────────────────────────────────────────── */
+/* ── Review items ────────────────────────────────────────────────── */
 .review-item {
   display: flex;
   align-items: center;
@@ -1176,7 +1228,9 @@
   padding: 8px 0;
   border-bottom: 1px solid #f5f1eb;
 
-  &:last-child { border-bottom: none; }
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
 .review-item__info {
@@ -1214,10 +1268,10 @@
   color: var(--dark);
 }
 
- /* ── Totals ──────────────────────────────────────────────────────── */
+/* ── Totals ──────────────────────────────────────────────────────── */
 .review-totals {
   border: 1px solid #ede8e0;
-  border-radius: var(--radius-box) ;
+  border-radius: var(--radius-box);
   padding: 14px 16px;
   margin-bottom: 20px;
 }
@@ -1241,7 +1295,18 @@
   }
 }
 
- /* ── Submit error ────────────────────────────────────────────────── */
+.review-free {
+  color: #0e7548;
+  font-weight: 600;
+}
+
+.review-free-hint {
+  font-size: 12px;
+  color: #888;
+  margin: 4px 0 0;
+}
+
+/* ── Submit error ────────────────────────────────────────────────── */
 .submit-error {
   background: #fff0f0;
   border: 1px solid #fbc8c8;
@@ -1255,7 +1320,7 @@
   line-height: 1.5;
 }
 
- /* ── Loading spinner on button ───────────────────────────────────── */
+/* ── Loading spinner on button ───────────────────────────────────── */
 .btn-next--loading {
   opacity: 0.7;
   cursor: default;
@@ -1268,13 +1333,17 @@
   display: inline-block;
   width: 14px;
   height: 14px;
-  border: 2px solid rgba(255,255,255,0.4);
+  border: 2px solid rgba(255, 255, 255, 0.4);
   border-top-color: #fff;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
 
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 /* ── Success: EFT block ──────────────────────────────────────────── */
 .success-eft {
@@ -1333,7 +1402,7 @@
   margin-top: 4px;
 }
 
- /* ── Success: COD block ──────────────────────────────────────────── */
+/* ── Success: COD block ──────────────────────────────────────────── */
 .success-cod {
   background: var(--gold-light);
   border: 1px solid var(--gold-border);
