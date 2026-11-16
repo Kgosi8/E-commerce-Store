@@ -4,18 +4,19 @@ import { provideToastr } from 'ngx-toastr';
 
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
-import { provideHttpClient, withFetch } from '@angular/common/http';
-
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { apiUrlInterceptor } from './core/interceptors/api-url-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes), provideClientHydration(withEventReplay()),
-    provideHttpClient(withFetch()),
+    provideRouter(routes),
+    provideClientHydration(withEventReplay()),
+    provideHttpClient(withInterceptors([apiUrlInterceptor])),
     provideToastr({
       timeOut: 3000,
       positionClass: 'toast-top-right',
       preventDuplicates: true,
-    })
-  ]
+    }),
+  ],
 };

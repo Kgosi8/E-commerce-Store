@@ -2,10 +2,13 @@ const Order = require("../model/Order");
 const { generateId } = require("../utils/generateId");
 const { validateOrder } = require("../utils/validateOrder");
 const { sendOrderConfirmation } = require("../services/email");
-const { sendPaymentReminder } = require('../services/email');
+const { sendPaymentReminder } = require("../services/email");
+const mongoose = require("mongoose");
+const Product = require("../model/Product");
+const { calculateDeliveryFee, round2 } = require("../utils/deliveryFee");
 
-const DELIVERY_FEE = 80; // fixed delivery fee
 const REMINDER_COOLDOWN_HOURS = 24;
+const MAX_QTY_PER_ITEM = 20;
 
 // ------- POST  /api/orders -----------------------
 
@@ -13,40 +16,93 @@ async function createOrder(req, res) {
   try {
     const { customer, items, paymentMethod } = req.body;
 
-    // Validate order data
     const errors = validateOrder(req.body);
     if (errors.length) {
       return res.status(400).json({ success: false, errors });
     }
 
-    // Calculate subtotal and total
-    const subtotal = items.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0,
-    );
-    const total = subtotal + DELIVERY_FEE;
+    // 1. Combine duplicate lines and check ids and quantities
+    const wanted = new Map(); // productId -> quantity
+    for (const item of items) {
+      const id = String(item.productId);
+      const qty = item.quantity;
 
-    // Generate unique orderId
+      if (
+        !mongoose.isValidObjectId(id) ||
+        !Number.isInteger(qty) ||
+        qty < 1 ||
+        qty > MAX_QTY_PER_ITEM
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Something in your cart is invalid. Please refresh and try again.",
+        });
+      }
+      wanted.set(id, (wanted.get(id) || 0) + qty);
+    }
+
+    // 2. Load the real products from the database
+    const products = await Product.find({
+      _id: { $in: [...wanted.keys()] },
+    }).lean();
+    const byId = new Map(products.map((p) => [String(p._id), p]));
+
+    // 3. Build the order from DATABASE values, never from the browser's price/name
+    const verifiedItems = [];
+    for (const [id, quantity] of wanted) {
+      const p = byId.get(id);
+
+      if (!p) {
+        return res.status(400).json({
+          success: false,
+          message: "An item in your cart is no longer available.",
+        });
+      }
+      if (p.stock < quantity) {
+        return res.status(400).json({
+          success: false,
+          message:
+            p.stock === 0
+              ? `"${p.name}" is sold out.`
+              : `Only ${p.stock} of "${p.name}" left in stock.`,
+        });
+      }
+
+      verifiedItems.push({
+        productId: p._id,
+        name: p.name,
+        price: p.price,
+        quantity,
+        image: p.images?.[0],
+      });
+    }
+
+    // 4. Totals, calculated on the server
+    const subtotal = round2(
+      verifiedItems.reduce((s, i) => s + i.price * i.quantity, 0),
+    );
+    const deliveryFee = calculateDeliveryFee(subtotal);
+    const total = round2(subtotal + deliveryFee);
+
+    // 5. Save
     const orderId = generateId("ORD");
     const eftReference =
       paymentMethod === "eft" ? generateId("EFT") : undefined;
-
-    // Build and save the order
 
     const order = await Order.create({
       orderId,
       eftReference,
       customer,
-      items,
+      items: verifiedItems,
       paymentMethod,
       subtotal,
-      deliveryFee: DELIVERY_FEE,
+      deliveryFee,
       total,
       status: "pending",
       paymentStatus: "awaiting_payment",
     });
 
-    //email confirmation
     sendOrderConfirmation(order);
 
     return res.status(201).json({
@@ -67,25 +123,17 @@ async function createOrder(req, res) {
       },
     });
   } catch (err) {
-    //Handle duplicate orderId or eftReference error
-
     if (err.code === 11000) {
-      return res
-        .status(409)
-        .json({
-          success: false,
-          message: "Duplicate orderId or eftReference. Please try again.",
-        });
-    }
-
-    if (err.name === "ValidationError" || err.name === "CastError") {
-      return res.status(400).json({
+      return res.status(409).json({
         success: false,
-        message: err.message,
-        errors: err.errors,
+        message: "Duplicate orderId or eftReference. Please try again.",
       });
     }
-
+    if (err.name === "ValidationError" || err.name === "CastError") {
+      return res
+        .status(400)
+        .json({ success: false, message: err.message, errors: err.errors });
+    }
     console.error("[createOrder]", err);
     return res
       .status(500)
@@ -232,24 +280,23 @@ async function getCustomers(req, res) {
     const customers = await Order.aggregate([
       {
         $group: {
-          _id:         '$customer.email',
-          firstName:   { $first: '$customer.firstName' },
-          lastName:    { $first: '$customer.lastName' },
-          email:       { $first: '$customer.email' },
-          phone:       { $first: '$customer.phone' },
+          _id: "$customer.email",
+          firstName: { $first: "$customer.firstName" },
+          lastName: { $first: "$customer.lastName" },
+          email: { $first: "$customer.email" },
+          phone: { $first: "$customer.phone" },
           totalOrders: { $sum: 1 },
-          totalSpent:  { $sum: '$total' },
-          lastOrderAt: { $max: '$createdAt' },
+          totalSpent: { $sum: "$total" },
+          lastOrderAt: { $max: "$createdAt" },
         },
       },
       { $sort: { totalOrders: -1 } },
     ]);
 
     return res.json({ success: true, customers });
-
   } catch (err) {
-    console.error('[getCustomers]', err);
-    return res.status(500).json({ success: false, message: 'Server error.' });
+    console.error("[getCustomers]", err);
+    return res.status(500).json({ success: false, message: "Server error." });
   }
 }
 
@@ -259,22 +306,20 @@ async function getOrderStats(req, res) {
     const [stats] = await Order.aggregate([
       {
         $facet: {
-          byStatus: [
-            { $group: { _id: '$status', count: { $sum: 1 } } },
-          ],
+          byStatus: [{ $group: { _id: "$status", count: { $sum: 1 } } }],
           byPaymentStatus: [
-            { $group: { _id: '$paymentStatus', count: { $sum: 1 } } },
+            { $group: { _id: "$paymentStatus", count: { $sum: 1 } } },
           ],
           byPaymentMethod: [
-            { $group: { _id: '$paymentMethod', count: { $sum: 1 } } },
+            { $group: { _id: "$paymentMethod", count: { $sum: 1 } } },
           ],
           totals: [
             {
               $group: {
-                _id:           null,
-                totalOrders:   { $sum: 1 },
-                totalRevenue:  { $sum: '$total' },
-                avgOrderValue: { $avg: '$total' },
+                _id: null,
+                totalOrders: { $sum: 1 },
+                totalRevenue: { $sum: "$total" },
+                avgOrderValue: { $avg: "$total" },
               },
             },
           ],
@@ -292,18 +337,17 @@ async function getOrderStats(req, res) {
     return res.json({
       success: true,
       stats: {
-        byStatus:        flatten(stats.byStatus),
+        byStatus: flatten(stats.byStatus),
         byPaymentStatus: flatten(stats.byPaymentStatus),
         byPaymentMethod: flatten(stats.byPaymentMethod),
-        totalOrders:     stats.totals[0]?.totalOrders   ?? 0,
-        totalRevenue:    stats.totals[0]?.totalRevenue  ?? 0,
-        avgOrderValue:   stats.totals[0]?.avgOrderValue ?? 0,
+        totalOrders: stats.totals[0]?.totalOrders ?? 0,
+        totalRevenue: stats.totals[0]?.totalRevenue ?? 0,
+        avgOrderValue: stats.totals[0]?.avgOrderValue ?? 0,
       },
     });
-
   } catch (err) {
-    console.error('[getOrderStats]', err);
-    return res.status(500).json({ success: false, message: 'Server error.' });
+    console.error("[getOrderStats]", err);
+    return res.status(500).json({ success: false, message: "Server error." });
   }
 }
 
@@ -313,24 +357,31 @@ async function sendReminder(req, res) {
     const order = await Order.findOne({ orderId: req.params.orderId });
 
     if (!order) {
-      return res.status(404).json({ success: false, message: 'Order not found.' });
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found." });
     }
 
-    if (order.paymentMethod !== 'eft' || order.paymentStatus !== 'awaiting_payment') {
+    if (
+      order.paymentMethod !== "eft" ||
+      order.paymentStatus !== "awaiting_payment"
+    ) {
       return res.status(400).json({
         success: false,
-        message: 'Reminders only apply to EFT orders awaiting payment.',
+        message: "Reminders only apply to EFT orders awaiting payment.",
       });
     }
 
-    if (order.status === 'cancelled') {
-      return res.status(400).json({ success: false, message: 'This order is cancelled.' });
+    if (order.status === "cancelled") {
+      return res
+        .status(400)
+        .json({ success: false, message: "This order is cancelled." });
     }
 
     if (order.popImageUrl) {
       return res.status(400).json({
         success: false,
-        message: 'The customer has already uploaded proof of payment.',
+        message: "The customer has already uploaded proof of payment.",
       });
     }
 
@@ -349,11 +400,12 @@ async function sendReminder(req, res) {
     if (!sent) {
       return res.status(502).json({
         success: false,
-        message: 'Could not send the email. Check the mail server and try again.',
+        message:
+          "Could not send the email. Check the mail server and try again.",
       });
     }
 
-    order.reminderCount  = (order.reminderCount || 0) + 1;
+    order.reminderCount = (order.reminderCount || 0) + 1;
     order.lastReminderAt = new Date();
     await order.save();
 
@@ -362,10 +414,9 @@ async function sendReminder(req, res) {
       order,
       message: `Reminder sent to ${order.customer.email}.`,
     });
-
   } catch (err) {
-    console.error('[sendReminder]', err);
-    return res.status(500).json({ success: false, message: 'Server error.' });
+    console.error("[sendReminder]", err);
+    return res.status(500).json({ success: false, message: "Server error." });
   }
 }
 

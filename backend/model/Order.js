@@ -35,7 +35,7 @@ const OrderSchema = new mongoose.Schema({
   items:          { type: [OrderItemSchema], required: true },
   paymentMethod:  { type: String, enum: ['eft', 'cod'], required: true },
   subtotal:       { type: Number, required: true },
-  deliveryFee:    { type: Number, required: true, default: 80 },
+  deliveryFee:    { type: Number, required: true, default: 0 },
   total:          { type: Number, required: true },
   status: {
     type: String,

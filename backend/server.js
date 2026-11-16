@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const connectDB = require('./connection/db_connect');
-
+const { retryFailedEmails } = require('./services/mailSender');
 
 // Routes
 const authRoutes = require('./routes/customer/auth.js');
@@ -19,7 +19,7 @@ const orderRoutes = require('./routes/customer/order.js');
 const app = express();
 
 app.set('trust proxy', 1);             // needed behind Render's proxy
-app.use(helmet());
+app.use(helmet({contentSecurityPolicy: false}));  // CSP is too strict for some email templates
 
 // ── CORS ──
 // CLIENT_URL can hold several origins, comma-separated:
@@ -62,9 +62,22 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/orders', orderRoutes);
 
 // ── 404 for unknown routes ──
-app.use((req, res) => {
+app.use('/api', (req, res) => {
   res.status(404).json({ success: false, status: 'error', message: 'Route not found.' });
 });
+
+// ── Angular app (built files live in backend/public) ──
+const clientDir = path.join(__dirname, 'public');
+app.use(express.static(clientDir));
+app.use((req, res, next) => {
+  if (req.method !== 'GET') return next();
+  res.sendFile(path.join(clientDir, 'index.html'), (err) => { if (err) next(); });
+});
+
+app.use((req, res) => {
+  res.status(404).json({ success: false, status: 'error', message: 'Not found.' });
+});
+
 
 // ── Error handler (catches upload errors, thrown errors, etc.) ──
 app.use((err, req, res, next) => {
@@ -88,7 +101,6 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-// ── Optional: retry saved emails every 15 minutes ──
-// Uncomment once services/mailSender.js (from the mail resilience step) is in place.
-// const { retryFailedEmails } = require('./services/mailSender');
-// setInterval(() => retryFailedEmails().catch(console.error), 15 * 60 * 1000);
+
+// Retry saved emails every 15 minutes
+setInterval(() => retryFailedEmails().catch(console.error), 15 * 60 * 1000);
