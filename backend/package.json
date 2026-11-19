@@ -30,5 +30,6 @@
     "@types/crypto-js": "^4.2.2",
     "dotenv": "^17.3.1",
     "nodemon": "^3.1.14"
-  }
+  },
+  "engines": { "node": ">=20" }
 }
