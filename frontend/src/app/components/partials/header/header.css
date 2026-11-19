@@ -142,6 +142,11 @@ a{
   cursor: pointer;
 }
 
+.menu mat-icon {
+  margin-right: 8px;
+  cursor: pointer;
+}
+
 .shops {
   padding: 1rem;
 }

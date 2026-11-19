@@ -7,7 +7,7 @@ import { CheckoutForm, CheckoutValidationErrors } from '../../interfaces/checkou
 import { PaymentMethod }  from '../../interfaces/order';
 
 const DELIVERY_FEE = 80;
-const FREE_DELIVERY_THRESHOLD = 5000;
+const FREE_DELIVERY_THRESHOLD = 500;
 
 const EMPTY_FORM: CheckoutForm = {
   firstName:  '',

@@ -18,29 +18,26 @@ export interface UpdateAddressPayload {
 @Injectable({
   providedIn: 'root',
 })
-
 export class AccountService {
-
   private readonly baseUrl = 'http://localhost:5000/api';
-  readonly user= signal<User | null>(null);
+  readonly user = signal<User | null>(null);
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getUser(): Observable<UserResponse> {
-
-    return this.http.get<UserResponse>(`${this.baseUrl}/user`,{
-      withCredentials: true,
-    }).pipe(
-      tap(res=> this.user.set(res.data))
-    );
+    return this.http
+      .get<UserResponse>(`${this.baseUrl}/user`, {
+        withCredentials: true,
+      })
+      .pipe(tap((res) => this.user.set(res.data)));
   }
 
   updateAddress(payload: UpdateAddressPayload): Observable<UserResponse> {
-    return this.http.put<UserResponse>(`${this.baseUrl}/user/address`, payload, {
-      withCredentials: true,
-    }).pipe(
-      tap(res => this.user.set(res.data))
-    );
+    return this.http
+      .put<UserResponse>(`${this.baseUrl}/user/address`, payload, {
+        withCredentials: true,
+      })
+      .pipe(tap((res) => this.user.set(res.data)));
   }
 
   getOrders(): Observable<OrdersResponse> {
@@ -50,8 +47,8 @@ export class AccountService {
   }
 
   logout(): Observable<any> {
-    return this.http.post(`${this.baseUrl}/logout`, {}, {
-      withCredentials: true,
-    });
+    return this.http.post(`${this.baseUrl}/logout`, {}, { withCredentials: true }).pipe(
+      tap(() => this.user.set(null)), // ← clear the cached user
+    );
   }
 }

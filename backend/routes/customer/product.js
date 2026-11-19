@@ -13,7 +13,7 @@ router.get('/category/:category', controller.getProductsByCategory);
 // GET /api/products/:id
 router.get("/:id", controller.getProductById);
 router.post("/",verifyToken,requireAdmin, upload.array("images", 6), controller.createProduct);
-router.delete("/:id", controller.deleteProduct);
+router.delete("/:id", verifyToken, requireAdmin, controller.deleteProduct);
 
 
 

@@ -24,7 +24,7 @@ export const HOME_SECTIONS: Showcase[] = [
     key:      'hoodies',
     tag:      'Hoodies',
     rowTitle: 'Hoodies',
-    bannerId: 'models/hoodies-model',     // TODO: your real public ID
+    bannerId: 'models/model-8',     
     bannerEyebrow: 'Stay Warm & Stylish',
     bannerTitle:   'Hoodies',
     bannerAlt:     'Model wearing a Mpahlas hoodie',
@@ -33,7 +33,7 @@ export const HOME_SECTIONS: Showcase[] = [
     key:      'pants',
     tag:      'Pants',
     rowTitle: 'Pants',
-    bannerId: 'models/pants-model',     // TODO: your real public ID
+    bannerId: 'model-Black_outfit',     
     bannerEyebrow: 'Comfortable & Stylish',
     bannerTitle:   'Pants',
     bannerAlt:     'Model wearing Mpahlas pants',
@@ -42,7 +42,7 @@ export const HOME_SECTIONS: Showcase[] = [
     key:           'caps',
     tag:           'Caps',
     rowTitle:      'Caps',
-    bannerId:      'model-cap',     // TODO: your real public ID
+    bannerId:      'model-cap',     
     bannerEyebrow: 'Finish the look',
     bannerTitle:   'Caps',
     bannerAlt:     'Model wearing a Mpahlas cap',
@@ -51,7 +51,7 @@ export const HOME_SECTIONS: Showcase[] = [
     key:      'beanies',
     tag:      'Beanies',
     rowTitle: 'Beanies',
-    bannerId: 'models/beanies-model',     // TODO: your real public ID
+    bannerId: 'models/model-7',    
     bannerEyebrow: 'Winter is coming',
     bannerTitle:   'Beanies',
     bannerAlt:     'Model wearing a Mpahlas beanie',
@@ -60,7 +60,7 @@ export const HOME_SECTIONS: Showcase[] = [
     key:           'kids',
     tag:           'Kids',
     rowTitle:      'Kids',
-    bannerId:      'products/kptw1lqxhh9lxbfwjzy3',     // TODO: your real public ID
+    bannerId:      'products/kptw1lqxhh9lxbfwjzy3',     
     bannerEyebrow: 'Mini Mpahlas',
     bannerTitle:   'Kids',
     bannerAlt:     'Kid wearing Mpahlas clothing',
@@ -69,7 +69,7 @@ export const HOME_SECTIONS: Showcase[] = [
     key:      'slutchi',
     tag:      'Slutchi',
     rowTitle: 'Slutchi',
-    bannerId: 'Model-Hoodie_Sluchie',     // TODO: your real public ID
+    bannerId: 'Model-Hoodie_Sluchie',     
     bannerEyebrow: 'Stylish & Comfortable',
     bannerTitle:   'Slutchi',
     bannerAlt:     'Model wearing Mpahlas Slutchi',

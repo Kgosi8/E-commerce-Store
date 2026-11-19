@@ -2,6 +2,7 @@ const dotenv = require('dotenv');
 dotenv.config();                       // first, so every file below can read process.env
 
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');

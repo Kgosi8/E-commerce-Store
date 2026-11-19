@@ -1093,12 +1093,13 @@
   font-weight: 500;
   color: var(--dark);
 
-  &--mono {
+}
+
+.bank-value--mono {
     font-family: 'Courier New', monospace;
     font-weight: 600;
     letter-spacing: 0.04em;
   }
-}
 
 .eft-notice {
   background: var(--gold-light);
@@ -1202,12 +1203,12 @@
   color: var(--dark);
   margin-bottom: 3px;
   line-height: 1.5;
+}
 
-  &--muted {
+  .review-line--muted {
     color: var(--muted);
     font-size: 13px;
   }
-}
 
 .review-payment-row {
   display: flex;

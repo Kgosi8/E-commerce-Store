@@ -136,7 +136,7 @@
         <div class="summary-line summary-line--delivery">
           <span>Delivery</span>
           <span class="delivery-free">
-            {{ getOrderTotal() >= 500 ? 'Free' : 'R 50.00' }}
+            {{ getOrderTotal() >= 500 ? 'Free' : 'R 80.00' }}
           </span>
         </div>
 
@@ -146,7 +146,7 @@
         <div class="summary-line summary-line--total">
           <span>Total</span>
           <span class="total-amount">
-            R {{ (getOrderTotal() >= 500 ? getOrderTotal() : getOrderTotal() + 50) | number:'1.2-2' }}
+            R {{ (getOrderTotal() >= 500 ? getOrderTotal() : getOrderTotal() + 80) | number:'1.2-2' }}
           </span>
         </div>
 

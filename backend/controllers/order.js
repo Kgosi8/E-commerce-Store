@@ -5,7 +5,7 @@ const { sendOrderConfirmation } = require("../services/email");
 const { sendPaymentReminder } = require("../services/email");
 const mongoose = require("mongoose");
 const Product = require("../model/Product");
-const { calculateDeliveryFee, round2 } = require("../utils/deliveryFee");
+const { calculateDeliveryFee, round2 } = require("../utils/pricing");
 
 const REMINDER_COOLDOWN_HOURS = 24;
 const MAX_QTY_PER_ITEM = 20;
@@ -24,19 +24,25 @@ async function createOrder(req, res) {
     // 1. Combine duplicate lines and check ids and quantities
     const wanted = new Map(); // productId -> quantity
     for (const item of items) {
-      const id = String(item.productId);
-      const qty = item.quantity;
+      const id = String(item.productId?._id ?? item.productId);
+      const qty = Number(item.quantity);
 
-      if (
-        !mongoose.isValidObjectId(id) ||
-        !Number.isInteger(qty) ||
-        qty < 1 ||
-        qty > MAX_QTY_PER_ITEM
-      ) {
+      if (!/^[a-f\d]{24}$/i.test(id)) {
+        console.warn(
+          "[createOrder] bad productId:",
+          JSON.stringify(item.productId),
+        );
         return res.status(400).json({
           success: false,
-          message:
-            "Something in your cart is invalid. Please refresh and try again.",
+          message: `"${item.name}" has an invalid product id. Remove it from your cart and add it again.`,
+        });
+      }
+
+      if (!Number.isInteger(qty) || qty < 1 || qty > MAX_QTY_PER_ITEM) {
+        console.warn("[createOrder] bad quantity:", item.quantity);
+        return res.status(400).json({
+          success: false,
+          message: `Quantity for "${item.name}" must be a whole number from 1 to ${MAX_QTY_PER_ITEM}.`,
         });
       }
       wanted.set(id, (wanted.get(id) || 0) + qty);

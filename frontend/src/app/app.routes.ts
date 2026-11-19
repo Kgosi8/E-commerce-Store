@@ -6,6 +6,7 @@ import { AddToCart } from './components/pages/add-to-cart/add-to-cart';
 import { Cart } from './components/pages/cart/cart';
 import { Checkout } from './components/pages/checkout/checkout';
 import { AccountDetails } from './components/pages/account-details/account-details';
+import { adminGuard } from './core/guards/admin-guard';
 
 export const routes: Routes = [
   {
@@ -102,6 +103,7 @@ export const routes: Routes = [
 
   {
     path: 'admin',
+    canActivate: [adminGuard],
     loadChildren: () => import('./admin/routes/admin-routes').then((m) => m.ADMIN_ROUTES),
   },
   {
