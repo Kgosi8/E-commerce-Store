@@ -87,19 +87,7 @@ export const routes: Routes = [
     path: 'account-details',
     component: AccountDetails,
   },
-  // {
-  //   path: 'admin-dashboard',
-  //   loadComponent() {
-  //     return import('./components/pages/admin-dashboard/admin-dashboard').then(
-  //       (m) => m.AdminDashboard,
-  //     );
-  //   },
-  //   // canActivate: [adminGuard],
-  //   // children: [
-  //   //     {path:'create', component:CreateProduct},
-  //   //     {path:'products', component:ProductList},
-  //   // ]
-  // },
+  
 
   {
     path: 'admin',

@@ -43,7 +43,7 @@
   @else if(products().length > 0) {
     <div class="sr-grid">
       @for(product of products(); track product._id) {
-        <div class="sr-card" [routerLink]="['/product', product._id]">
+        <div class="sr-card" [routerLink]="['/add-to-cart', product._id]" >
           <div class="sr-card-img-wrap">
             <img
               [src]="product.images[0] || 'assets/placeholder.png'"
