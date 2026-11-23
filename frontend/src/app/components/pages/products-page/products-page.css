@@ -326,3 +326,22 @@
 
 .pp-clear-btn:hover { background: #333; }
 
+.pp-grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
+}
+
+@media (max-width: 599px) {
+  .pp-body   { padding: 1rem 1rem 3rem; }
+  .pp-hero   { padding: 2.5rem 1rem 2rem; }
+  .pp-toolbar { flex-direction: column; align-items: stretch; }
+  .pp-search-wrap { min-width: 0; width: 100%; }
+
+  /* filter pills scroll sideways instead of wrapping into many rows */
+  .pp-tag-strip { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; }
+  .pp-tag { flex-shrink: 0; }
+
+  /* two products per row, the whole card is already tappable */
+  .pp-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .pp-card-btn { display: none; }
+  .pp-card-body { padding: 10px 12px 12px; }
+}

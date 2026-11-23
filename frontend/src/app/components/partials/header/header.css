@@ -245,3 +245,76 @@ a{
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
+
+
+.header { position: relative; }
+
+/* cart badge follows the icon (replace your old top/right values) */
+.cart-icon-wrap { position: relative; }
+.cart-badge { top: -6px; right: -2px; }
+
+/* account popup */
+.account-wrap { position: relative; }
+.popup {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 1000;
+}
+
+/* side panel: never wider than the screen */
+.side-panel {
+  left: 0;
+  width: min(450px, 86vw);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+}
+.side-panel.open { transform: translateX(0); }
+
+@media (max-width: 768px) {
+  .header {
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 10px 14px;
+    gap: 6px 10px;
+  }
+
+  /* let the menu button and category links sit directly in the header row */
+  .menu-category { display: contents; }
+
+  .menu         { order: 1; }
+  .header > .logo { order: 2; flex: 1; display: flex; justify-content: center; }
+  .logo img     { width: auto; height: 44px; max-width: 100%; }
+  .search-login { order: 3; gap: 8px; }
+
+  /* category links become a scrollable second row */
+  .categories {
+    order: 4;
+    flex: 0 0 100%;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 4px;
+  }
+
+  /* the open search bar covers the header row */
+  .search-wrap--open {
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    top: 8px;
+    height: 44px;
+    z-index: 20;
+  }
+  .search-input { flex: 1; width: 100%; min-width: 0; }
+
+  .popup {
+    position: fixed;
+    top: 60px;
+    left: 10px;
+    right: 10px;
+    display: flex;
+    justify-content: center;
+  }
+}

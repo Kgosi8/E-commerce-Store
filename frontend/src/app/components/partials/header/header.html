@@ -78,7 +78,7 @@
     </div>
 
     @if (isLoggedIn$ | async) {
-      <div class="account-container">
+      <div class="account-wrap">
         <div class="profile-icon" (click)="showAccountDetails = !showAccountDetails">
           {{ initials$ | async }}
         </div>

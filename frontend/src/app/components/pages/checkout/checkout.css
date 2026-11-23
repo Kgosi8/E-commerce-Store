@@ -1416,3 +1416,10 @@
   text-align: center;
   line-height: 1.6;
 }
+
+@media (max-width: 599px) {
+  .field-row { flex-direction: column; gap: 0; }
+  .payment-tabs,
+  .bank-grid,
+  .success-bank-grid { grid-template-columns: 1fr; }
+}

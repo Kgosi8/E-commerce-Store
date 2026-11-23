@@ -365,3 +365,7 @@
   border-radius: 6px;
   padding: 5px 10px;
 }
+
+.ac-wrap {
+  width: min(320px, calc(100vw - 20px));
+}

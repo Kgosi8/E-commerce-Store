@@ -37,7 +37,7 @@ body {
     0 10px 30px rgba(0,0,0,0.10) !important;
   padding: 2.5rem 2.75rem !important;
   width: 100%;
-  max-width: 460px;
+  max-width: 400px;
   margin: 2rem auto;
   font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
   box-sizing: border-box;
@@ -117,6 +117,7 @@ body {
 .register-card button[type="submit"] {
   display: block !important;
   width: 100% !important;
+  max-width: 400px !important;
   margin-top: 0.75rem !important;
   background-color: var(--black-800) !important;
   color: #f5f0e8 !important;

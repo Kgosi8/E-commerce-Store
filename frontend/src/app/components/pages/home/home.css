@@ -932,6 +932,7 @@ input[type="email"]:focus {
 
 /* ── Mobile ───────────────────────────────────────────────────── */
 @media (max-width: 599px) {
-  .banner img { aspect-ratio: 4 / 5; }
-  .hs-arrow   { display: none; }       /* swipe instead */
+  .model-cover small { display: none; }   /* the long tagline overlaps the title on a phone */
+  .showcase { padding: 0 12px; }
+  .hs-card { flex-basis: 150px; }
 }

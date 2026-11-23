@@ -4,15 +4,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f5f0e6, #e8dfd1);
+  background: linear-gradient(135deg, #f7f5f2, #f7f5f2);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: red;
 }
+
 
 /* Card container */
 .login-box {
-  background: #ffffff;
   padding: 40px;
-  width: 380px;
+  width: 100%;
+  max-width: 400px;
   border-radius: 14px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
   text-align: center;
@@ -115,3 +117,4 @@
 .register-link a{
     cursor: pointer;
 }
+
