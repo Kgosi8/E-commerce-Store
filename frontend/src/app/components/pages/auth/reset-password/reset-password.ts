@@ -16,7 +16,8 @@ function passwordsMatch(control: AbstractControl) {
   selector: 'app-reset-password',
   imports: [CommonModule, ReactiveFormsModule,RouterLink],
   templateUrl: './reset-password.html',
-  styleUrl: './reset-password.css',
+  styleUrls: ['../login/login.css', 
+    './reset-password.css'],
 })
 export class ResetPassword implements OnInit{
 

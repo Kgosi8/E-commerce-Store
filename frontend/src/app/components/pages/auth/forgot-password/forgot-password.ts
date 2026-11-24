@@ -6,27 +6,24 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-forgot-password',
-  imports: [CommonModule,ReactiveFormsModule,RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './forgot-password.html',
-  styleUrl: './forgot-password.css',
+  styleUrls: ['../login/login.css', './forgot-password.css'],
 })
 export class ForgotPassword {
-
-  
   form!: FormGroup;
-  
 
   isSubmitting = signal(false);
-  success      = signal(false);
-  error        = signal<string | null>(null);
+  success = signal(false);
+  error = signal<string | null>(null);
 
   constructor(
-    private fb:   FormBuilder,
+    private fb: FormBuilder,
     private http: HttpClient,
   ) {
     this.form = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
-  });
+      email: ['', [Validators.required, Validators.email]],
+    });
   }
 
   onSubmit(): void {
@@ -35,18 +32,19 @@ export class ForgotPassword {
     this.isSubmitting.set(true);
     this.error.set(null);
 
-    this.http.post<any>('http://localhost:5000/api/forgot-password', {
-      email: this.form.value.email,
-    }).subscribe({
-      next: () => {
-        this.isSubmitting.set(false);
-        this.success.set(true);
-      },
-      error: (err) => {
-        this.isSubmitting.set(false);
-        this.error.set(err?.error?.message ?? 'Something went wrong. Please try again.');
-      },
-    });
+    this.http
+      .post<any>('http://localhost:5000/api/forgot-password', {
+        email: this.form.value.email,
+      })
+      .subscribe({
+        next: () => {
+          this.isSubmitting.set(false);
+          this.success.set(true);
+        },
+        error: (err) => {
+          this.isSubmitting.set(false);
+          this.error.set(err?.error?.message ?? 'Something went wrong. Please try again.');
+        },
+      });
   }
-
 }

@@ -251,7 +251,7 @@ a{
 
 /* cart badge follows the icon (replace your old top/right values) */
 .cart-icon-wrap { position: relative; }
-.cart-badge { top: -6px; right: -2px; }
+.cart-badge { top: -6px; right: -4px; }
 
 /* account popup */
 .account-wrap { position: relative; }
@@ -309,6 +309,17 @@ a{
   }
   .search-input { flex: 1; width: 100%; min-width: 0; }
 
+  .popup {
+    position: fixed;
+    top: 60px;
+    left: 10px;
+    right: 10px;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
   .popup {
     position: fixed;
     top: 60px;
